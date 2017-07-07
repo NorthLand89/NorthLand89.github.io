@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  17年5月27日 - AI迷思
+  Kaggle卫星图片竞赛思路 - AI迷思
   
   </title>
   
@@ -110,31 +110,221 @@
        
 
  <script type="text/javascript">
-	$(function(){
-		var currentURL = 'index.html';
-		currentURL = currentURL.substr(0,currentURL.length-5);
-		$('#menu_item_'+currentURL).addClass('is_active');
-	});
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
 </script>
 <div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Kaggle卫星图片竞赛思路</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">6/3/2017 0:23 上午</span>
 
-    <div id="single-page-wrap">
-        <h1>17年5月27日</h1>
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+           
+         
+          <span class="comments">
+            
 
-        <div class="markdown-body post-page">
-        <p><img src="media/14958920347786/14958968567404.jpg" alt=""/></p>
-
-<p>wordpress的博客数据找不回来了，挺可惜的，背景图片之后就没找到。MDwiki用了一阵子，其实还不错，但数据没打通总是败给惰性。</p>
-
-<p>MDwiki数学公式显示有问题，复杂的公式显示不了，折腾了大半天。回家后试了下MWeb，不得不说99软妹币没白花，网页主题挺顺眼，还能分享印象笔记，所以以后就用MWeb和rsync来做博客了。</p>
-
-<p>经历不少事情，现在算是踏入正轨了。</p>
-
-<p>坚持自己的信念。</p>
+            
+          </span>
 
         </div>
-    </div>
-</div>              
+      </div><!-- article -->
+
+      <div class="article-content">
+      <ol>
+<li>旋转不变性</li>
+<li>缩放不变性</li>
+<li>多个神经网络叠加</li>
+<li>滤镜单独训练个神经网络</li>
+</ol>
+
+<p>总结下：</p>
+
+<ol>
+<li>样本图片旋转层</li>
+<li>样本图片缩放层</li>
+<li>多个神经网络缩放</li>
+</ol>
+
+<h2 id="toc_0">样本缩放</h2>
+
+<p>图片质量不高，样本缩放应保证包含较重要信息，比如边缘的图像，城镇等。<br/>
+* 尝试下随机四分缩放</p>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14967180723369.html" 
+          title="Previous Post: ">&laquo; </a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14962993796548.html" 
+          title="Next Post: keras 手打Mnist测试">keras 手打Mnist测试 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>AI迷思</h1>
+                <div class="site-des">雪山大猫的小窝</div>
+                <div class="social">
+
+
+
+
+
+
+
+<a target="_blank" class="weibo" href="http://weibo.com/xueshandamao" title="weibo">Weibo</a>
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="point.html"><strong>心得</strong></a>
+        
+            <a href="course.html"><strong>课程</strong></a>
+        
+            <a href="doc.html"><strong>文档</strong></a>
+        
+            <a href="algorithm.html"><strong>算法</strong></a>
+        
+            <a href="tech.html"><strong>技术栈</strong></a>
+        
+            <a href="data.html"><strong>data</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="14977968463363.html">二叉树</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969159275994.html">Faster R-CNN</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14967180723369.html"></a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
  <div class="page-bottom clearfix">
   <div class="row">
    <p class="copyright">Copyright &copy; 2015

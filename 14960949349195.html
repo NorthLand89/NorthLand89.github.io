@@ -1,0 +1,522 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  keras - AI迷思
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="AI迷思" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:www.aimyth.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="point.html">心得</a></li>
+        
+        <li id=""><a target="_self" href="algorithm.html">算法</a></li>
+        
+        <li id=""><a target="_self" href="tech.html">技术栈</a></li>
+        
+        <li id=""><a target="_self" href="doc.html">文档</a></li>
+        
+        <li id=""><a target="_self" href="course.html">课程</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; AI迷思</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+       
+       <li><a href="index.html">HOME</a></li>
+    <li><a href="archives.html">Archives</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="point.html">心得</a></li>
+        
+            <li><a href="course.html">课程</a></li>
+        
+            <li><a href="doc.html">文档</a></li>
+        
+            <li><a href="algorithm.html">算法</a></li>
+        
+            <li><a href="tech.html">技术栈</a></li>
+        
+            <li><a href="data.html">data</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>keras</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">5/30/2017 5:55 上午</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='doc.html'>文档</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <p>补空<br/>
+待翻译~</p>
+
+<p><a href="https://travis-ci.org/fchollet/keras"><img src="https://travis-ci.org/fchollet/keras.svg?branch=master" alt="Build Status"/></a><br/>
+<a href="https://github.com/fchollet/keras/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" alt="license"/></a></p>
+
+<h2 id="toc_0">You have just found Keras.</h2>
+
+<p>Keras is a high-level neural networks API, written in Python and capable of running on top of either <a href="https://github.com/tensorflow/tensorflow">TensorFlow</a> or <a href="https://github.com/Theano/Theano">Theano</a>. It was developed with a focus on enabling fast experimentation. <em>Being able to go from idea to result with the least possible delay is key to doing good research.</em></p>
+
+<p>Use Keras if you need a deep learning library that:</p>
+
+<ul>
+<li>Allows for easy and fast prototyping (through user friendliness, modularity, and extensibility).</li>
+<li>Supports both convolutional networks and recurrent networks, as well as combinations of the two.</li>
+<li>Runs seamlessly on CPU and GPU.</li>
+</ul>
+
+<p>Read the documentation at <a href="http://keras.io">Keras.io</a>.</p>
+
+<p>Keras is compatible with: <strong>Python 2.7-3.5</strong>.</p>
+
+<hr/>
+
+<h2 id="toc_1">Guiding principles</h2>
+
+<ul>
+<li><p>__User friendliness.__ Keras is an API designed for human beings, not machines. It puts user experience front and center. Keras follows best practices for reducing cognitive load: it offers consistent &amp; simple APIs, it minimizes the number of user actions required for common use cases, and it provides clear and actionable feedback upon user error.</p></li>
+<li><p>__Modularity.__ A model is understood as a sequence or a graph of standalone, fully-configurable modules that can be plugged together with as little restrictions as possible. In particular, neural layers, cost functions, optimizers, initialization schemes, activation functions, regularization schemes are all standalone modules that you can combine to create new models.</p></li>
+<li><p>__Easy extensibility.__ New modules are simple to add (as new classes and functions), and existing modules provide ample examples. To be able to easily create new modules allows for total expressiveness, making Keras suitable for advanced research.</p></li>
+<li><p>__Work with Python__. No separate models configuration files in a declarative format. Models are described in Python code, which is compact, easier to debug, and allows for ease of extensibility.</p></li>
+</ul>
+
+<hr/>
+
+<h2 id="toc_2">Getting started: 30 seconds to Keras</h2>
+
+<p>The core data structure of Keras is a <strong>model</strong>, a way to organize layers. The simplest type of model is the <a href="http://keras.io/getting-started/sequential-model-guide"><code>Sequential</code></a> model, a linear stack of layers. For more complex architectures, you should use the <a href="http://keras.io/getting-started/functional-api-guide">Keras functional API</a>, which allows to build arbitrary graphs of layers.</p>
+
+<p>Here is the <code>Sequential</code> model:</p>
+
+<pre><code class="language-python">from keras.models import Sequential
+
+model = Sequential()
+</code></pre>
+
+<p>Stacking layers is as easy as <code>.add()</code>:</p>
+
+<pre><code class="language-python">from keras.layers import Dense, Activation
+
+model.add(Dense(units=64, input_dim=100))
+model.add(Activation(&#39;relu&#39;))
+model.add(Dense(units=10))
+model.add(Activation(&#39;softmax&#39;))
+</code></pre>
+
+<p>Once your model looks good, configure its learning process with <code>.compile()</code>:</p>
+
+<pre><code class="language-python">model.compile(loss=&#39;categorical_crossentropy&#39;,
+              optimizer=&#39;sgd&#39;,
+              metrics=[&#39;accuracy&#39;])
+</code></pre>
+
+<p>If you need to, you can further configure your optimizer. A core principle of Keras is to make things reasonably simple, while allowing the user to be fully in control when they need to (the ultimate control being the easy extensibility of the source code).<br/>
+<code>python<br/>
+model.compile(loss=keras.losses.categorical_crossentropy,<br/>
+              optimizer=keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True))<br/>
+</code></p>
+
+<p>You can now iterate on your training data in batches:</p>
+
+<pre><code class="language-python"># x_train and y_train are Numpy arrays --just like in the Scikit-Learn API.
+model.fit(x_train, y_train, epochs=5, batch_size=32)
+</code></pre>
+
+<p>Alternatively, you can feed batches to your model manually:</p>
+
+<pre><code class="language-python">model.train_on_batch(x_batch, y_batch)
+</code></pre>
+
+<p>Evaluate your performance in one line:</p>
+
+<pre><code class="language-python">loss_and_metrics = model.evaluate(x_test, y_test, batch_size=128)
+</code></pre>
+
+<p>Or generate predictions on new data:</p>
+
+<pre><code class="language-python">classes = model.predict(x_test, batch_size=128)
+</code></pre>
+
+<p>Building a question answering system, an image classification model, a Neural Turing Machine, or any other model is just as fast. The ideas behind deep learning are simple, so why should their implementation be painful?</p>
+
+<p>For a more in-depth tutorial about Keras, you can check out:</p>
+
+<ul>
+<li><a href="http://keras.io/getting-started/sequential-model-guide">Getting started with the Sequential model</a></li>
+<li><a href="http://keras.io/getting-started/functional-api-guide">Getting started with the functional API</a></li>
+</ul>
+
+<p>In the <a href="https://github.com/fchollet/keras/tree/master/examples">examples folder</a> of the repository, you will find more advanced models: question-answering with memory networks, text generation with stacked LSTMs, etc.</p>
+
+<hr/>
+
+<h2 id="toc_3">Installation</h2>
+
+<p>Keras uses the following dependencies:</p>
+
+<ul>
+<li>numpy, scipy</li>
+<li>yaml</li>
+<li>HDF5 and h5py (optional, required if you use model saving/loading functions)</li>
+<li>Optional but recommended if you use CNNs: cuDNN.</li>
+</ul>
+
+<p><em>When using the TensorFlow backend:</em></p>
+
+<ul>
+<li>TensorFlow
+
+<ul>
+<li><a href="https://www.tensorflow.org/install/">See installation instructions</a>.</li>
+</ul></li>
+</ul>
+
+<p><em>When using the Theano backend:</em></p>
+
+<ul>
+<li>Theano
+
+<ul>
+<li><a href="http://deeplearning.net/software/theano/install.html#install">See installation instructions</a>.</li>
+</ul></li>
+</ul>
+
+<p>To install Keras, <code>cd</code> to the Keras folder and run the install command:<br/>
+<code>sh<br/>
+sudo python setup.py install<br/>
+</code></p>
+
+<p>You can also install Keras from PyPI:<br/>
+<code>sh<br/>
+sudo pip install keras<br/>
+</code></p>
+
+<hr/>
+
+<h2 id="toc_4">Switching from TensorFlow to Theano</h2>
+
+<p>By default, Keras will use TensorFlow as its tensor manipulation library. <a href="http://keras.io/backend/">Follow these instructions</a> to configure the Keras backend.</p>
+
+<hr/>
+
+<h2 id="toc_5">Support</h2>
+
+<p>You can ask questions and join the development discussion:</p>
+
+<ul>
+<li>On the <a href="https://groups.google.com/forum/#!forum/keras-users">Keras Google group</a>.</li>
+<li>On the <a href="https://kerasteam.slack.com">Keras Slack channel</a>. Use <a href="https://keras-slack-autojoin.herokuapp.com/">this link</a> to request an invitation to the channel.</li>
+</ul>
+
+<p>You can also post <strong>bug reports and feature requests</strong> (only) in <a href="https://github.com/fchollet/keras/issues">Github issues</a>. Make sure to read <a href="https://github.com/fchollet/keras/blob/master/CONTRIBUTING.md">our guidelines</a> first.</p>
+
+<hr/>
+
+<h2 id="toc_6">Why this name, Keras?</h2>
+
+<p>Keras (κέρας) means <u>horn</u> in Greek. It is a reference to a literary image from ancient Greek and Latin literature, first found in the <u>Odyssey</u>, where dream spirits (_Oneiroi_, singular <u>Oneiros</u>) are divided between those who deceive men with false visions, who arrive to Earth through a gate of ivory, and those who announce a future that will come to pass, who arrive through a gate of horn. It&#39;s a play on the words κέρας (horn) / κραίνω (fulfill), and ἐλέφας (ivory) / ἐλεφαίρομαι (deceive).</p>
+
+<p>Keras was initially developed as part of the research effort of project ONEIROS (Open-ended Neuro-Electronic Intelligent Robot Operating System).</p>
+
+<blockquote>
+<p>_&quot;Oneiroi are beyond our unravelling --who can be sure what tale they tell? Not all that men look for comes to pass. Two gates there are that give passage to fleeting Oneiroi; one is made of horn, one of ivory. The Oneiroi that pass through sawn ivory are deceitful, bearing a message that will not be fulfilled; those that come out through polished horn have truth behind them, to be accomplished for men who see them.&quot;_ Homer, Odyssey 19. 562 ff (Shewring translation).</p>
+</blockquote>
+
+<hr/>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14961980378781.html" 
+          title="Previous Post: Keras LSTM">&laquo; Keras LSTM</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14960914407480.html" 
+          title="Next Post: 日记">日记 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>AI迷思</h1>
+                <div class="site-des">雪山大猫的小窝</div>
+                <div class="social">
+
+
+
+
+
+
+
+<a target="_blank" class="weibo" href="http://weibo.com/xueshandamao" title="weibo">Weibo</a>
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="point.html"><strong>心得</strong></a>
+        
+            <a href="course.html"><strong>课程</strong></a>
+        
+            <a href="doc.html"><strong>文档</strong></a>
+        
+            <a href="algorithm.html"><strong>算法</strong></a>
+        
+            <a href="tech.html"><strong>技术栈</strong></a>
+        
+            <a href="data.html"><strong>data</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="14977968463363.html">二叉树</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969159275994.html">Faster R-CNN</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14967180723369.html"></a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+
+  </body>
+</html>

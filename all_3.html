@@ -1,0 +1,632 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  AI迷思
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="AI迷思" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:www.aimyth.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="point.html">心得</a></li>
+        
+        <li id=""><a target="_self" href="algorithm.html">算法</a></li>
+        
+        <li id=""><a target="_self" href="tech.html">技术栈</a></li>
+        
+        <li id=""><a target="_self" href="doc.html">文档</a></li>
+        
+        <li id=""><a target="_self" href="course.html">课程</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; AI迷思</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+       
+       <li><a href="index.html">HOME</a></li>
+    <li><a href="archives.html">Archives</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="point.html">心得</a></li>
+        
+            <li><a href="course.html">课程</a></li>
+        
+            <li><a href="doc.html">文档</a></li>
+        
+            <li><a href="algorithm.html">算法</a></li>
+        
+            <li><a href="tech.html">技术栈</a></li>
+        
+            <li><a href="data.html">data</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="14958952545528.html">
+                
+                  <h1>ssh反向隧道连接局域网中的linux主机</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>玩树莓派时发现的方法,当时电脑和树莓派在一个局域网里,但树莓派一重启ip就变,电脑查不到,上网查到这么一个方法,正好能用在工作里.</p>
+
+<p>就是这东西,袖珍linux电脑,可以接灯泡传感器显示屏舵机什么的,挺有意思的.<br/>
+<img src="media/14958952545528/14958955969092.jpg" alt=""/></p>
+
+<p>场景是linux电脑A想用ssh连接到B,AB都能连外网但AB互相看不到.这时候只要有一台有公网IP的服务器C,就能通过ssh从A访问B.</p>
+
+<p>下面以ubuntu系统为例,从A连到B.</p>
+
+<p>首先,B,C安装ssh-server(记不清的话都安上)</p>
+
+<pre><code>     sudo apt-get install autossh-server
+</code></pre>
+
+<p>修改服务器C的ssh配置文件</p>
+
+<pre><code>     ubuntu:   /etc/ssh/sshd_config
+     centos:   /etc/ssh/sshd_conf
+</code></pre>
+
+<p>在文件末尾添加一行:</p>
+
+<pre><code>     GatewayPorts clientspecified
+</code></pre>
+
+<p>B,C重启ssh服务(保险起见,似乎不重启也没啥事)</p>
+
+<pre><code>      sudo service ssh restart
+</code></pre>
+
+<p>B安装autossh</p>
+
+<pre><code>      sudo apt-get install autossh
+</code></pre>
+
+<p>B运行命令,简单理解为B通过ssh连接服务器C把自己的的22端口挂到服务器C的10022端口上去.</p>
+
+<pre><code>    autossh -M 10900 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R 服务器C的地址:10022:localhost:22 服务器C的用户名@服务器C的地址
+</code></pre>
+
+<p>现在A就可以直接通过服务器C的10022端口,用B的用户名连接到B了.</p>
+
+<pre><code>    ssh -p10022 B的用户名@C的地址
+</code></pre>
+
+<p>如果过程中哪个步骤提示host与已知的不匹配可以尝试</p>
+
+<pre><code>    rm ~/.ssh/known_hosts
+</code></pre>
+
+<p>过程中会有一些提示记住host输入密码什么的就略过了.</p>
+
+<p>下面是另一个场景,共4台服务器A,B,C,D.C是一台有公网IP的服务器,A没有公网IP能上网,B和D在一个局域网中,D可以连B,B连不了D(没关系的),B不能连外网,D可以连外网.目标还是从A连到B,只是现在B不能连外网了,要通过D连接.</p>
+
+<p>方法比较简单,除了autossh命令外其他步骤相同.</p>
+
+<p>只有D可以同时连B和C,autossh命令在要在D上运行.就直接贴命令了,C域名是www.aimyth.com,B的IP是192.168.1.107.</p>
+
+<pre><code>    autossh -M 18731 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R www.aimyth.com:10023:192.168.1.107:22 sean@www.aimyth.com
+</code></pre>
+
+<p>这个命令运行完就可以直接从外网ssh连接B了</p>
+
+<pre><code>    ssh -p10023 B的用户名@www.aimyth.com
+</code></pre>
+
+<p><a href="http://network.chinabyte.com/140/13402140.shtml">原教程</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545489.html">
+                
+                  <h1>sbt-jvm设置</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>用sbt运行一个spark单机任务的时候会报超时异常，怀疑是内存不足导致的。<br/>
+先看下sbt配置<br/>
+<code>sbt -v</code><br/>
+内存确实不够<br/>
+再看sbt在哪里</p>
+
+<pre><code class="language-shell">$:whereis sbt
+/usr/bin/sbt
+$:ls -l /usr/bin/sbt
+lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/sbt
+</code></pre>
+
+<p>这样就找到sbt的安装目录了，打开sbt/conf/sbtopts文件，把以下内容按需要修改后填进去保存。</p>
+
+<pre><code>-J-Xms512M
+-J-Xmx3536M
+-J-Xss1M
+-J-XX:+CMSClassUnloadingEnabled
+-J-XX:+UseConcMarkSweepGC
+-J-XX:MaxPermSize=724M
+-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+</code></pre>
+
+<p>查看下sbt配置</p>
+
+<p><code>sbt -v</code></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545450.html">
+                
+                  <h1>Gson读取List</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>新发现一个用法，直接上代码了：<br/>
+<code><br/>
+val gs = new Gson()<br/>
+  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
+  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
+</code></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545409.html">
+                
+                  <h1>翻译评估方法-BLEU</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Bilingual Evaluation Understudy</p>
+
+<h2 id="toc_0">场景</h2>
+
+<p><img src="media/14958952545409/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-27%20%E4%B8%8B%E5%8D%8810.31.17.png" alt="屏幕快照 2017-05-27 下午10.31.17"/></p>
+
+<ul>
+<li>候选翻译 candidate</li>
+<li>参考翻译 reference</li>
+</ul>
+
+<h2 id="toc_1">1阶</h2>
+
+<p>候选1相比于候选2 与reference 有更多的相同词和相同word-N-grame</p>
+
+<p>-&gt;计算准确评分（正确N-grames的期望）</p>
+
+<p>调整N-gram准确率（每个N-gram）为：</p>
+
+<p>\(count_{clip}(w)=min(count_{candidate}(w),maxcount_{reference}(w))\)</p>
+
+<p>候选1的\[count_{clip}(w=&quot;the&quot;)\]指的是什么呢？<br/>
+min(3,4)=3<br/>
+the在候选1中出现了3次，在reference3中出现了4次。</p>
+
+<ul>
+<li>计算候选翻译中出现的所有词的\[count_{clip}(w)\]</li>
+<li>unigram准确率=候选词中正确词的期望</li>
+<li>\[ p_{unigram} =\frac{count_{clip}(w_1)+count_{clip}(w_2)+...+count_{clip}(w_M)}{count(w_1)+count(w_2)+...+count(w_M)}  \]</li>
+<li>\[p_{unigram}=\frac{\sum_{i=1}^M count_{clip}(w_i)}{\sum_{i=1}^M count(w_i)}\]</li>
+<li>计算所有翻译过句子的\[count_{clip}(w)\]</li>
+<li>把所有翻译过的句子的\[p_1=p_{unigram}\]算出来</li>
+</ul>
+
+<h2 id="toc_2">高阶</h2>
+
+<p>用同样的步骤计算数量更多的N-gram：</p>
+
+<ul>
+<li>bigram</li>
+<li>trigram</li>
+<li>...</li>
+</ul>
+
+<p>-&gt; \[p_1,p_2,p_3\]</p>
+
+<h3 id="toc_3">汇总计算</h3>
+
+<p>把所有精确率放在一起计算几何均值。</p>
+
+<p>P=\[\sqrt[n]{p_1*p_2*...*p_n}\]<br/>
+ =\[(p_1*p_2*...*p_n)^{\frac{1}{n}}\]<br/>
+ =\[(\prod_{i=1}^n p_i)^{\frac{1}{n}}\]</p>
+
+<p>为了防止越界：</p>
+
+<p>P=\[e^{\frac{1}{n} {\sum_{i=1}^n log_e{p_i}}}\]</p>
+
+<p>为了让翻译尽量简短，使用简洁处罚（Brevity penalty，BP）：<br/>
+\[BP=\begin{cases} 1,&amp;\mbox{if candidate c&gt;reference r} \\ e^{(1-r/c)}, &amp; \mbox{if candidate c } \leq \mbox{ reference r} \end{cases}\]</p>
+
+<p>把他们都放在一起：</p>
+
+<p>\[BLEU=BP*e^{(\frac{1}{n}*\sum_{n=1}^N log_e(p_n))}\]</p>
+
+<p>通常设置：N=4，使用4以下的n-grams</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='algorithm.html'>算法</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545289.html">
+                
+                  <h1>序列</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">链表</h2>
+
+<h2 id="toc_1">栈</h2>
+
+<h2 id="toc_2">队列</h2>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="all_2.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>AI迷思</h1>
+                <div class="site-des">雪山大猫的小窝</div>
+                <div class="social">
+
+
+
+
+
+
+
+<a target="_blank" class="weibo" href="http://weibo.com/xueshandamao" title="weibo">Weibo</a>
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="point.html"><strong>心得</strong></a>
+        
+            <a href="course.html"><strong>课程</strong></a>
+        
+            <a href="doc.html"><strong>文档</strong></a>
+        
+            <a href="algorithm.html"><strong>算法</strong></a>
+        
+            <a href="tech.html"><strong>技术栈</strong></a>
+        
+            <a href="data.html"><strong>data</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="14977968463363.html">二叉树</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969159275994.html">Faster R-CNN</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14967180723369.html"></a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+
+  </body>
+</html>

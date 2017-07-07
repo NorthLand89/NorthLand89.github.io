@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	ssh反向隧道连接局域网中的linux主机 - ai迷思
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="ai迷思" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">ai迷思</a></h1>
+					<p class="subtitle">雪山大猫的AI之路</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="archives.html">Archives</a></li>
+						
+						  <li id=""><a target="_self" href="tech.html">技术</a></li>
+						
+						  <li id=""><a target="_self" href="point.html">心得</a></li>
+						
+						  <li id=""><a target="_self" href="algorithm.html">算法</a></li>
+						
+						  <li id=""><a target="_self" href="tech.html">技术栈</a></li>
+						
+						  <li id=""><a target="_self" href="doc.html">文档</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">ssh反向隧道连接局域网中的linux主机</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p>玩树莓派时发现的方法,当时电脑和树莓派在一个局域网里,但树莓派一重启ip就变,电脑查不到,上网查到这么一个方法,正好能用在工作里.</p>
+
+<p>就是这东西,袖珍linux电脑,可以接灯泡传感器显示屏舵机什么的,挺有意思的.<br/>
+<img src="media/14958952545528/14958955969092.jpg" alt=""/></p>
+
+<p>场景是linux电脑A想用ssh连接到B,AB都能连外网但AB互相看不到.这时候只要有一台有公网IP的服务器C,就能通过ssh从A访问B.</p>
+
+<p>下面以ubuntu系统为例,从A连到B.</p>
+
+<p>首先,B,C安装ssh-server(记不清的话都安上)</p>
+
+<pre><code>     sudo apt-get install autossh-server
+</code></pre>
+
+<p>修改服务器C的ssh配置文件</p>
+
+<pre><code>     ubuntu:   /etc/ssh/sshd_config
+     centos:   /etc/ssh/sshd_conf
+</code></pre>
+
+<p>在文件末尾添加一行:</p>
+
+<pre><code>     GatewayPorts clientspecified
+</code></pre>
+
+<p>B,C重启ssh服务(保险起见,似乎不重启也没啥事)</p>
+
+<pre><code>      sudo service ssh restart
+</code></pre>
+
+<p>B安装autossh</p>
+
+<pre><code>      sudo apt-get install autossh
+</code></pre>
+
+<p>B运行命令,简单理解为B通过ssh连接服务器C把自己的的22端口挂到服务器C的10022端口上去.</p>
+
+<pre><code>    autossh -M 10900 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R 服务器C的地址:10022:localhost:22 服务器C的用户名@服务器C的地址
+</code></pre>
+
+<p>现在A就可以直接通过服务器C的10022端口,用B的用户名连接到B了.</p>
+
+<pre><code>    ssh -p10022 B的用户名@C的地址
+</code></pre>
+
+<p>如果过程中哪个步骤提示host与已知的不匹配可以尝试</p>
+
+<pre><code>    rm ~/.ssh/known_hosts
+</code></pre>
+
+<p>过程中会有一些提示记住host输入密码什么的就略过了.</p>
+
+<p>下面是另一个场景,共4台服务器A,B,C,D.C是一台有公网IP的服务器,A没有公网IP能上网,B和D在一个局域网中,D可以连B,B连不了D(没关系的),B不能连外网,D可以连外网.目标还是从A连到B,只是现在B不能连外网了,要通过D连接.</p>
+
+<p>方法比较简单,除了autossh命令外其他步骤相同.</p>
+
+<p>只有D可以同时连B和C,autossh命令在要在D上运行.就直接贴命令了,C域名是www.aimyth.com,B的IP是192.168.1.107.</p>
+
+<pre><code>    autossh -M 18731 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R www.aimyth.com:10023:192.168.1.107:22 sean@www.aimyth.com
+</code></pre>
+
+<p>这个命令运行完就可以直接从外网ssh连接B了</p>
+
+<pre><code>    ssh -p10023 B的用户名@www.aimyth.com
+</code></pre>
+
+<p><a href="http://network.chinabyte.com/140/13402140.shtml">原教程</a></p>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+<script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+</body>
+</html>

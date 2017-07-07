@@ -1,0 +1,372 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  Faster R-CNN：趋近实时物体检测的区域建议网络 - AI迷思
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="AI迷思" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:www.aimyth.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="point.html">心得</a></li>
+        
+        <li id=""><a target="_self" href="algorithm.html">算法</a></li>
+        
+        <li id=""><a target="_self" href="tech.html">技术栈</a></li>
+        
+        <li id=""><a target="_self" href="doc.html">文档</a></li>
+        
+        <li id=""><a target="_self" href="course.html">课程</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; AI迷思</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+       
+       <li><a href="index.html">HOME</a></li>
+    <li><a href="archives.html">Archives</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="point.html">心得</a></li>
+        
+            <li><a href="course.html">课程</a></li>
+        
+            <li><a href="doc.html">文档</a></li>
+        
+            <li><a href="algorithm.html">算法</a></li>
+        
+            <li><a href="tech.html">技术栈</a></li>
+        
+            <li><a href="data.html">data</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Faster R-CNN：趋近实时物体检测的区域建议网络</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">6/8/2017 14:42 下午</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='doc.html'>文档</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <p><strong>摘要</strong>-最新的基于区域建议来预测物体位置方法。像SPPnet和Fast R-CNN的进展减少了监测网络的耗时，区域预测则成为了计算的瓶颈。这篇文章介绍了一个共享全部卷积特征的区域建议网络（RPN），实现了几乎无消耗的区域建议。RPN是一个同时预测每个位置物体边界和打分的全卷积网络。RPN使用端到端训练来生成高质量区域建议，Fast R-CNN就使用RPN来做预测。我们通过共享他们的卷积特征-使用最近很火的“注意力”机制，RPN部分告诉整个网络要去看哪里，这样我们近一步把RPN和Fast R-CNN整合到一个单一神经网络中。对于很深的VGG-15模型，我们的检测系统使用GPU计算可以达到5帧每秒（使用PASCAL VOC 2007，2012 和COCO 数据集 300个图）。 在 ILSVRC和COCO 2015竞赛中，Faster R-CNN 和RPN 多次应用于冠军的技术栈中。代码已经公开了。</p>
+
+<h2 id="toc_0">1 简介</h2>
+
+<p>物体检测最近的发展受益于区域建议方法和区域卷积网络。尽管区域卷积网络相比于传统方法计算代价高昂，但得益于建议过程中共享卷积其计算代价大大减少。最近使用很深网络的Fast R-CNN达到了近乎实时的结果（忽略区域建议耗时）。现在区域建议是前沿检测系统的瓶颈。</p>
+
+<p>区域简易方法通常依赖复杂度较低的特征和比较经济的推理方案。<strong>Selective Search</strong>是一个最流行的方法，他基于设计过的低级别特征贪心合并<strong>超级像素</strong>。甚至当我们比较高效检测网络时，Selective Search CPU的2秒一帧都被拿来做基准。<strong>EdgeBoxes</strong>最近在效率和质量上达到了最好的平衡，每帧只需要0.2秒。即便如此，区域建议步骤仍然与监测网络耗时相当。</p>
+
+<p>你可能记得 Fast R-CNN 受益于GPU计算，但很多研发中的区域建议方法是在CPU上实现的，这导致耗时的不可比较。一个显而易见的加速方法是使用重新实现一个适合GPU的版本。这可能是个有效的方法，但无视其后续检测网络重新实现会丢失共享计算中重要的opportunities。</p>
+
+<p>在这片论文中，我们展示了一个算法上的改变-使用深度卷积网络优雅高效地是建议计算达到几乎不耗时。为了达到目标，我们引入了新颖的使用共享权值的区域建议网络。测试时使用共享卷积网络，达到了在微不足的时间内实现建议。</p>
+
+<p>我们意识到区域检测器所使用的卷积特征表，比如Fast R-CNN，同样可以用于区域建议。在这些卷积特征上，我们添加了几个卷积层同时常规框内的每个位置做边界回归和打分。RPN就是这样一个完全卷积网络，对生成检测建议可以实现端到端训练。</p>
+
+<p><img src="media/14969041690185/14969116306373.jpg" alt=""/></p>
+
+<blockquote>
+<p>图1：处理多尺寸多角度的多种不同方法<br/>
+1. 构建不同的图像金子塔，分类器使用所有的缩放数据。<br/>
+2. 构建不同尺寸的过滤器做特征。<br/>
+3. 我们在回归函数中使用boxes金字塔。 </p>
+</blockquote>
+
+<p>RPNs设计用来高效预测一个大范围缩放过的区域建议。与一些流行比如[8][9][1][2]不同，他们使用的是图像金字塔，或是过滤器金字塔，我们介绍了新颖的“anchor”盒子，他可以考虑不同尺寸和视角。我们的方法可以想想成一个回归关系的金字塔，他避免了枚举图像和过滤器来处理尺度角度问题。这个模型使用单缩放图像训练后表现良好，而且速度上有提升。</p>
+
+<p>为了把RPNs与Fast R-CNN物体检测网络整合，我们</p>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14969159275994.html" 
+          title="Previous Post: Faster R-CNN">&laquo; Faster R-CNN</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14967180723369.html" 
+          title="Next Post: "> &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>AI迷思</h1>
+                <div class="site-des">雪山大猫的小窝</div>
+                <div class="social">
+
+
+
+
+
+
+
+<a target="_blank" class="weibo" href="http://weibo.com/xueshandamao" title="weibo">Weibo</a>
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="point.html"><strong>心得</strong></a>
+        
+            <a href="course.html"><strong>课程</strong></a>
+        
+            <a href="doc.html"><strong>文档</strong></a>
+        
+            <a href="algorithm.html"><strong>算法</strong></a>
+        
+            <a href="tech.html"><strong>技术栈</strong></a>
+        
+            <a href="data.html"><strong>data</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="14977968463363.html">二叉树</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969159275994.html">Faster R-CNN</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14967180723369.html"></a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+
+  </body>
+</html>

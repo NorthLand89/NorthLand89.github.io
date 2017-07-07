@@ -1,0 +1,464 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  keras 手打Mnist测试 - AI迷思
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="AI迷思" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:www.aimyth.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="point.html">心得</a></li>
+        
+        <li id=""><a target="_self" href="algorithm.html">算法</a></li>
+        
+        <li id=""><a target="_self" href="tech.html">技术栈</a></li>
+        
+        <li id=""><a target="_self" href="doc.html">文档</a></li>
+        
+        <li id=""><a target="_self" href="course.html">课程</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; AI迷思</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+       
+       <li><a href="index.html">HOME</a></li>
+    <li><a href="archives.html">Archives</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="point.html">心得</a></li>
+        
+            <li><a href="course.html">课程</a></li>
+        
+            <li><a href="doc.html">文档</a></li>
+        
+            <li><a href="algorithm.html">算法</a></li>
+        
+            <li><a href="tech.html">技术栈</a></li>
+        
+            <li><a href="data.html">data</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>keras 手打Mnist测试</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">6/1/2017 14:42 下午</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <p>导入，有些是多余的，这个print_function还没搞懂式子</p>
+
+<pre><code class="language-python">import keras
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import numpy as np
+</code></pre>
+
+<p>创建Tensorboard监听</p>
+
+<pre><code class="language-python">cbks=keras.callbacks.TensorBoard(log_dir=&#39;/tmp/logs&#39;, histogram_freq=0, write_graph=True,  write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+</code></pre>
+
+<p>加载数据</p>
+
+<pre><code class="language-python">(x_train,y_train),(x_test,y_test) = mnist.load_data()
+</code></pre>
+
+<p>** 数据要做reshape添加通道 **</p>
+
+<pre><code class="language-python">x_train = np.reshape(x_train,(len(x_train),28,28,1))
+x_test = np.reshape(x_test,(len(x_test),28,28,1))
+</code></pre>
+
+<p>这里要把y转换成1维十通道的向量（因为要与神经网络输出对应）</p>
+
+<pre><code class="language-python">y_train = keras.utils.to_categorical(y_train, 10)
+</code></pre>
+
+<p>ok 数据到这里就准备好了</p>
+
+<p>下面创建模型</p>
+
+<pre><code class="language-python">model = Sequential()
+</code></pre>
+
+<p>添加一个卷积层</p>
+
+<ul>
+<li>64 个卷积核</li>
+<li>(28,28,1)x 是（28*28）的1通道图</li>
+<li>边界 valid 丢弃右侧多余边界/same 用0填充</li>
+<li>‘relu’激活函数</li>
+</ul>
+
+<pre><code class="language-python">model.add(Conv2D(64,(3,3),input_shape=(28,28,1),strides=2,padding=&#39;valid&#39;,activation=&#39;relu&#39;))
+</code></pre>
+
+<p>做个4*4的池化</p>
+
+<pre><code class="language-python">model.add(MaxPooling2D(pool_size=(4,4)))
+</code></pre>
+
+<p>把图片拍平了丢给一个2层网络</p>
+
+<pre><code class="language-python">model.add(Flatten())
+model.add(Dense(10,activation=&#39;softmax&#39;))
+</code></pre>
+
+<p>编译网络，指定优化器，损失函数，评价指标。</p>
+
+<pre><code class="language-python">model.compile(optimizer=&#39;rmsprop&#39;,
+              loss=&#39;categorical_crossentropy&#39;,
+              metrics=[&#39;accuracy&#39;])
+</code></pre>
+
+<p>这里再看下训练数据的格式</p>
+
+<pre><code class="language-python">np.shape(x_train),np.shape(y_train)
+</code></pre>
+
+<pre><code>((60000, 28, 28, 1), (60000, 10))
+</code></pre>
+
+<p>要开始训练了，注意tensorboard是在这个阶段放进去的</p>
+
+<p>当这个步骤开始后就可以在运行tensorflow的服务器上执行：</p>
+
+<p><code>tensorboard --logdir=&#39;/tmp/logs&#39; --host 192.168.130.230</code></p>
+
+<p>来开启tensorboard服务了，访问地址在服务开启后会打出来</p>
+
+<pre><code class="language-python">model.fit(x_train,y_train,epochs=10,verbose=1,batch_size=200,callbacks=[cbks],validation_split=0.1)
+</code></pre>
+
+<pre><code>Train on 54000 samples, validate on 6000 samples
+Epoch 1/10
+54000/54000 [==============================] - 0s - loss: 11.8321 - acc: 0.2545 - val_loss: 11.6785 - val_acc: 0.2672
+Epoch 2/10
+54000/54000 [==============================] - 0s - loss: 11.5241 - acc: 0.2814 - val_loss: 11.5208 - val_acc: 0.2840
+Epoch 3/10
+54000/54000 [==============================] - 0s - loss: 11.5023 - acc: 0.2839 - val_loss: 11.5455 - val_acc: 0.2817
+Epoch 4/10
+54000/54000 [==============================] - 0s - loss: 10.8901 - acc: 0.3165 - val_loss: 8.4736 - val_acc: 0.4560
+Epoch 5/10
+54000/54000 [==============================] - 0s - loss: 7.2009 - acc: 0.5308 - val_loss: 6.6652 - val_acc: 0.5737
+Epoch 6/10
+54000/54000 [==============================] - 0s - loss: 5.1571 - acc: 0.6478 - val_loss: 5.0852 - val_acc: 0.6655
+Epoch 7/10
+54000/54000 [==============================] - 0s - loss: 4.9678 - acc: 0.6682 - val_loss: 5.0733 - val_acc: 0.6668
+Epoch 8/10
+54000/54000 [==============================] - 0s - loss: 4.9384 - acc: 0.6726 - val_loss: 5.0504 - val_acc: 0.6728
+Epoch 9/10
+54000/54000 [==============================] - 0s - loss: 4.9237 - acc: 0.6750 - val_loss: 5.0476 - val_acc: 0.6708
+Epoch 10/10
+54000/54000 [==============================] - 0s - loss: 3.7022 - acc: 0.7319 - val_loss: 3.3021 - val_acc: 0.7682
+
+
+
+
+
+&lt;keras.callbacks.History at 0x7fbd1f1c5a58&gt;
+</code></pre>
+
+<p>这里看一下帮助，发现可以像sklearn一样指定验证集大小，就添加到前面了，也可以使用<code>validation_data: tuple (x_val, y_val) or tuple</code>手动设置</p>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14964206226772.html" 
+          title="Previous Post: Kaggle卫星图片竞赛思路">&laquo; Kaggle卫星图片竞赛思路</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14962271262431.html" 
+          title="Next Post: jupyter 免加密连接">jupyter 免加密连接 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>AI迷思</h1>
+                <div class="site-des">雪山大猫的小窝</div>
+                <div class="social">
+
+
+
+
+
+
+
+<a target="_blank" class="weibo" href="http://weibo.com/xueshandamao" title="weibo">Weibo</a>
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="point.html"><strong>心得</strong></a>
+        
+            <a href="course.html"><strong>课程</strong></a>
+        
+            <a href="doc.html"><strong>文档</strong></a>
+        
+            <a href="algorithm.html"><strong>算法</strong></a>
+        
+            <a href="tech.html"><strong>技术栈</strong></a>
+        
+            <a href="data.html"><strong>data</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="14977968463363.html">二叉树</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969159275994.html">Faster R-CNN</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14967180723369.html"></a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+
+  </body>
+</html>
