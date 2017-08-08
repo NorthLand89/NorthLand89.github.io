@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  ssh反向隧道连接局域网中的linux主机 - AI迷思
+  AI迷思
   
   </title>
   
@@ -110,36 +110,177 @@
        
 
  <script type="text/javascript">
-  $(function(){
-    $('#menu_item_index').addClass('is_active');
-  });
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
 </script>
 <div class="row">
-  <div class="large-8 medium-8 columns">
-      <div class="markdown-body article-wrap">
-       <div class="article">
-          
-          <h1>ssh反向隧道连接局域网中的linux主机</h1>
-     
-        <div class="read-more clearfix">
-          <span class="date">5/27/2017 22:27 下午</span>
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="14959021333435.html">
+                
+                  <h1>软件工程大纲</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>考试题型:概念问答题、实践案例题<br/>
+总分:50分</p>
 
-          <span>posted in&nbsp;</span> 
-          
-              <span class="posted-in"><a href='tech.html'>技术栈</a></span>
-           
-         
-          <span class="comments">
-            
+<h2 id="toc_0">一、软件过程</h2>
 
-            
-          </span>
+<ul>
+<li>软件过程的概念</li>
+<li>经典软件过程模型的特点(瀑布模型、增量模型、演化模 型、统一过程模型)</li>
+<li>过程评估与CMM/CMMI的基本概念</li>
+<li>敏捷宣言与敏捷过程的特点。</li>
+</ul>
 
-        </div>
-      </div><!-- article -->
+<h2 id="toc_1">二、软件需求</h2>
 
-      <div class="article-content">
-      <p>玩树莓派时发现的方法,当时电脑和树莓派在一个局域网里,但树莓派一重启ip就变,电脑查不到,上网查到这么一个方法,正好能用在工作里.</p>
+<ul>
+<li>软件需求的概念</li>
+<li>需求工程的基本过程</li>
+<li>分层数据流模型</li>
+<li>用例和场景建模及其UML表达(用例图、活动图、泳道图、顺序图)</li>
+<li>数据模型建模及其UML表达(类图)</li>
+<li>行为模型建模及其UML表达(状态机图)。</li>
+</ul>
+
+<h2 id="toc_2">三、软件设计与构造</h2>
+
+<ul>
+<li>软件体系结构及体系结构风格的概念</li>
+<li>设计模式的概念</li>
+<li>模块化设计的基本思想及概念(抽象、分解、模块化、封装、信息隐藏、功能独立)</li>
+<li>软件重构的概念</li>
+<li>软件体系结构的UML建模(包图、类图、构件图、顺序图、部署图)</li>
+<li>接口的概念</li>
+<li>面向对象设计原则(开闭原则、Liskov替换原则、依赖 转置原则、接又隔离原则)</li>
+<li>内聚与耦合的概念</li>
+<li>常见的内聚和耦合类型。</li>
+</ul>
+
+<h2 id="toc_3">四、软件测试</h2>
+
+<ul>
+<li>软件测试及测试用例的概念</li>
+<li>单元测试、集成测试、确认测试、系统测试、回归测试的概念</li>
+<li>调试的概念、调试与测试的关系</li>
+<li>测试覆盖度的概念</li>
+<li>白盒测试、黑盒测试的概念</li>
+<li>代码圈复杂度的计算方法</li>
+<li>白盒测试中的基本路径测试方法</li>
+<li>黑盒测试中的等价类划分方法。</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/28/2017 0:22 上午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='course.html'>课程</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545569.html">
+                
+                  <h1>storm 安装笔记</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ul>
+<li>环境</li>
+<li>安装</li>
+<li>配置</li>
+<li>测试</li>
+</ul>
+
+<h2 id="toc_0">环境</h2>
+
+<p>本次安装使用ubuntu-14.04,storm-1.0.2,.</p>
+
+<h2 id="toc_1">安装</h2>
+
+<h3 id="toc_2">1.zookeeper安装</h3>
+
+<p>这里直接使用docker镜像<a href="https://github.com/jplock/docker-zookeeper">jplock/zookeeper</a> 运行即可.</p>
+
+<h3 id="toc_3">2,storm</h3>
+
+<p>解压即可.</p>
+
+<h2 id="toc_4">配置</h2>
+
+<p>该目录需要有读写权限.</p>
+
+<pre><code>storm.local.dir: &quot;/tmp/storm/&quot;
+</code></pre>
+
+<p>这应该是工作节点的thrift端口,几个端口对应每个worker节点几个线程.</p>
+
+<pre><code>supervisor.slots.ports:
+- 10001
+- 10002
+</code></pre>
+
+<h2 id="toc_5">使用</h2>
+
+<pre><code>storm jar Getting-Started-0.0.1-SNAPSHOT.jar com.kanke.test.ClusterEdition
+</code></pre>
+
+<p>注意,storm集群与单机版不同,并不会立即调用clean生命周期,测试打印需写在excute周期内,打印在[INFO]的[STDO]中.</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545528.html">
+                
+                  <h1>ssh反向隧道连接局域网中的linux主机</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>玩树莓派时发现的方法,当时电脑和树莓派在一个局域网里,但树莓派一重启ip就变,电脑查不到,上网查到这么一个方法,正好能用在工作里.</p>
 
 <p>就是这东西,袖珍linux电脑,可以接灯泡传感器显示屏舵机什么的,挺有意思的.<br/>
 <img src="media/14958952545528/14958955969092.jpg" alt=""/></p>
@@ -207,43 +348,142 @@
 
 <p><a href="http://network.chinabyte.com/140/13402140.shtml">原教程</a></p>
 
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-    
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545489.html">
+                
+                  <h1>sbt-jvm设置</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>用sbt运行一个spark单机任务的时候会报超时异常，怀疑是内存不足导致的。<br/>
+先看下sbt配置<br/>
+<code>sbt -v</code><br/>
+内存确实不够<br/>
+再看sbt在哪里</p>
 
-      </div>
+<pre><code class="language-shell">$:whereis sbt
+/usr/bin/sbt
+$:ls -l /usr/bin/sbt
+lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/sbt
+</code></pre>
 
-      <div class="row">
-        <div class="large-6 columns">
-        <p class="text-left" style="padding:15px 0px;">
-      
-          <a href="14958952545569.html" 
-          title="Previous Post: storm 安装笔记">&laquo; storm 安装笔记</a>
-      
-        </p>
-        </div>
-        <div class="large-6 columns">
-      <p class="text-right" style="padding:15px 0px;">
-      
-          <a  href="14958952545489.html" 
-          title="Next Post: sbt-jvm设置">sbt-jvm设置 &raquo;</a>
-      
-      </p>
-        </div>
-      </div>
-      <div class="comments-wrap">
-        <div class="share-comments">
-          
+<p>这样就找到sbt的安装目录了，打开sbt/conf/sbtopts文件，把以下内容按需要修改后填进去保存。</p>
 
-          
+<pre><code>-J-Xms512M
+-J-Xmx3536M
+-J-Xss1M
+-J-XX:+CMSClassUnloadingEnabled
+-J-XX:+UseConcMarkSweepGC
+-J-XX:MaxPermSize=724M
+-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+</code></pre>
 
-          
-        </div>
-      </div>
-    </div><!-- article-wrap -->
-  </div><!-- large 8 -->
+<p>查看下sbt配置</p>
+
+<p><code>sbt -v</code></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545450.html">
+                
+                  <h1>Gson读取List</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>新发现一个用法，直接上代码了：<br/>
+<code><br/>
+val gs = new Gson()<br/>
+  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
+  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
+</code></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
 
 
-
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="all_3.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			 <a href="all_5.html">&raquo; Next Page</a> 
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
 
  <div class="large-4 medium-4 columns">
   <div class="hide-for-small">

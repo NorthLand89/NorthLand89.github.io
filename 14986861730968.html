@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  线性表 - AI迷思
+  直播间机器人识别 - AI迷思
   
   </title>
   
@@ -119,14 +119,14 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>线性表</h1>
+          <h1>直播间机器人识别</h1>
      
         <div class="read-more clearfix">
-          <span class="date">5/29/2017 21:21 下午</span>
+          <span class="date">6/29/2017 5:42 上午</span>
 
           <span>posted in&nbsp;</span> 
           
-              <span class="posted-in"><a href='algorithm.html'>算法</a></span>
+              <span class="posted-in"><a href='tech.html'>技术栈</a></span>
            
          
           <span class="comments">
@@ -139,71 +139,44 @@
       </div><!-- article -->
 
       <div class="article-content">
-      <p>向量指的应该就是序列表</p>
+      <h2 id="toc_0">目标</h2>
 
-<p>栈和队列都有序列实现和链表实现</p>
+<p>根据弹幕等信息识别出直播间内的机器人。</p>
 
-<h2 id="toc_0">序列（Array Vector）</h2>
+<h2 id="toc_1">数据情况</h2>
 
-<p>太简单略过，有考点再补充</p>
+<p>redis中有最近三天的弹幕数据，包括已经分词的和未分词的。fromid字段就是用户id</p>
 
-<h2 id="toc_1">链表（List）</h2>
-
-<p><em>哨兵节点指的貌似就是空头尾节点</em><br/>
-太简单略过，有考点再补充</p>
-
-<h2 id="toc_2">栈</h2>
-
-<p>栈是后入先出的数据结构，可以用链表或者数组实现。</p>
-
-<p>“技术栈”的意思大抵如此，新学的技术取起来比较快，旧的知识取起来比较慢。</p>
-
-<h3 id="toc_3">算式求值</h3>
-
-<p>用栈对算式求值分为两步，书上是倒着讲的，这里把他顺过来。</p>
+<h2 id="toc_2">机器人模式</h2>
 
 <ol>
-<li>中缀表达式转为后缀表达式</li>
-<li>后缀表达式求值</li>
+<li>从预先准备的弹幕库中指定/随机选弹幕</li>
+<li>重复之前其他用户弹幕</li>
 </ol>
 
-<p>这里以一个算式</p>
+<h2 id="toc_3">方法</h2>
 
-<p><code>1+2*3+(4*5+6)*7</code><br/>
-来表述流程</p>
+<h3 id="toc_4">神经网络</h3>
 
-<h4 id="toc_4">中缀表达式转后缀表达式</h4>
-
-<p>这里将符号分为两类：</p>
-
-<ul>
-<li>数字</li>
-<li>操作符</li>
-</ul>
-
-<p>通过计算得到的后缀表达式即为输出</p>
-
-<ul>
-<li>读到数字时，立即将数字放到输出中。</li>
-<li>如果读到的是操作符，</li>
-</ul>
-
-<p>这部分只有中缀转后缀比较麻烦一点，但不需要太在理论上推转换逻辑，算两个式子自然就明白了，其实只是常规计算顺序的计算机语言表述。</p>
-
-<p>不大好理解的两点：</p>
+<p>使用预先准备的弹幕相比容易识别一点</p>
 
 <ol>
-<li>左括号权值最高，但右括号出现之前不能出栈。</li>
-<li>在拿到优先级低于栈顶操作符的操作符时才触发操作符出栈，一直出到左括号比操作符优先级低的栈顶前（貌似是废话，因为简单示例的操作符只有2个权值）</li>
+<li>训练word2vec</li>
+<li>把句子做成word2vec向量序列</li>
+<li>使用多层LSTM网络做分类</li>
 </ol>
 
-<h4 id="toc_5">后缀表达式计算</h4>
+<p>如果是重复之间其他用户弹幕，那么相比会麻烦一些，特征阶段需要在全库上做，这样数据结构要复杂一些。可能需要的特征如下：</p>
 
-<p>这个就是遍历一遍，数字都进栈，碰到操作符就pop出两个计算后把结果push进去，遍历完剩下的一个就是最终结果了。</p>
+<ol>
+<li>该用户覆盖时间</li>
+<li>该用户覆盖主播</li>
+<li>该用户弹幕频次</li>
+<li>同内容弹幕数量（时间窗内）</li>
+<li>同内容弹幕占比（个人记录）</li>
+</ol>
 
-<h2 id="toc_6">队列</h2>
-
-<p>因为太简单所以略过了。。</p>
+<p><em>涉及同内容弹幕</em>部分需基于</p>
 
 
     
@@ -214,16 +187,16 @@
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="14960914407480.html" 
-          title="Previous Post: 日记">&laquo; 日记</a>
+          <a href="14987984386703.html" 
+          title="Previous Post: sql 字段">&laquo; sql 字段</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="14959068134134.html" 
-          title="Next Post: 计算机系统基础大纲">计算机系统基础大纲 &raquo;</a>
+          <a  href="14984118813264.html" 
+          title="Next Post: 数据结构笔记">数据结构笔记 &raquo;</a>
       
       </p>
         </div>

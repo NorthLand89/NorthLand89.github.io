@@ -119,6 +119,772 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
+                <a class="clearlink" href="15012188936637.html">
+                
+                  <h1>Jena RDF API</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">前言</h2>
+
+<p>这是一个包含了<strong>W3C资源描述框架（RDF）</strong>和<strong>Jena</strong>,一个RDF的Java API 的教程。这篇教程写个不熟悉RDF但熟悉原型（prototyping）或者其他希望快速实现的程序员。假设读者已经有XML和Java的基础。</p>
+
+<p>在初步理解RDF数据模型钳快速实现会导致挫败和失望。单独学习数据模型比较枯燥，就像猜字谜一样。边学边用更好一点。学一点数据模型就把他弄出来，往复前行。这样理论指导实践而实践又验证了理论。数据模型很简单，所以不会花很多时间。</p>
+
+<p>RDF有XML句法，一些人看起来会觉得比较熟悉。这是幻觉。RDF应该按照它的数据模型来理解。RDF数据可以用XML表述，但理解数据模型比理解句法更重要。</p>
+
+<p>一个JenaAPI的实现，包括源码和本文中的样例代码都可以从<a href="http://jena.apache.org/download/index.cgi">jena.apache.org/download/index.cgi</a> 下载到。</p>
+
+<h2 id="toc_1">正文列表</h2>
+
+<h3 id="toc_2">介绍</h3>
+
+<p>资源描述框架（RDF）是一个描述资源的标准（W3C建议）。什么是资源？ 它的精确定义大家仍然争论。我们可以标识的任何东西都可以想象成资源。你是一个资源，你的主页也是个资源，这篇教程，数字1，和莫比迪克的《白鲸》都是。</p>
+
+<p>我们的样例是关于人的，他们使用名片数据资源<a href="http://www.w3.org/TR/vcard-rdf/">RDF representation of VCARDS</a>,RDF 最好理解为图标中的行，一个简单的vcard看起来可能是这样：<br/>
+<img src="media/15012188936637/15012206702534.png" alt=""/>图1<br/>
+资源项，John Smith 在一个椭圆中显示为唯一资源标识符(URI)，在这个例子中是&quot;http://.../JohnSmith&quot;。</p>
+
+<p>资源包含属性，在这些样例中我们关注与 John Smith的名片上属性的顺序。图1只显示了一个属性，就是全名（FN）。一个属性就代表了一个有向链接，以属性名作为标签。属性名同样也是个URI，但这个URI更长且更笨重。在XML表中可以看到。在“：”之前的的称为命名空间前缀，它代表了一个命名空间。在“：”之后的称为本地名，同样代表一个命名空间。</p>
+
+<p>属性通常在写出RDF的XML文件是可以看到，当在途表或者文本中使用时使用简写更方便一些。严格的说，属性名室友URI定义的，前缀:本地名写法是给URI的命名起个别名。在使用浏览器时没有任何必要把一个属性的URI解析为其他东西。</p>
+
+<p>每个属性对应一个值，在这个样例中值是一个文本，我们可以把它当成字符串，文本可以用长方形标识。</p>
+
+<p>Jena是一个可以用来创建操作RDF图的Java API。Jena有实体类来表征图，资源，属性，和文本。这些表征资源，属性和文本的接口就是Resource接口。在Jena中，图被称为模型并且由Model接口表达。</p>
+
+<p>这些代码创建了一个图：</p>
+
+<pre><code class="language-Java">// some definitions
+static String personURI    = &quot;http://somewhere/JohnSmith&quot;;
+static String fullName     = &quot;John Smith&quot;;
+
+// create an empty Model
+Model model = ModelFactory.createDefaultModel();
+
+// create the resource
+Resource johnSmith = model.createResource(personURI);
+
+// add the property
+ johnSmith.addProperty(VCARD.FN, fullName);
+</code></pre>
+
+<p>在开始时定义了几个常亮和一个空模型，使用<code>ModelFactory</code>的<code>crateDefaultModel()</code>方法创建一个基于内存的模型。Jena的Model接口包含了其他的实现，比如说关联数据库的，ModelFactory也可以使用那些模型。</p>
+
+<p>之后我们创建了John Smith资源并添加了一个属性。这个属性是由一个常量类<code>VCARD</code>提供的，这个类还保存了许多代表VCARD表其他字段的属性。Jena也提供了其他比较常见的表的常量类，比如说RDF和RDF表，Dublin Core和OWL。</p>
+
+<p>这段代码创建了资源并添加了属性，可以用更紧凑的瀑布风格：</p>
+
+<pre><code class="language-Java">Resource johnSmith =
+        model.createResource(personURI)
+             .addProperty(VCARD.FN, fullName);
+</code></pre>
+
+<p>这些代码可以在<code>/src-examples</code>的<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial01.java">totorial 1</a>里找到，作为一个练习，修改这些属性并给你自己搞一张名片吧。</p>
+
+<p>现在让我们添加vcard的更多细节，探索RDF和Jena的更多特性。</p>
+
+<p>在第一个样例中，属性值是文本，RDF属性也可以用其他资源作为他们的值。使用通用的RDF技术，这个样例可以展示John Smith 的名字：</p>
+
+<p><img src="media/15012188936637/15012230925824.png" alt=""/>图2</p>
+
+<p>这里我们添加了一个新的属性，<code>vard:N</code>来代表John Smith的名字结构，在这个模型中有几个有趣的地方。注意vcard:N属性使用了一个资源作为他的值，记住椭圆所代表的符合名并没有URI，他是一个空节点。</p>
+
+<p>下面我们使用Jena来构造这个样例，优势很简单的。从声明几个量和创建空模型开始。</p>
+
+<pre><code class="language-Java">// some definitions
+String personURI    = &quot;http://somewhere/JohnSmith&quot;;
+String givenName    = &quot;John&quot;;
+String familyName   = &quot;Smith&quot;;
+String fullName     = givenName + &quot; &quot; + familyName;
+
+// create an empty Model
+Model model = ModelFactory.createDefaultModel();
+
+// create the resource
+//   and add the properties cascading style
+Resource johnSmith
+  = model.createResource(personURI)
+         .addProperty(VCARD.FN, fullName)
+         .addProperty(VCARD.N,
+                      model.createResource()//此处没有URI
+                           .addProperty(VCARD.Given, givenName)
+                           .addProperty(VCARD.Family, familyName));
+</code></pre>
+
+<p>这段代码在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial02.java">tutorial 2</a>的<code>/src-examples</code>目录下。</p>
+
+<h3 id="toc_3">Statements</h3>
+
+<p>每个RDF模型的边被称为一个陈述(<a href="http://jena.apache.org/tutorials/rdf_api.html#glos-Statement">statement</a>),每个陈述断言了一个资源的事实，一个陈述包括三个部分：</p>
+
+<ul>
+<li>初始对象 三元组的初始对象</li>
+<li>属性 属性描述</li>
+<li>对象 三元组的属性值</li>
+</ul>
+
+<p>一个陈述通常也被称为三元组，因为他有三个部分。</p>
+
+<p>一个RDF模型有陈述的集合来表述。每次调用添加属性都会在模型中新加一个陈述（因为模型是集合，所以重复添加什么的无所谓）。Jena的模型定义了一个<code>listStatements()</code>方法返回了一个<code>StmtIterator</code>，他是一个可以遍历模型所有陈述的迭代器。这个迭代器迭代对象是<code>Statement</code>，<code>Statement</code>接口提供了访问三元组中各个对象的方法。<br/>
+现在我们可以扩展样例2把所有陈述列出并打印出来。完整代码在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial03.java">tutorial 3</a>中.</p>
+
+<pre><code class="language-Java">// list the statements in the Model
+StmtIterator iter = model.listStatements();
+
+// print out the predicate, subject and object of each statement
+while (iter.hasNext()) {
+    Statement stmt      = iter.nextStatement();  // get next statement
+    Resource  subject   = stmt.getSubject();     // get the subject
+    Property  predicate = stmt.getPredicate();   // get the predicate
+    RDFNode   object    = stmt.getObject();      // get the object
+
+    System.out.print(subject.toString());
+    System.out.print(&quot; &quot; + predicate.toString() + &quot; &quot;);
+    if (object instanceof Resource) {
+       System.out.print(object.toString());
+    } else {
+        // object is a literal
+        System.out.print(&quot; \&quot;&quot; + object.toString() + &quot;\&quot;&quot;);
+    }
+
+    System.out.println(&quot; .&quot;);
+} 
+</code></pre>
+
+<p>既然一个陈述的object既可以是文本也可以是资源，那么getObject方法返回的就是一个<code>RDFNode</code>对象，它是Resource和Literal的父类。其下的类是正确的类别，所以代码中使用了instanceOf来判断他的类别。</p>
+
+<p>运行时，程序产生了如下输出：</p>
+
+<pre><code class="language-Java">http://somewhere/JohnSmith http://www.w3.org/2001/vcard-rdf/3.0#N anon:14df86:ecc3dee17b:-7fff .
+anon:14df86:ecc3dee17b:-7fff http://www.w3.org/2001/vcard-rdf/3.0#Family  &quot;Smith&quot; .
+anon:14df86:ecc3dee17b:-7fff http://www.w3.org/2001/vcard-rdf/3.0#Given  &quot;John&quot; .
+http://somewhere/JohnSmith http://www.w3.org/2001/vcard-rdf/3.0#FN  &quot;John Smith&quot; .
+</code></pre>
+
+<p>现在你应该搞懂画图是很简单的事情了。如果你看的仔细，你会发现每一行是一个三元组。模型中有四条边，所以有四个陈述。<code>anon:14df86:ecc3dee17b:-7fff</code>是一个Jena生成的内部标识。他并不是一个URI。他只是一个用Jena实现的内部标签二义。</p>
+
+<p>W3C<a href="http://www.w3.org/2001/sw/RDFCore/">RDFCore Working Group</a>定义了一个类似的<a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>声明。下部分我们就能看到Jena有一个能写出这个格式的输出器。</p>
+
+<h3 id="toc_4">Writing RDF</h3>
+
+<p>Jena有RDF 读写成XML格式的方法。我们可以先把RDF写成文件然后再读出来。</p>
+
+<p>样例3把模型携程了三元组表，样例4则在眼里3的基础上把RDF XML表写到了标准输出中。又上代码了，这次的非常简单，<code>model.write</code>方法使用一个输出流做参数把模型写出去</p>
+
+<pre><code class="language-Java">// now write the model in XML form to a file
+model.write(System.out);
+</code></pre>
+
+<p>输出看起来像是这样：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:vcard=&#39;http://www.w3.org/2001/vcard-rdf/3.0#&#39;
+ &gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/JohnSmith&#39;&gt;
+    &lt;vcard:FN&gt;John Smith&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A0&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A0&quot;&gt;
+    &lt;vcard:Given&gt;John&lt;/vcard:Given&gt;
+    &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>这个RDF详细的表明了XML是如何表达RDF的。RDF的XML格式相当复杂。reader的开发基于之前RFDCore WG的开发，他们有更详细的介绍~。我们还是看一下怎么翻译上边的把。</p>
+
+<p>blablabla</p>
+
+<h3 id="toc_5">Reading RDF</h3>
+
+<p>样例5 演示了如果读取一个XML格式的RDF。在这个向导里，我们提供了一个名片的小数据库。下面的代码会读取并写出它。记住这段代码运行时输入文件路径要填对。</p>
+
+<pre><code class="language-Java"> // create an empty model
+ Model model = ModelFactory.createDefaultModel();
+
+ // use the FileManager to find the input file
+ InputStream in = FileManager.get().open( inputFileName );
+if (in == null) {
+    throw new IllegalArgumentException(
+                                 &quot;File: &quot; + inputFileName + &quot; not found&quot;);
+}
+
+// read the RDF/XML file
+model.read(in, null);
+
+// write it to standard out
+model.write(System.out);
+</code></pre>
+
+<p><code>read()</code>方法的第二个参数是用来解析相关URI的 URI，因为测试文件中没有相关的URI，他可以空着。运行时，<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial05.java">tutorial 5</a>会输出下面的XML：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:vcard=&#39;http://www.w3.org/2001/vcard-rdf/3.0#&#39;
+ &gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A0&quot;&gt;
+    &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;John&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/JohnSmith/&#39;&gt;
+    &lt;vcard:FN&gt;John Smith&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A0&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/SarahJones/&#39;&gt;
+    &lt;vcard:FN&gt;Sarah Jones&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A1&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/MattJones/&#39;&gt;
+    &lt;vcard:FN&gt;Matt Jones&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A2&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A3&quot;&gt;
+    &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;Rebecca&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A1&quot;&gt;
+    &lt;vcard:Family&gt;Jones&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;Sarah&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A2&quot;&gt;
+    &lt;vcard:Family&gt;Jones&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;Matthew&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/RebeccaSmith/&#39;&gt;
+    &lt;vcard:FN&gt;Becky Smith&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A3&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<h3 id="toc_6">Controlling Prefixes</h3>
+
+<h4 id="toc_7">显式前缀定义</h4>
+
+<p>在上一章节中，我们看到了输出XML定义的命名空间vcard并用前缀来缩写URIs。当RDF仅使用完整的URIs,或者不适用这个缩略表示，Jena提供了使用前缀映射来控制命名空间的方法。下面是示例代码。</p>
+
+<pre><code class="language-Java"> Model m = ModelFactory.createDefaultModel();
+ String nsA = &quot;http://somewhere/else#&quot;;
+ String nsB = &quot;http://nowhere/else#&quot;;
+ Resource root = m.createResource( nsA + &quot;root&quot; );
+ Property P = m.createProperty( nsA + &quot;P&quot; );
+ Property Q = m.createProperty( nsB + &quot;Q&quot; );
+ Resource x = m.createResource( nsA + &quot;x&quot; );
+ Resource y = m.createResource( nsA + &quot;y&quot; );
+ Resource z = m.createResource( nsA + &quot;z&quot; );
+ m.add( root, P, x ).add( root, P, y ).add( y, Q, z );
+ System.out.println( &quot;# -- no special prefixes defined&quot; );
+ m.write( System.out );
+ System.out.println( &quot;# -- nsA defined&quot; );
+ m.setNsPrefix( &quot;nsA&quot;, nsA );
+ m.write( System.out );
+ System.out.println( &quot;# -- nsA and cat defined&quot; );
+ m.setNsPrefix( &quot;cat&quot;, nsB );
+ m.write( System.out );
+</code></pre>
+
+<p>这段代码的输出是三块 RDF/XML,三个不同的前缀映射。第一个默认的，不同于标准的：</p>
+
+<pre><code class="language-XML"># -- no special prefixes defined
+
+&lt;rdf:RDF
+    xmlns:j.0=&quot;http://nowhere/else#&quot;
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:j.1=&quot;http://somewhere/else#&quot; &gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#root&quot;&gt;
+    &lt;j.1:P rdf:resource=&quot;http://somewhere/else#x&quot;/&gt;
+    &lt;j.1:P rdf:resource=&quot;http://somewhere/else#y&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#y&quot;&gt;
+    &lt;j.0:Q rdf:resource=&quot;http://somewhere/else#z&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>我们看到rdf命名空间自动声明了，因为它需要像<a href="rdf:RDF">rdf:RDF</a>和<a href="rdf:resource">rdf:resource</a>一样的标签。XML命名空间的声明同样需要使用P和Q两个属性。但因为他们的前缀并没有在示例的模型中介绍过。他们的命名空间名就变成了<code>j.0</code>和<code>j.1</code>。</p>
+
+<p><code>setNsPrefix(String prefix, String URI)</code> 方法声明了命名空间的URI可以用前缀碎屑。Jena需要前缀来做一个合法的XML命名空间名，并且URI需要以一个非名称(non-name)字符结束。RDF/XML writer会返回XML 命名空间声明的前缀声明并在输出中使用它们。</p>
+
+<pre><code class="language-XML">
+# -- nsA defined
+
+&lt;rdf:RDF
+    xmlns:j.0=&quot;http://nowhere/else#&quot;
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:nsA=&quot;http://somewhere/else#&quot; &gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#root&quot;&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#x&quot;/&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#y&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#y&quot;&gt;
+    &lt;j.0:Q rdf:resource=&quot;http://somewhere/else#z&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>另一个命名空间仍然得到了构造好的名字，但<code>nsA</code>名称现在用于属性标签。在Jena代码中已经没有需要继续使用前缀名了。</p>
+
+<pre><code class="language-XML">
+# -- nsA and cat defined
+
+&lt;rdf:RDF
+    xmlns:cat=&quot;http://nowhere/else#&quot;
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:nsA=&quot;http://somewhere/else#&quot; &gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#root&quot;&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#x&quot;/&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#y&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#y&quot;&gt;
+    &lt;cat:Q rdf:resource=&quot;http://somewhere/else#z&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<h4 id="toc_8">隐式前缀定义</h4>
+
+<p>就像前缀定义使用<code>setNsPrefix</code>调用一样，Jena会记住<code>model.read()</code>方法中我们使用的前缀。</p>
+
+<p>使用前面部分的输出，粘贴到文件里，运行下面的代码：</p>
+
+<pre><code class="language-Java">Model m2 = ModelFactory.createDefaultModel();
+m2.read( &quot;file:/tmp/fragment.rdf&quot; );
+m2.write( System.out );
+</code></pre>
+
+<p>你会发现输入的前缀在输出中保存了。就算没使用过的前缀都保存了。如果不想再输出中使用的话可以使用<code>removeNsPrefix(String prefix)</code>方法删除前缀。</p>
+
+<p>既然Ntriples不适用任何简易方式写URIs,那么他在输出中不适用前缀并且不提供任何信息。注解**<em>N3</em>，Jena同样支持，不提端前缀名，并且从输入中读取在输出中使用。</p>
+
+<p>Jena 还有其他基于前缀映射的操作。比如提取出包含前缀映射的JavaMap，一次添加一组映射；详细的去看<code>PrefixMapping</code>文档。</p>
+
+<h3 id="toc_9">Jena RDF Packages</h3>
+
+<p>Jena是一个用于网页应用的语义API。对于开发者来说关键的RDF包是<code>org.apache.jena.rdf.model</code>。这个API定义了多想接口这样应用代码在不修改代码的基础上使用不同实现。这个包包含了多个呈现模型，资源，配置，文本，陈述和所有其他RDF的关键概念，还有一个创建模型的ModelFactory。这样应用代码保留了实现时的独立性，最好使用接口，不要指定实现。</p>
+
+<p><code>org.apache.jena.tutorial</code> 包包含了可以工作的样例代码。</p>
+
+<p><code>org.apache.jena...impl</code> 包包含了不同实现。比如说，他们定义了类 <code>ResourceImpl</code>,<code>PropertyImpl</code>和<code>LiteralImpl</code> 这些可以直接使用或者继承泛化的实现。应用应该很少或者从不直接使用这些类。举例来说，不管模型有没有使用，直接创建一个<code>ResourceImpl</code>不如使用<code>createResource</code>方法。两种类型互转是没必要的。</p>
+
+<h3 id="toc_10">Navigating a Model</h3>
+
+<p>看了这么多了，前面的都是创建和读写RDF模型。下面我们看一下如果获取模型持有的数据。</p>
+
+<p>给出一个资源的URI，用模型的<code>Model.getResource(String uri)</code>方法就能拿到这个对象，这个方法定义来返回一个模型中的节点，如果没有就创建一个新的。举例来说，在示例5的模型中取回John Smith资源：</p>
+
+<pre><code class="language-Java">// retrieve the John Smith vcard resource from the model
+Resource vcard = model.getResource(johnSmithURI);
+
+</code></pre>
+
+<p>资源接口定义了大量获取资源属性的方法。<code>Resource.getProperty(Property p)</code> 方法可以方位资源的一个属性。这个方法并不遵从Java的常规方法，它将数据为<code>Statement</code>而不是你期待的<code>Property</code>。把整个陈述返回便于检索它的相关节点。比如说根据寻回vcard:N资源：</p>
+
+<pre><code class="language-Java">// retrieve the value of the N property
+Resource name = (Resource) vcard.getProperty(VCARD.N)
+                                .getObject();
+</code></pre>
+
+<p>通常来说，陈述对象可以是资源或者文本，所以应用代码，知道值一定是一个资源，将返回值转换成Resource。一件Jena一致师徒在做的事情是提供指定类别方法这样应用就不再需要在编译时检查类型。下面的代码可能用起来更方便一些：</p>
+
+<pre><code class="language-Java">// retrieve the value of the N property
+Resource name = vcard.getProperty(VCARD.N)
+                     .getResource();
+</code></pre>
+
+<p>类似第，文本值也可以寻回：</p>
+
+<pre><code class="language-Java">// retrieve the given name property
+String fullName = vcard.getProperty(VCARD.FN)
+                        .getString();
+</code></pre>
+
+<p>在这个例子中，vcard 资源只有一个 <code>vcard：FN</code> 和一个 <code>vcard:n</code>属性，RDF允许资源重复一个属性；比如说Adam也许有几个昵称。我们给他起俩：</p>
+
+<pre><code class="language-Java">// add two nickname properties to vcard
+vcard.addProperty(VCARD.NICKNAME, &quot;Smithy&quot;)
+     .addProperty(VCARD.NICKNAME, &quot;Adman&quot;);
+</code></pre>
+
+<p>就像前面提到过的，Jena 将RDF模型视为一个陈述集合，所以添加一个已经存在于模型中的主语，谓语，宾语并没有影响。Jena并没有定义这两个昵称哪个会被返回。<code>vcard.getProperty(VCARD.NICKNAME)</code>的调用结果将是不确定的。Jena会返回其中一个值，但并不保证两次调用会返回相同的值。</p>
+
+<p>如果一个属性出现了不止一次，那么使用<code>Resource.listProperties（Property p）</code>可以拿到一个包含这些属性的迭代器。这个方法会返回一个Statement泛型的迭代器。</p>
+
+<p>我们可以像这样列举昵称：</p>
+
+<pre><code class="language-Java">// set up the output
+System.out.println(&quot;The nicknames of \&quot;&quot;
+                      + fullName + &quot;\&quot; are:&quot;);
+// list the nicknames
+StmtIterator iter = vcard.listProperties(VCARD.NICKNAME);
+while (iter.hasNext()) {
+    System.out.println(&quot;    &quot; + iter.nextStatement()
+                                    .getObject()
+                                    .toString());
+}
+</code></pre>
+
+<p>这些代码可以在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial06.java">tutorial 6</a>中找到。陈述迭代器<code>iter</code>  可以遍历所有主语是vcard 切谓语是<code>Vcard.NICKNAME</code>的陈述。拿到宾语域并转成字符串。这段代码会输出：</p>
+
+<pre><code>The nicknames of &quot;John Smith&quot; are:
+    Smithy
+    Adman
+</code></pre>
+
+<p>一个资源的所有属性可以使用<code>listProperties()</code>方法列出来。</p>
+
+<h3 id="toc_11">Querying a Model</h3>
+
+<p>上一张我们处理了用已知URI导航模型的案例。这一章我们来搜索模型。核心的Jena提仅提供了功能有限的原始查询。更强大的查询机制由SPARQL提供。</p>
+
+<p><code>Model.listStatements()</code>方法可以列举模型中的所有陈述，可能是查询模型最残暴的方法了。模型大时不推荐使用这种方法。<code>Model.listSubjects</code>也是，但他返回可以遍历所有有属性的资源的迭代器。</p>
+
+<p><code>Model.listSubjectsWithProperty(Property p, RDFNode o)</code>方法会返回一个可遍历所有有资源<code>p</code>和值<code>o</code>的迭代器，如果我们假设只有名片资源有<code>vcard:FN</code>属性，而且它在我们的数据中，所有这样的资源都有这样的一个属性，那么我们可以这样找出所有的vcard：</p>
+
+<pre><code class="language-Java">// list vcards
+ResIterator iter = model.listSubjectsWithProperty(VCARD.FN);
+while (iter.hasNext()) {
+    Resource r = iter.nextResource();
+    ...
+}
+</code></pre>
+
+<p>所有这些方法在一个原始的查询方法上都有一个简单的语法糖<code>model.listStatements(Selector s)</code>,这个方法会返回一个经过Selector s 筛选过的迭代器。这个<code>Selector</code>接口被设计成可扩展的，但现在只有一个实现类：<code>org.apache.jena.rdf.model.SimpleSelector</code>.当需要指定类别而不是接口时<code>SimpleSelector</code>就比较少见了。</p>
+
+<p><code>SimpleSelector</code>构造器接收三个参数：</p>
+
+<p><code>Selector selector = new SimpleSelector(subject, predicate, object)</code></p>
+
+<p>这个选择器会选择所有主谓宾匹配的陈述。<br/>
+如果对应的位置填了null，那么该位置任何值均认为匹配。判断依据为相同的URIs或者相同的空白节点。两个文本的判定则是内容相同；</p>
+
+<p>这样选取所有的内容：</p>
+
+<pre><code class="language-Java">Selector selector = new SimpleSelector(null, null, null);
+</code></pre>
+
+<p>这样选取所有谓语为<code>VCARD.FN</code>的陈述：</p>
+
+<pre><code class="language-Java">Selector selector = new SimpleSelector(null, VCARD.FN, null);
+</code></pre>
+
+<p>作为缩写，一下两种表述是相同的：</p>
+
+<pre><code class="language-Java">listStatements( S, P, O )
+// =
+listStatements( new SimpleSelector( S, P, O ) )
+</code></pre>
+
+<p>下面的代码来自 <a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial07.java">tutorial 7</a> 列举了所有的人的全名：</p>
+
+<pre><code class="language-Java">
+// select all the resources with a VCARD.FN property
+ResIterator iter = model.listSubjectsWithProperty(VCARD.FN);
+if (iter.hasNext()) {
+    System.out.println(&quot;The database contains vcards for:&quot;);
+    while (iter.hasNext()) {
+        System.out.println(&quot;  &quot; + iter.nextResource()
+                                      .getProperty(VCARD.FN)
+                                      .getString());
+    }
+} else {
+    System.out.println(&quot;No vcards were found in the database&quot;);
+}
+         
+</code></pre>
+
+<p>输出应该是这样：</p>
+
+<pre><code>The database contains vcards for:
+  Sarah Jones
+  John Smith
+  Matt Jones
+  Becky Smith
+</code></pre>
+
+<p>你的下一个练习是使用<code>SimpleSelector</code>替换<code>listSubjectsWithProperty</code></p>
+
+<p>让我们看一下如果实现极好的陈述选择。<code>SimpleSelector</code>可以被集成而且他的selects方法可以实现更优的过滤：</p>
+
+<pre><code class="language-Java">// select all the resources with a VCARD.FN property
+// whose value ends with &quot;Smith&quot;
+StmtIterator iter = model.listStatements(
+    new SimpleSelector(null, VCARD.FN, (RDFNode) null) {
+        public boolean selects(Statement s)
+            {return s.getString().endsWith(&quot;Smith&quot;);}
+    });
+</code></pre>
+
+<p>示例代码使用了一个简洁的Java技术，重写了一个方法select，这个方法判断姓是不是“Smith”。注意这个过滤器是针对主语做的，谓语和宾语在select()方法前就做过了，所以其他的测试将只应用于匹配的陈述。</p>
+
+<p>[utorial 8] 中可以看到完整代码，输出类似下面的内容：</p>
+
+<pre><code>The database contains vcards for:
+  John Smith
+  Becky Smith
+</code></pre>
+
+<p>你也许会这么想：</p>
+
+<pre><code>// do all filtering in the selects method
+StmtIterator iter = model.listStatements(
+  new
+      SimpleSelector(null, null, (RDFNode) null) {
+          public boolean selects(Statement s) {
+              return (subject == null   || s.getSubject().equals(subject))
+                  &amp;&amp; (predicate == null || s.getPredicate().equals(predicate))
+                  &amp;&amp; (object == null    || s.getObject().equals(object)) ;
+          }
+     }
+     });
+</code></pre>
+
+<p>他们是等价的：</p>
+
+<pre><code>StmtIterator iter =
+  model.listStatements(new SimpleSelector(subject, predicate, object)
+</code></pre>
+
+<p>机制上他们相同，但第二种表述性能更好一些。</p>
+
+<h3 id="toc_12">Operations on Models</h3>
+
+<p>Jena 提供了三种将模型视为整体的操作。那就是合集，交集和差集。</p>
+
+<p>又犯懒了，直接看图吧：</p>
+
+<p><img src="media/15012188936637/15012377833936.png" alt=""/>图3<br/>
+<img src="media/15012188936637/15012377858005.png" alt=""/>图4<br/>
+<img src="media/15012188936637/15012378315524.png" alt=""/>图5</p>
+
+<p>看看代码怎么写(完整代码在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial09.java">tutorial 9</a>)</p>
+
+<pre><code>// read the RDF/XML files
+model1.read(new InputStreamReader(in1), &quot;&quot;);
+model2.read(new InputStreamReader(in2), &quot;&quot;);
+
+// merge the Models
+Model model = model1.union(model2);
+
+// print the Model as RDF/XML
+model.write(system.out, &quot;RDF/XML-ABBREV&quot;);
+</code></pre>
+
+<p>产生的输出应该是这样的：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:vcard=&quot;http://www.w3.org/2001/vcard-rdf/3.0#&quot;&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/JohnSmith/&quot;&gt;
+    &lt;vcard:EMAIL&gt;
+      &lt;vcard:internet&gt;
+        &lt;rdf:value&gt;John@somewhere.com&lt;/rdf:value&gt;
+      &lt;/vcard:internet&gt;
+    &lt;/vcard:EMAIL&gt;
+    &lt;vcard:N rdf:parseType=&quot;Resource&quot;&gt;
+      &lt;vcard:Given&gt;John&lt;/vcard:Given&gt;
+      &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+    &lt;/vcard:N&gt;
+    &lt;vcard:FN&gt;John Smith&lt;/vcard:FN&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>几遍你不熟悉RDF/XML语法的细节，你也能看出模型如预期般合并在一起了。交集和差集的计算也类似，使用<code>.intersection(Model)</code>和<code>.difference(Model)</code>就行了；更多细节看<a href="http://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html#difference(org.apache.jena.rdf.model.Model)">difference</a>and<a href="http://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html#intersection(org.apache.jena.rdf.model.Model)">intersection</a></p>
+
+<h3 id="toc_13">Containers</h3>
+
+<p>RDF 定义了一个特殊的资源类型来表征事物的集合。这些资源被称为<code>containers</code>。容器的成员必须是文本或资源集合。有三种类型的容器：</p>
+
+<ul>
+<li>BAG 无序集合</li>
+<li>ALT 用于代表候选的无序集合（unordered collection intended to represent alternatives）</li>
+<li>SEQ 有序集合</li>
+</ul>
+
+<p>容器用资源来表征，如果资源是容器的话它的属性会有<code>rdf:type</code>，其中type可能为<code>rdf:Bag</code>, <code>rdf:Alt</code> 或 <code>rdf:Seq</code>或者这仨的子类，基于实际容器的类型。容器的第一个属性是容器的 <code>rdf_1</code>属性；以此类推。<code>rdf_nnn</code>属性就是常规的属性。</p>
+
+<p>举个例子，包含Smith的简单bag vcards容器 看起来可能是这样：</p>
+
+<p><img src="media/15012188936637/15012388174221.png" alt=""/>图6</p>
+
+<p>这样呆子的成员就都用属性 <code>rdf:_1，rdf:_2...</code>这样描述了，我们可以交换rdf:_1 和rdf:_2 属性位置，但没啥影响。</p>
+
+<p>Alt&#39;s是用来表征替补的。举个例子，一个资源代表了一个软件产品。他可能有一个属性来说明它是怎么获得的。这个属性就可能是一个包含了可能下载自那里的链接的ALt集合。Alt&#39;s是无序的，但rdf:_1属性有特殊含义，它代表了默认选择。</p>
+
+<p>容器可以使用基本的资源和属性机制操作，Jena有显示的接口和隐式的类来处理他们。用对象来操作一个容器是不明智的，尽量使用低阶方法来改变容器状态。</p>
+
+<p>让我们修改示例8 的代码：</p>
+
+<pre><code class="language-Java">// create a bag
+Bag smiths = model.createBag();
+
+// select all the resources with a VCARD.FN property
+// whose value ends with &quot;Smith&quot;
+StmtIterator iter = model.listStatements(
+    new SimpleSelector(null, VCARD.FN, (RDFNode) null) {
+        public boolean selects(Statement s) {
+                return s.getString().endsWith(&quot;Smith&quot;);
+        }
+    });
+// add the Smith&#39;s to the bag
+while (iter.hasNext()) {
+    smiths.add(iter.nextStatement().getSubject());
+}
+</code></pre>
+
+<p>如果我们把模型写出去，内容会是这样：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:vcard=&#39;http://www.w3.org/2001/vcard-rdf/3.0#&#39;
+ &gt;
+...
+  &lt;rdf:Description rdf:nodeID=&quot;A3&quot;&gt;
+    &lt;rdf:type rdf:resource=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag&#39;/&gt;
+    &lt;rdf:_1 rdf:resource=&#39;http://somewhere/JohnSmith/&#39;/&gt;
+    &lt;rdf:_2 rdf:resource=&#39;http://somewhere/RebeccaSmith/&#39;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>看到袋子容器啥样了吧。</p>
+
+<p>容器接口提供了一个遍历容器内容的迭代器：</p>
+
+<pre><code class="language-Java">// print out the members of the bag
+NodeIterator iter2 = smiths.iterator();
+if (iter2.hasNext()) {
+    System.out.println(&quot;The bag contains:&quot;);
+    while (iter2.hasNext()) {
+        System.out.println(&quot;  &quot; +
+            ((Resource) iter2.next())
+                            .getProperty(VCARD.FN)
+                            .getString());
+    }
+} else {
+    System.out.println(&quot;The bag is empty&quot;);
+}
+</code></pre>
+
+<p>生成内容如下：</p>
+
+<pre><code>The bag contains:
+  John Smith
+  Becky Smith
+</code></pre>
+
+<p>可执行代码可以在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial10.java">tutorial 10</a>中看到。示例10 把一些复杂的样例整合在一起了。</p>
+
+<p>Jena 类提供的操作容器方法包括新成员，居中插入和移除已有成员。Jena 容器类当前可以保证有序的属性名是连续的。RDFCore WG已经放松了这个限制，这样就可以用碎片来代表容器。这里Jena 未来可能会有改变。</p>
+
+<h3 id="toc_14">More about Literals and Datatypes</h3>
+
+<p>RDF 文本不是简单的字符串。文本有语言标签来表明是什么语言的。“chat”在英语和发育中的意思是不同的。这个奇怪的举动是原生RDF/XML语法认为规定的。</p>
+
+<p>再远一点，文本有两种形式，第一种就是字符串内容。另一种文本内容是类似XML。当一个RDF模型作为RDF/XML写入的时候 会用一个parseType=‘Literal’来代表这种构造方法。</p>
+
+<p>在Jena中，这些文书属性一般会在文本构造的时候设置，比如<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial11.java">turtorial 11</a>：</p>
+
+<pre><code class="language-Java">// create the resource
+Resource r = model.createResource();
+
+// add the property
+r.addProperty(RDFS.label, model.createLiteral(&quot;chat&quot;, &quot;en&quot;))
+ .addProperty(RDFS.label, model.createLiteral(&quot;chat&quot;, &quot;fr&quot;))
+ .addProperty(RDFS.label, model.createLiteral(&quot;&lt;em&gt;chat&lt;/em&gt;&quot;, true));
+
+// write out the Model
+model.write(system.out);
+</code></pre>
+
+<p>输出为：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:rdfs=&#39;http://www.w3.org/2000/01/rdf-schema#&#39;
+ &gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A0&quot;&gt;
+    &lt;rdfs:label xml:lang=&#39;en&#39;&gt;chat&lt;/rdfs:label&gt;
+    &lt;rdfs:label xml:lang=&#39;fr&#39;&gt;chat&lt;/rdfs:label&gt;
+    &lt;rdfs:label rdf:parseType=&#39;Literal&#39;&gt;&lt;em&gt;chat&lt;/em&gt;&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>如果预期两个文本相同，那他们必须是同一类型的文本，而且语言标签必须相同。简单字符串必须完全相等。XML文本有两个说明要想等。第一个判定依据是刚刚提过的条件满足且字符串相等。另一个判据是他们标准化后的字符串相等。</p>
+
+<p>Jena 的接口同事支持带类型的文本。一种过时的风格是将带类型文本当做文本的缩写：带类型的值会转换成Java的字符串存在模型里。举例来说，试试（简单文本木有，我们可以通过model.createLiteral(。。。)调用）：</p>
+
+<pre><code class="language-Java">// create the resource
+Resource r = model.createResource();
+
+// add the property
+r.addProperty(RDFS.label, &quot;11&quot;)
+ .addProperty(RDFS.label, 11);
+
+// write out the Model
+model.write(system.out, &quot;N-TRIPLE&quot;);
+</code></pre>
+
+<p>输出为：</p>
+
+<pre><code class="language-XML">_:A... &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; &quot;11&quot; .
+</code></pre>
+
+<p>既然两个字符串都是11,那么只有一个陈述可以添加。</p>
+
+<p>RDFCore WG已经定义了RDF数据类型支持机制。Jena通过标签文本机制支持；本文中不讨论这个问题。</p>
+
+<h3 id="toc_15">Glossary</h3>
+
+<p><a href="">Blank Node</a><br/>
+Represents a resource, but does not indicate a URI for the resource. Blank nodes act like existentially qualified variables in first order logic.<br/>
+<a href="">Dublin Core</a><br/>
+A standard for metadata about web resources. Further information can be found at the Dublin Core web site.<br/>
+<a href="">Literal</a><br/>
+A string of characters which can be the value of a property.<br/>
+<a href="">Object</a><br/>
+The part of a triple which is the value of the statement.<br/>
+<a href="">Predicate</a><br/>
+The property part of a triple.<br/>
+<a href="">Property</a><br/>
+A property is an attribute of a resource. For example DC.title is a property, as is RDF.type.<br/>
+<a href="">Resource</a><br/>
+Some entity. It could be a web resource such as web page, or it could be a concrete physical thing such as a tree or a car. It could be an abstract idea such as chess or football. Resources are named by URI&#39;s.<br/>
+<a href="">Statement</a><br/>
+An arc in an RDF Model, normally interpreted as a fact.<br/>
+<a href="">Subject</a><br/>
+The resource which is the source of an arc in an RDF Model<br/>
+<a href="">Triple</a><br/>
+A structure containing a subject, a predicate and an object. Another term for a statement.</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">7/28/2017 13:14 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='doc.html'>文档</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
                 <a class="clearlink" href="14969159275994.html">
                 
                   <h1>Faster R-CNN</h1>
@@ -3899,214 +4665,6 @@ submit.to_csv(&quot;../working/submit.csv&quot;, index=False)
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="14960949349195.html">
-                
-                  <h1>keras</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>补空<br/>
-待翻译~</p>
-
-<p><a href="https://travis-ci.org/fchollet/keras"><img src="https://travis-ci.org/fchollet/keras.svg?branch=master" alt="Build Status"/></a><br/>
-<a href="https://github.com/fchollet/keras/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000" alt="license"/></a></p>
-
-<h2 id="toc_0">You have just found Keras.</h2>
-
-<p>Keras is a high-level neural networks API, written in Python and capable of running on top of either <a href="https://github.com/tensorflow/tensorflow">TensorFlow</a> or <a href="https://github.com/Theano/Theano">Theano</a>. It was developed with a focus on enabling fast experimentation. <em>Being able to go from idea to result with the least possible delay is key to doing good research.</em></p>
-
-<p>Use Keras if you need a deep learning library that:</p>
-
-<ul>
-<li>Allows for easy and fast prototyping (through user friendliness, modularity, and extensibility).</li>
-<li>Supports both convolutional networks and recurrent networks, as well as combinations of the two.</li>
-<li>Runs seamlessly on CPU and GPU.</li>
-</ul>
-
-<p>Read the documentation at <a href="http://keras.io">Keras.io</a>.</p>
-
-<p>Keras is compatible with: <strong>Python 2.7-3.5</strong>.</p>
-
-<hr/>
-
-<h2 id="toc_1">Guiding principles</h2>
-
-<ul>
-<li><p>__User friendliness.__ Keras is an API designed for human beings, not machines. It puts user experience front and center. Keras follows best practices for reducing cognitive load: it offers consistent &amp; simple APIs, it minimizes the number of user actions required for common use cases, and it provides clear and actionable feedback upon user error.</p></li>
-<li><p>__Modularity.__ A model is understood as a sequence or a graph of standalone, fully-configurable modules that can be plugged together with as little restrictions as possible. In particular, neural layers, cost functions, optimizers, initialization schemes, activation functions, regularization schemes are all standalone modules that you can combine to create new models.</p></li>
-<li><p>__Easy extensibility.__ New modules are simple to add (as new classes and functions), and existing modules provide ample examples. To be able to easily create new modules allows for total expressiveness, making Keras suitable for advanced research.</p></li>
-<li><p>__Work with Python__. No separate models configuration files in a declarative format. Models are described in Python code, which is compact, easier to debug, and allows for ease of extensibility.</p></li>
-</ul>
-
-<hr/>
-
-<h2 id="toc_2">Getting started: 30 seconds to Keras</h2>
-
-<p>The core data structure of Keras is a <strong>model</strong>, a way to organize layers. The simplest type of model is the <a href="http://keras.io/getting-started/sequential-model-guide"><code>Sequential</code></a> model, a linear stack of layers. For more complex architectures, you should use the <a href="http://keras.io/getting-started/functional-api-guide">Keras functional API</a>, which allows to build arbitrary graphs of layers.</p>
-
-<p>Here is the <code>Sequential</code> model:</p>
-
-<pre><code class="language-python">from keras.models import Sequential
-
-model = Sequential()
-</code></pre>
-
-<p>Stacking layers is as easy as <code>.add()</code>:</p>
-
-<pre><code class="language-python">from keras.layers import Dense, Activation
-
-model.add(Dense(units=64, input_dim=100))
-model.add(Activation(&#39;relu&#39;))
-model.add(Dense(units=10))
-model.add(Activation(&#39;softmax&#39;))
-</code></pre>
-
-<p>Once your model looks good, configure its learning process with <code>.compile()</code>:</p>
-
-<pre><code class="language-python">model.compile(loss=&#39;categorical_crossentropy&#39;,
-              optimizer=&#39;sgd&#39;,
-              metrics=[&#39;accuracy&#39;])
-</code></pre>
-
-<p>If you need to, you can further configure your optimizer. A core principle of Keras is to make things reasonably simple, while allowing the user to be fully in control when they need to (the ultimate control being the easy extensibility of the source code).<br/>
-<code>python<br/>
-model.compile(loss=keras.losses.categorical_crossentropy,<br/>
-              optimizer=keras.optimizers.SGD(lr=0.01, momentum=0.9, nesterov=True))<br/>
-</code></p>
-
-<p>You can now iterate on your training data in batches:</p>
-
-<pre><code class="language-python"># x_train and y_train are Numpy arrays --just like in the Scikit-Learn API.
-model.fit(x_train, y_train, epochs=5, batch_size=32)
-</code></pre>
-
-<p>Alternatively, you can feed batches to your model manually:</p>
-
-<pre><code class="language-python">model.train_on_batch(x_batch, y_batch)
-</code></pre>
-
-<p>Evaluate your performance in one line:</p>
-
-<pre><code class="language-python">loss_and_metrics = model.evaluate(x_test, y_test, batch_size=128)
-</code></pre>
-
-<p>Or generate predictions on new data:</p>
-
-<pre><code class="language-python">classes = model.predict(x_test, batch_size=128)
-</code></pre>
-
-<p>Building a question answering system, an image classification model, a Neural Turing Machine, or any other model is just as fast. The ideas behind deep learning are simple, so why should their implementation be painful?</p>
-
-<p>For a more in-depth tutorial about Keras, you can check out:</p>
-
-<ul>
-<li><a href="http://keras.io/getting-started/sequential-model-guide">Getting started with the Sequential model</a></li>
-<li><a href="http://keras.io/getting-started/functional-api-guide">Getting started with the functional API</a></li>
-</ul>
-
-<p>In the <a href="https://github.com/fchollet/keras/tree/master/examples">examples folder</a> of the repository, you will find more advanced models: question-answering with memory networks, text generation with stacked LSTMs, etc.</p>
-
-<hr/>
-
-<h2 id="toc_3">Installation</h2>
-
-<p>Keras uses the following dependencies:</p>
-
-<ul>
-<li>numpy, scipy</li>
-<li>yaml</li>
-<li>HDF5 and h5py (optional, required if you use model saving/loading functions)</li>
-<li>Optional but recommended if you use CNNs: cuDNN.</li>
-</ul>
-
-<p><em>When using the TensorFlow backend:</em></p>
-
-<ul>
-<li>TensorFlow
-
-<ul>
-<li><a href="https://www.tensorflow.org/install/">See installation instructions</a>.</li>
-</ul></li>
-</ul>
-
-<p><em>When using the Theano backend:</em></p>
-
-<ul>
-<li>Theano
-
-<ul>
-<li><a href="http://deeplearning.net/software/theano/install.html#install">See installation instructions</a>.</li>
-</ul></li>
-</ul>
-
-<p>To install Keras, <code>cd</code> to the Keras folder and run the install command:<br/>
-<code>sh<br/>
-sudo python setup.py install<br/>
-</code></p>
-
-<p>You can also install Keras from PyPI:<br/>
-<code>sh<br/>
-sudo pip install keras<br/>
-</code></p>
-
-<hr/>
-
-<h2 id="toc_4">Switching from TensorFlow to Theano</h2>
-
-<p>By default, Keras will use TensorFlow as its tensor manipulation library. <a href="http://keras.io/backend/">Follow these instructions</a> to configure the Keras backend.</p>
-
-<hr/>
-
-<h2 id="toc_5">Support</h2>
-
-<p>You can ask questions and join the development discussion:</p>
-
-<ul>
-<li>On the <a href="https://groups.google.com/forum/#!forum/keras-users">Keras Google group</a>.</li>
-<li>On the <a href="https://kerasteam.slack.com">Keras Slack channel</a>. Use <a href="https://keras-slack-autojoin.herokuapp.com/">this link</a> to request an invitation to the channel.</li>
-</ul>
-
-<p>You can also post <strong>bug reports and feature requests</strong> (only) in <a href="https://github.com/fchollet/keras/issues">Github issues</a>. Make sure to read <a href="https://github.com/fchollet/keras/blob/master/CONTRIBUTING.md">our guidelines</a> first.</p>
-
-<hr/>
-
-<h2 id="toc_6">Why this name, Keras?</h2>
-
-<p>Keras (κέρας) means <u>horn</u> in Greek. It is a reference to a literary image from ancient Greek and Latin literature, first found in the <u>Odyssey</u>, where dream spirits (_Oneiroi_, singular <u>Oneiros</u>) are divided between those who deceive men with false visions, who arrive to Earth through a gate of ivory, and those who announce a future that will come to pass, who arrive through a gate of horn. It&#39;s a play on the words κέρας (horn) / κραίνω (fulfill), and ἐλέφας (ivory) / ἐλεφαίρομαι (deceive).</p>
-
-<p>Keras was initially developed as part of the research effort of project ONEIROS (Open-ended Neuro-Electronic Intelligent Robot Operating System).</p>
-
-<blockquote>
-<p>_&quot;Oneiroi are beyond our unravelling --who can be sure what tale they tell? Not all that men look for comes to pass. Two gates there are that give passage to fleeting Oneiroi; one is made of horn, one of ivory. The Oneiroi that pass through sawn ivory are deceitful, bearing a message that will not be fulfilled; those that come out through polished horn have truth behind them, to be accomplished for men who see them.&quot;_ Homer, Odyssey 19. 562 ff (Shewring translation).</p>
-</blockquote>
-
-<hr/>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">5/30/2017 5:55 上午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='doc.html'>文档</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -4118,7 +4676,7 @@ sudo pip install keras<br/>
 			  </div>
 			  <div class="large-6 columns">
 			<p class="text-right" style="padding-top:25px;">
-			
+			 <a href="doc_1.html">&raquo; Next Page</a> 
 			</p>
 			  </div>
 			</div>
@@ -4186,31 +4744,31 @@ sudo pip install keras<br/>
 	      
 		      
 			      <li class="post">
-			        <a href="14977968463363.html">二叉树</a>
+			        <a href="15015102563853.html">软件工程基础</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14969159275994.html">Faster R-CNN</a>
+			        <a href="15015093939550.html">新大纲</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			        <a href="15012188936637.html">Jena RDF API</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14967180723369.html"></a>
+			        <a href="14988073837096.html">自动补全标签思路</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			        <a href="14987984386703.html">sql 字段</a>
 			      </li>
 		     
 		  
@@ -4286,7 +4844,7 @@ Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
     </script>
 
     <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
 
   </body>

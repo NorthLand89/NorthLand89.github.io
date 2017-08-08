@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  线性表 - AI迷思
+  AI迷思
   
   </title>
   
@@ -110,138 +110,164 @@
        
 
  <script type="text/javascript">
-  $(function(){
-    $('#menu_item_index').addClass('is_active');
-  });
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
 </script>
 <div class="row">
-  <div class="large-8 medium-8 columns">
-      <div class="markdown-body article-wrap">
-       <div class="article">
-          
-          <h1>线性表</h1>
-     
-        <div class="read-more clearfix">
-          <span class="date">5/29/2017 21:21 下午</span>
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="14958952545409.html">
+                
+                  <h1>翻译评估方法-BLEU</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Bilingual Evaluation Understudy</p>
 
-          <span>posted in&nbsp;</span> 
-          
-              <span class="posted-in"><a href='algorithm.html'>算法</a></span>
-           
-         
-          <span class="comments">
-            
+<h2 id="toc_0">场景</h2>
 
-            
-          </span>
-
-        </div>
-      </div><!-- article -->
-
-      <div class="article-content">
-      <p>向量指的应该就是序列表</p>
-
-<p>栈和队列都有序列实现和链表实现</p>
-
-<h2 id="toc_0">序列（Array Vector）</h2>
-
-<p>太简单略过，有考点再补充</p>
-
-<h2 id="toc_1">链表（List）</h2>
-
-<p><em>哨兵节点指的貌似就是空头尾节点</em><br/>
-太简单略过，有考点再补充</p>
-
-<h2 id="toc_2">栈</h2>
-
-<p>栈是后入先出的数据结构，可以用链表或者数组实现。</p>
-
-<p>“技术栈”的意思大抵如此，新学的技术取起来比较快，旧的知识取起来比较慢。</p>
-
-<h3 id="toc_3">算式求值</h3>
-
-<p>用栈对算式求值分为两步，书上是倒着讲的，这里把他顺过来。</p>
-
-<ol>
-<li>中缀表达式转为后缀表达式</li>
-<li>后缀表达式求值</li>
-</ol>
-
-<p>这里以一个算式</p>
-
-<p><code>1+2*3+(4*5+6)*7</code><br/>
-来表述流程</p>
-
-<h4 id="toc_4">中缀表达式转后缀表达式</h4>
-
-<p>这里将符号分为两类：</p>
+<p><img src="media/14958952545409/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-27%20%E4%B8%8B%E5%8D%8810.31.17.png" alt="屏幕快照 2017-05-27 下午10.31.17"/></p>
 
 <ul>
-<li>数字</li>
-<li>操作符</li>
+<li>候选翻译 candidate</li>
+<li>参考翻译 reference</li>
 </ul>
 
-<p>通过计算得到的后缀表达式即为输出</p>
+<h2 id="toc_1">1阶</h2>
+
+<p>候选1相比于候选2 与reference 有更多的相同词和相同word-N-grame</p>
+
+<p>-&gt;计算准确评分（正确N-grames的期望）</p>
+
+<p>调整N-gram准确率（每个N-gram）为：</p>
+
+<p>\(count_{clip}(w)=min(count_{candidate}(w),maxcount_{reference}(w))\)</p>
+
+<p>候选1的\[count_{clip}(w=&quot;the&quot;)\]指的是什么呢？<br/>
+min(3,4)=3<br/>
+the在候选1中出现了3次，在reference3中出现了4次。</p>
 
 <ul>
-<li>读到数字时，立即将数字放到输出中。</li>
-<li>如果读到的是操作符，</li>
+<li>计算候选翻译中出现的所有词的\[count_{clip}(w)\]</li>
+<li>unigram准确率=候选词中正确词的期望</li>
+<li>\[ p_{unigram} =\frac{count_{clip}(w_1)+count_{clip}(w_2)+...+count_{clip}(w_M)}{count(w_1)+count(w_2)+...+count(w_M)}  \]</li>
+<li>\[p_{unigram}=\frac{\sum_{i=1}^M count_{clip}(w_i)}{\sum_{i=1}^M count(w_i)}\]</li>
+<li>计算所有翻译过句子的\[count_{clip}(w)\]</li>
+<li>把所有翻译过的句子的\[p_1=p_{unigram}\]算出来</li>
 </ul>
 
-<p>这部分只有中缀转后缀比较麻烦一点，但不需要太在理论上推转换逻辑，算两个式子自然就明白了，其实只是常规计算顺序的计算机语言表述。</p>
+<h2 id="toc_2">高阶</h2>
 
-<p>不大好理解的两点：</p>
+<p>用同样的步骤计算数量更多的N-gram：</p>
 
-<ol>
-<li>左括号权值最高，但右括号出现之前不能出栈。</li>
-<li>在拿到优先级低于栈顶操作符的操作符时才触发操作符出栈，一直出到左括号比操作符优先级低的栈顶前（貌似是废话，因为简单示例的操作符只有2个权值）</li>
-</ol>
+<ul>
+<li>bigram</li>
+<li>trigram</li>
+<li>...</li>
+</ul>
 
-<h4 id="toc_5">后缀表达式计算</h4>
+<p>-&gt; \[p_1,p_2,p_3\]</p>
 
-<p>这个就是遍历一遍，数字都进栈，碰到操作符就pop出两个计算后把结果push进去，遍历完剩下的一个就是最终结果了。</p>
+<h3 id="toc_3">汇总计算</h3>
 
-<h2 id="toc_6">队列</h2>
+<p>把所有精确率放在一起计算几何均值。</p>
 
-<p>因为太简单所以略过了。。</p>
+<p>P=\[\sqrt[n]{p_1*p_2*...*p_n}\]<br/>
+ =\[(p_1*p_2*...*p_n)^{\frac{1}{n}}\]<br/>
+ =\[(\prod_{i=1}^n p_i)^{\frac{1}{n}}\]</p>
+
+<p>为了防止越界：</p>
+
+<p>P=\[e^{\frac{1}{n} {\sum_{i=1}^n log_e{p_i}}}\]</p>
+
+<p>为了让翻译尽量简短，使用简洁处罚（Brevity penalty，BP）：<br/>
+\[BP=\begin{cases} 1,&amp;\mbox{if candidate c&gt;reference r} \\ e^{(1-r/c)}, &amp; \mbox{if candidate c } \leq \mbox{ reference r} \end{cases}\]</p>
+
+<p>把他们都放在一起：</p>
+
+<p>\[BLEU=BP*e^{(\frac{1}{n}*\sum_{n=1}^N log_e(p_n))}\]</p>
+
+<p>通常设置：N=4，使用4以下的n-grams</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='algorithm.html'>算法</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545289.html">
+                
+                  <h1>序列</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">链表</h2>
+
+<h2 id="toc_1">栈</h2>
+
+<h2 id="toc_2">队列</h2>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
 
 
-    
-
-      </div>
-
-      <div class="row">
-        <div class="large-6 columns">
-        <p class="text-left" style="padding:15px 0px;">
-      
-          <a href="14960914407480.html" 
-          title="Previous Post: 日记">&laquo; 日记</a>
-      
-        </p>
-        </div>
-        <div class="large-6 columns">
-      <p class="text-right" style="padding:15px 0px;">
-      
-          <a  href="14959068134134.html" 
-          title="Next Post: 计算机系统基础大纲">计算机系统基础大纲 &raquo;</a>
-      
-      </p>
-        </div>
-      </div>
-      <div class="comments-wrap">
-        <div class="share-comments">
-          
-
-          
-
-          
-        </div>
-      </div>
-    </div><!-- article-wrap -->
-  </div><!-- large 8 -->
-
-
-
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="all_4.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
 
  <div class="large-4 medium-4 columns">
   <div class="hide-for-small">

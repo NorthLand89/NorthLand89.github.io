@@ -119,6 +119,220 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
+                <a class="clearlink" href="14962271262431.html">
+                
+                  <h1>jupyter 免加密连接</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>很简单：</p>
+
+<p>写个脚本</p>
+
+<p><code>jupyter notebook --port=9999 --ip=192.168.130.230</code></p>
+
+<ul>
+<li><code>0.0.0.0</code>就是本机可以访问</li>
+<li><code>192.168....</code>就是内网可以访问</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/31/2017 18:38 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545569.html">
+                
+                  <h1>storm 安装笔记</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ul>
+<li>环境</li>
+<li>安装</li>
+<li>配置</li>
+<li>测试</li>
+</ul>
+
+<h2 id="toc_0">环境</h2>
+
+<p>本次安装使用ubuntu-14.04,storm-1.0.2,.</p>
+
+<h2 id="toc_1">安装</h2>
+
+<h3 id="toc_2">1.zookeeper安装</h3>
+
+<p>这里直接使用docker镜像<a href="https://github.com/jplock/docker-zookeeper">jplock/zookeeper</a> 运行即可.</p>
+
+<h3 id="toc_3">2,storm</h3>
+
+<p>解压即可.</p>
+
+<h2 id="toc_4">配置</h2>
+
+<p>该目录需要有读写权限.</p>
+
+<pre><code>storm.local.dir: &quot;/tmp/storm/&quot;
+</code></pre>
+
+<p>这应该是工作节点的thrift端口,几个端口对应每个worker节点几个线程.</p>
+
+<pre><code>supervisor.slots.ports:
+- 10001
+- 10002
+</code></pre>
+
+<h2 id="toc_5">使用</h2>
+
+<pre><code>storm jar Getting-Started-0.0.1-SNAPSHOT.jar com.kanke.test.ClusterEdition
+</code></pre>
+
+<p>注意,storm集群与单机版不同,并不会立即调用clean生命周期,测试打印需写在excute周期内,打印在[INFO]的[STDO]中.</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545528.html">
+                
+                  <h1>ssh反向隧道连接局域网中的linux主机</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>玩树莓派时发现的方法,当时电脑和树莓派在一个局域网里,但树莓派一重启ip就变,电脑查不到,上网查到这么一个方法,正好能用在工作里.</p>
+
+<p>就是这东西,袖珍linux电脑,可以接灯泡传感器显示屏舵机什么的,挺有意思的.<br/>
+<img src="media/14958952545528/14958955969092.jpg" alt=""/></p>
+
+<p>场景是linux电脑A想用ssh连接到B,AB都能连外网但AB互相看不到.这时候只要有一台有公网IP的服务器C,就能通过ssh从A访问B.</p>
+
+<p>下面以ubuntu系统为例,从A连到B.</p>
+
+<p>首先,B,C安装ssh-server(记不清的话都安上)</p>
+
+<pre><code>     sudo apt-get install autossh-server
+</code></pre>
+
+<p>修改服务器C的ssh配置文件</p>
+
+<pre><code>     ubuntu:   /etc/ssh/sshd_config
+     centos:   /etc/ssh/sshd_conf
+</code></pre>
+
+<p>在文件末尾添加一行:</p>
+
+<pre><code>     GatewayPorts clientspecified
+</code></pre>
+
+<p>B,C重启ssh服务(保险起见,似乎不重启也没啥事)</p>
+
+<pre><code>      sudo service ssh restart
+</code></pre>
+
+<p>B安装autossh</p>
+
+<pre><code>      sudo apt-get install autossh
+</code></pre>
+
+<p>B运行命令,简单理解为B通过ssh连接服务器C把自己的的22端口挂到服务器C的10022端口上去.</p>
+
+<pre><code>    autossh -M 10900 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R 服务器C的地址:10022:localhost:22 服务器C的用户名@服务器C的地址
+</code></pre>
+
+<p>现在A就可以直接通过服务器C的10022端口,用B的用户名连接到B了.</p>
+
+<pre><code>    ssh -p10022 B的用户名@C的地址
+</code></pre>
+
+<p>如果过程中哪个步骤提示host与已知的不匹配可以尝试</p>
+
+<pre><code>    rm ~/.ssh/known_hosts
+</code></pre>
+
+<p>过程中会有一些提示记住host输入密码什么的就略过了.</p>
+
+<p>下面是另一个场景,共4台服务器A,B,C,D.C是一台有公网IP的服务器,A没有公网IP能上网,B和D在一个局域网中,D可以连B,B连不了D(没关系的),B不能连外网,D可以连外网.目标还是从A连到B,只是现在B不能连外网了,要通过D连接.</p>
+
+<p>方法比较简单,除了autossh命令外其他步骤相同.</p>
+
+<p>只有D可以同时连B和C,autossh命令在要在D上运行.就直接贴命令了,C域名是www.aimyth.com,B的IP是192.168.1.107.</p>
+
+<pre><code>    autossh -M 18731 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R www.aimyth.com:10023:192.168.1.107:22 sean@www.aimyth.com
+</code></pre>
+
+<p>这个命令运行完就可以直接从外网ssh连接B了</p>
+
+<pre><code>    ssh -p10023 B的用户名@www.aimyth.com
+</code></pre>
+
+<p><a href="http://network.chinabyte.com/140/13402140.shtml">原教程</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
                 <a class="clearlink" href="14958952545489.html">
                 
                   <h1>sbt-jvm设置</h1>
@@ -293,31 +507,31 @@ val gs = new Gson()<br/>
 	      
 		      
 			      <li class="post">
-			        <a href="14977968463363.html">二叉树</a>
+			        <a href="15015102563853.html">软件工程基础</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14969159275994.html">Faster R-CNN</a>
+			        <a href="15015093939550.html">新大纲</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			        <a href="15012188936637.html">Jena RDF API</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14967180723369.html"></a>
+			        <a href="14988073837096.html">自动补全标签思路</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			        <a href="14987984386703.html">sql 字段</a>
 			      </li>
 		     
 		  
@@ -393,7 +607,7 @@ Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
     </script>
 
     <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
 
   </body>

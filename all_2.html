@@ -119,444 +119,3402 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="14960640819488.html">
+                <a class="clearlink" href="14967180723369.html">
                 
-                  <h1>线性表</h1>
+                  <h1></h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>向量指的应该就是序列表</p>
+                        	<p><a id='top'></a></p>
 
-<p>栈和队列都有序列实现和链表实现</p>
+<h1 id="toc_0">泰坦尼克数据分析的python漫游</h1>
 
-<h2 id="toc_0">序列（Array Vector）</h2>
-
-<p>太简单略过，有考点再补充</p>
-
-<h2 id="toc_1">链表（List）</h2>
-
-<p><em>哨兵节点指的貌似就是空头尾节点</em><br/>
-太简单略过，有考点再补充</p>
-
-<h2 id="toc_2">栈</h2>
-
-<p>栈是后入先出的数据结构，可以用链表或者数组实现。</p>
-
-<p>“技术栈”的意思大抵如此，新学的技术取起来比较快，旧的知识取起来比较慢。</p>
-
-<h3 id="toc_3">算式求值</h3>
-
-<p>用栈对算式求值分为两步，书上是倒着讲的，这里把他顺过来。</p>
+<h2 id="toc_1">概要:</h2>
 
 <ol>
-<li>中缀表达式转为后缀表达式</li>
-<li>后缀表达式求值</li>
+<li><a href="#load">加载数据和模块</a></li>
+<li><a href="#explore">开始探索</a></li>
+<li><a href="#relations">数据间关联</a></li>
+<li><a href="#missing">缺失值</a></li>
+<li><a href="#derived">衍生特征</a></li>
+<li><a href="#encode">建模预处理</a></li>
+<li><a href="#model">建模</a></li>
+<li><a href="#submit">准备要提交的数据</a></li>
 </ol>
 
-<p>这里以一个算式</p>
+<p><a id='load'></a></p>
 
-<p><code>1+2*3+(4*5+6)*7</code><br/>
-来表述流程</p>
+<h1 id="toc_2"><strong>1. 加载数据和模块</strong></h1>
 
-<h4 id="toc_4">中缀表达式转后缀表达式</h4>
+<p><strong>载入python模块:</strong> 依赖表随着添加新函数越来越多，虽然一个模块的载入可以放在需要用的地方，但我个人更倾向于把他们放在一起方便了解梗概。</p>
 
-<p>这里将符号分为两类：</p>
+<pre><code class="language-python">#%matplotlib inline
+
+# for seaborn issue:
+import warnings
+warnings.filterwarnings(&quot;ignore&quot;)
+
+import pandas as pd
+import numpy as np
+from scipy import stats
+import sklearn as sk
+import itertools
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import seaborn as sns
+from statsmodels.graphics.mosaicplot import mosaic
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import Perceptron
+from sklearn import tree
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import VotingClassifier
+from sklearn import svm
+import xgboost as xgb
+from mlxtend.classifier import StackingClassifier
+
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+
+sns.set(style=&#39;white&#39;, context=&#39;notebook&#39;, palette=&#39;deep&#39;)
+</code></pre>
+
+<p><strong>Load input data.</strong> And combine the available features of train and test data sets. <em>test</em> of course doesn&#39;t have the column that indicates survival.</p>
+
+<p><strong>载入数据.</strong> 把训练和测试数据拼接起来（combine）</p>
+
+<pre><code class="language-python">train = pd.read_csv(&quot;../input/train.csv&quot;)
+test = pd.read_csv(&quot;../input/test.csv&quot;)
+combine = pd.concat([train.drop(&#39;Survived&#39;,1),test])
+</code></pre>
+
+<p><a id='explore'></a></p>
+
+<h1 id="toc_3">2. 开始探索</h1>
+
+<p><strong>尽量从更多不同的角度去观察数据</strong> 有一些模式关联可以很快观察到，另一些则需要你以更明确的方法检查一部分或是全部数据。就像警探查找线索一样</p>
+
+<p>先来一个板报。数据都是什么类型的，他们典型的形态和内容是什么？</p>
+
+<pre><code class="language-python">train.head(8)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Braund, Mr. Owen Harris</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>C85</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>Heikkinen, Miss. Laina</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>C123</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Allen, Mr. William Henry</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Moran, Mr. James</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>330877</td>
+      <td>8.4583</td>
+      <td>NaN</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>0</td>
+      <td>1</td>
+      <td>McCarthy, Mr. Timothy J</td>
+      <td>male</td>
+      <td>54.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>17463</td>
+      <td>51.8625</td>
+      <td>E46</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Palsson, Master. Gosta Leonard</td>
+      <td>male</td>
+      <td>2.0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>349909</td>
+      <td>21.0750</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>和PassengerId一起的只是一个运行时索引，无论乘客是否生还<code>survived (1) or not (0)</code>我们都有如下信息：</p>
 
 <ul>
-<li>数字</li>
-<li>操作符</li>
+<li><p><em>Pclass</em> 这是票等级：1，2，3等票，典型的整数特征。</p></li>
+<li><p><em>Name</em> 乘客的姓名。名字中也包含了称谓，一些人有同样的姓；隐藏的家庭关系。我们知道一些称谓可以提取出了一个比较确定的年龄信息。比如说<em>Master</em>是男孩而<em>Mr</em>则是一个男人。这些特征是一个特定格式的字符串。</p></li>
+<li><p><em>Sex</em> 是一个乘客是男性还是女性的索引。这是一个类别字符串特征。</p></li>
+<li><p><em>Age</em> 是一个乘客的整数年龄。有缺失值。</p></li>
+<li><p><em>SibSp</em> 是一个描述同辈数量的整数特征。</p></li>
+<li><p><em>Parch</em> 是一个描述父母子女数量的整数特征</p></li>
+<li><p><em>Ticket</em> 票号，是一个非定长的字符串特征。</p></li>
+<li><p><em>Fare</em> 这次难忘旅行的票价，</p></li>
+<li><p><em>Cabin</em> 给出了旅客的仓号，有缺失值，是字符串特征。</p></li>
+<li><p><em>Embarked</em> 登船港，是一个字符串特征</p></li>
 </ul>
 
-<p>通过计算得到的后缀表达式即为输出</p>
+<p>概括下：我们有1个票价的浮点特征，1个年龄的整数特征，3个有序的整数特征（票等级，同辈树，子女数），2 个类别文本特征（性别，登录港），3个字符串特征（票号，仓号，名字）</p>
+
+<pre><code class="language-python">train.describe()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>891.000000</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+      <td>714.000000</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>446.000000</td>
+      <td>0.383838</td>
+      <td>2.308642</td>
+      <td>29.699118</td>
+      <td>0.523008</td>
+      <td>0.381594</td>
+      <td>32.204208</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>257.353842</td>
+      <td>0.486592</td>
+      <td>0.836071</td>
+      <td>14.526497</td>
+      <td>1.102743</td>
+      <td>0.806057</td>
+      <td>49.693429</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.420000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>223.500000</td>
+      <td>0.000000</td>
+      <td>2.000000</td>
+      <td>20.125000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>7.910400</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>446.000000</td>
+      <td>0.000000</td>
+      <td>3.000000</td>
+      <td>28.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>14.454200</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>668.500000</td>
+      <td>1.000000</td>
+      <td>3.000000</td>
+      <td>38.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>31.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>891.000000</td>
+      <td>1.000000</td>
+      <td>3.000000</td>
+      <td>80.000000</td>
+      <td>8.000000</td>
+      <td>6.000000</td>
+      <td>512.329200</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>pclass, age, sibsp, parch的minimum/maxim显示了这些特征的最小值和最大值，我们可以看到票价相差悬殊。</p>
+
+<h3 id="toc_4"><em>缺失值</em></h3>
+
+<pre><code class="language-python">print(train.isnull().sum())
+print(test.info())
+</code></pre>
+
+<pre><code>PassengerId      0
+Survived         0
+Pclass           0
+Name             0
+Sex              0
+Age            177
+SibSp            0
+Parch            0
+Ticket           0
+Fare             0
+Cabin          687
+Embarked         2
+dtype: int64
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 418 entries, 0 to 417
+Data columns (total 11 columns):
+PassengerId    418 non-null int64
+Pclass         418 non-null int64
+Name           418 non-null object
+Sex            418 non-null object
+Age            332 non-null float64
+SibSp          418 non-null int64
+Parch          418 non-null int64
+Ticket         418 non-null object
+Fare           417 non-null float64
+Cabin          91 non-null object
+Embarked       418 non-null object
+dtypes: float64(2), int64(4), object(5)
+memory usage: 36.0+ KB
+None
+</code></pre>
+
+<p>了解缺失值非常重要，因为它显示了数据中有多少是我们不知道的。使用严重缺失的数据做推断通常是不理智的，一些建模处理会在有缺失值的情况下失败，导致我们必须采用完全删除或是用估计值填充等操作。</p>
+
+<p><strong>我们从数据中看到:</strong></p>
 
 <ul>
-<li>读到数字时，立即将数字放到输出中。</li>
-<li>如果读到的是操作符，</li>
+<li><p>在训练数据中，大量的<em>Cabin</em>值缺失，还有177个<em>年龄</em>值和2个<em>Embarked</em>值缺失。</p></li>
+<li><p>还有，在训练数据中有1个<em>票价</em>缺失，100个<em>Age</em>缺失，<em>Cabin</em>值则只有91个，这些在处理时要记住。</p></li>
 </ul>
 
-<p>这部分只有中缀转后缀比较麻烦一点，但不需要太在理论上推转换逻辑，算两个式子自然就明白了，其实只是常规计算顺序的计算机语言表述。</p>
+<pre><code class="language-python">surv = train[train[&#39;Survived&#39;]==1]
+nosurv = train[train[&#39;Survived&#39;]==0]
+surv_col = &quot;blue&quot;
+nosurv_col = &quot;red&quot;
 
-<p>不大好理解的两点：</p>
+print(&quot;Survived: %i (%.1f percent), Not Survived: %i (%.1f percent), Total: %i&quot;\
+      %(len(surv), 1.*len(surv)/len(train)*100.0,\
+        len(nosurv), 1.*len(nosurv)/len(train)*100.0, len(train)))
+</code></pre>
+
+<pre><code>Survived: 342 (38.4 percent), Not Survived: 549 (61.6 percent), Total: 891
+</code></pre>
+
+<p>在我们的训练数据中，60%的乘客未生还。断言所有人未生还就能在测试集上去的60%的准确率，让我们尝试做的更好些。</p>
+
+<p>这里我们用柱状图绘出生还、未生还的区别。这张图将会在这片文档中一直使用。</p>
+
+<p>现在，让我们一个一个地了解我们的特征 。这里我们看到生还与否在各个属性上分布的比较。我个人比较喜欢先用柱状图看概况和更普遍的特征缩放。对于类别信息为了更好的呈现我们使用<code>barplots</code>并添加标准差条。</p>
+
+<pre><code class="language-python">warnings.filterwarnings(action=&quot;ignore&quot;)
+plt.figure(figsize=[12,10])
+plt.subplot(331)
+sns.distplot(surv[&#39;Age&#39;].dropna().values, bins=range(0, 81, 1), kde=False, color=surv_col)
+sns.distplot(nosurv[&#39;Age&#39;].dropna().values, bins=range(0, 81, 1), kde=False, color=nosurv_col,
+            axlabel=&#39;Age&#39;)
+plt.subplot(332)
+sns.barplot(&#39;Sex&#39;, &#39;Survived&#39;, data=train)
+plt.subplot(333)
+sns.barplot(&#39;Pclass&#39;, &#39;Survived&#39;, data=train)
+plt.subplot(334)
+sns.barplot(&#39;Embarked&#39;, &#39;Survived&#39;, data=train)
+plt.subplot(335)
+sns.barplot(&#39;SibSp&#39;, &#39;Survived&#39;, data=train)
+plt.subplot(336)
+sns.barplot(&#39;Parch&#39;, &#39;Survived&#39;, data=train)
+plt.subplot(337)
+sns.distplot(np.log10(surv[&#39;Fare&#39;].dropna().values+1), kde=False, color=surv_col)
+sns.distplot(np.log10(nosurv[&#39;Fare&#39;].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25,
+                    wspace=0.35)
+
+print(&quot;Median age survivors: %.1f, Median age non-survivers: %.1f&quot;\
+      %(np.median(surv[&#39;Age&#39;].dropna()), np.median(nosurv[&#39;Age&#39;].dropna())))
+</code></pre>
+
+<pre><code>Median age survivors: 28.0, Median age non-survivers: 28.0
+</code></pre>
+
+<p><img src="media/14967180723369/output_25_1.png" alt="output_25_1"/></p>
+
+<p>我们上边画出了一个用于学习特征分布的可视化的摘要板。我们用matplotlib的<code>subplot</code>工具来在网格师徒中画图。我们用重叠的柱状图来花有序属性、柱状图来花类别属性。花一点时间仔细看图。<br/>
+<strong>我们观察到</strong> 下面是我们从个体属性中观察到的</p>
+
+<ul>
+<li><p><em>Age:</em> The medians are identical. However, it&#39;s noticeable that fewer young adults have survived (ages 18 - 30-ish) whereas <strong>children younger than 10-ish had a better survival rate.</strong> Also, there are no obvious outliers that would indicate problematic input data. The highest ages are well consistent with the overall distribution. There is a notable shortage of teenagers compared to the crowd of younger kids. But this could have natural reasons.</p></li>
+<li><p><em>Age:</em> 数据中值完全相同，然而比较显著的是年轻的成年人较少生还 <strong>十岁以下儿童有更高的生存概率。</strong> 并没有极端值显示输入数据有问题。最高年龄在总体分布中比较一致。请少年相比于幼童有比较明显的劣势。但这可能有自然原因在。</p></li>
+<li><p><em>Pclass:</em> 这里有个很清晰的倾向 <strong>头等舱生还几率大</strong>. 生活就是这么不公平.</p></li>
+<li><p><em>SibSp &amp; Parch:</em> <strong>在船上有1-3个亲人的人相比于独自旅行或是亲人规模更大的旅客更容易生还</strong></p></li>
+<li><p><em>Embarked:</em> 这个比较有意思.  <strong>在 &quot;C&quot; 登船的人比 &quot;S&quot; 登船的人生存概率高</strong>. 这应该与其他因素相关.</p></li>
+<li><p><em>Fare:</em> 在这个场景下线性缩放效果很差，因为极端值上的数量很少。这里我们很自然的使用了log函数，为了使用对数函数我们需要保证数据非0. 这张图告诉我们 <strong>便宜的仓生还概率低</strong>. 我们可以简单的认为便宜的仓更靠近底部，离救生艇比较远。</p></li>
+</ul>
+
+<p>小贴士：对于<em>SibSp</em>我们看到大部分区别并不明显（错误条重叠），另一个检查真实数据的方法是使用<em>交叉表</em></p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;SibSp&#39;], train[&#39;Survived&#39;])
+print(tab)
+#dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, 
+#                         stacked=True, color=[nosurv_col,surv_col])
+#dummy = plt.xlabel(&#39;SibSp&#39;)
+#dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Survived    0    1
+SibSp             
+0         398  210
+1          97  112
+2          15   13
+3          12    4
+4          15    3
+5           5    0
+8           7    0
+</code></pre>
+
+<p>有三个长辈，晚辈的乘客生存概率比较低。然而数据支持度并不很高，比如SibSp我们就有15 vs 3，5 vs 0，7 vs 0。</p>
+
+<p>根据二项式分布随机输出2个概率（像猜硬币一样）。我们可以使用<em>binomial test</em> 来估计事件5个有5个同辈的乘客全部未生还服从整体样本分布的概率。</p>
+
+<p>Random outcomes with 2 possibilities (like <em>heads or tails</em> when flipping a coin) follow the <a href="https://en.wikipedia.org/wiki/Binomial_distribution">binomial distribution</a>. We can use a <em>binomial test</em> to estimate the probability that 5 non-survivors out of a total 5 passengers with SibSp = 5 happened due to chance assuming the overall 38% survival chance for the entire sample.</p>
+
+<pre><code class="language-python">stats.binom_test(x=5,n=5,p=0.62)
+</code></pre>
+
+<pre><code>0.16417601599999998
+</code></pre>
+
+<p>任何高于0.05的都不认为是显著的，基于这个值我们无法给出有5个子女的样本分布区别于其他这个命题。</p>
+
+<p>对于更大的数值父母子女数，我们有4 vs 0，4 vs 1，1 vs 0.就他们自己而言，最后两个非常不明显，把他们扔到&gt;=4 这样我们拿到了9 vs 1 就好多了。</p>
+
+<p><strong>这里得出</strong> 父母子女数&gt;=4 和同辈数量&gt;=3 比较糟糕。单身汉，父母子女数1-3同辈数量1-2情况比较好。</p>
+
+<p><strong>We learn:</strong> parch &gt;= 4 and sibsp &gt;= 3 is bad. So is parch + sibsp = 0 (i.e. both 0). Parch in 1-3 and Sibsp in 1-2 is good.</p>
+
+<h3 id="toc_5"><em>仓号</em></h3>
+
+<p>这是一个比较棘手的特征，因为有很多缺失值而且仓号字符串的格式还不一样。</p>
+
+<pre><code class="language-python">print(&quot;We know %i of %i Cabin numbers in the training data set and&quot;
+      %(len(train[&#39;Cabin&#39;].dropna()), len(train)))
+print(&quot;we know %i of %i Cabin numbers in the testing data set.&quot;
+      %(len(test[&#39;Cabin&#39;].dropna()), len(test)))
+train.loc[:,[&#39;Survived&#39;,&#39;Cabin&#39;]].dropna().head(8)
+</code></pre>
+
+<pre><code>We know 204 of 891 Cabin numbers in the training data set and
+we know 91 of 418 Cabin numbers in the testing data set.
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Survived</th>
+      <th>Cabin</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>C85</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>C123</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>E46</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>G6</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1</td>
+      <td>C103</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>1</td>
+      <td>D56</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>1</td>
+      <td>A6</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>0</td>
+      <td>C23 C25 C27</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>我们可以做些尝试:</strong></p>
+
+<ul>
+<li><p>我猜测乘客可能收到一个手册，里面写了船只的具体仓位，并用他们做了额外的分类。但是仅有25%的仓位数据我们可能拿不到什么有用的信息，走着看吧。</p></li>
+<li><p>另一个猜测是这么少的仓位信息也许意味着这本身并不是有效的信息。也许只有生还的乘客才会知道自己的仓位号，让我们在衍生特征里再看一下。</p></li>
+</ul>
+
+<p><em>TODO: 为什么有的人有多个仓号，这是啥意思？</em></p>
+
+<h2 id="toc_6"><em>票号</em></h2>
+
+<p>最开始这是一个挺没洗完搞得特征，因为他看起来就是随机的字符串。但是当你和家人一起旅行时，每个人真的能拿到自己的票吗？让我们看看多少张唯一的票号：</p>
+
+<pre><code class="language-python">print(&quot;There are %i unique ticket numbers among the %i tickets.&quot; \
+      %(train[&#39;Ticket&#39;].nunique(),train[&#39;Ticket&#39;].count()))
+</code></pre>
+
+<pre><code>There are 681 unique ticket numbers among the 891 tickets.
+</code></pre>
+
+<p>比较有意思，分享票号并非罕见。让我们深入一点。</p>
+
+<pre><code class="language-python">grouped = train.groupby(&#39;Ticket&#39;)
+k = 0
+for name, group in grouped:
+    if (len(grouped.get_group(name)) &gt; 1):
+        print(group.loc[:,[&#39;Survived&#39;,&#39;Name&#39;, &#39;Fare&#39;]])
+        k += 1
+    if (k&gt;10):
+        break
+</code></pre>
+
+<pre><code>     Survived                                               Name  Fare
+257         1                               Cherry, Miss. Gladys  86.5
+504         1                              Maioni, Miss. Roberta  86.5
+759         1  Rothes, the Countess. of (Lucy Noel Martha Dye...  86.5
+     Survived                                    Name   Fare
+262         0                       Taussig, Mr. Emil  79.65
+558         1  Taussig, Mrs. Emil (Tillie Mandelbaum)  79.65
+585         1                     Taussig, Miss. Ruth  79.65
+     Survived                            Name  Fare
+110         0  Porter, Mr. Walter Chamberlain  52.0
+475         0     Clifford, Mr. George Quincy  52.0
+     Survived                                             Name     Fare
+329         1                     Hippach, Miss. Jean Gertrude  57.9792
+523         1  Hippach, Mrs. Louis Albert (Ida Sophia Fischer)  57.9792
+     Survived                                    Name  Fare
+166         1  Chibnall, Mrs. (Edith Martha Bowerman)  55.0
+356         1             Bowerman, Miss. Elsie Edith  55.0
+     Survived                                       Name  Fare
+61          1                        Icard, Miss. Amelie  80.0
+829         1  Stone, Mrs. George Nelson (Martha Evelyn)  80.0
+     Survived                                       Name   Fare
+390         1                 Carter, Mr. William Ernest  120.0
+435         1                  Carter, Miss. Lucile Polk  120.0
+763         1  Carter, Mrs. William Ernest (Lucile Polk)  120.0
+802         1        Carter, Master. William Thornton II  120.0
+     Survived                               Name  Fare
+151         1  Pears, Mrs. Thomas (Edith Wearne)  66.6
+336         0          Pears, Mr. Thomas Clinton  66.6
+     Survived                                             Name    Fare
+297         0                     Allison, Miss. Helen Loraine  151.55
+305         1                   Allison, Master. Hudson Trevor  151.55
+498         0  Allison, Mrs. Hudson J C (Bessie Waldo Daniels)  151.55
+708         1                             Cleaver, Miss. Alice  151.55
+     Survived                                               Name  Fare
+35          0                     Holverson, Mr. Alexander Oskar  52.0
+383         1  Holverson, Mrs. Alexander Oskar (Mary Aline To...  52.0
+     Survived                     Name  Fare
+270         0    Cairns, Mr. Alexander  31.0
+842         1  Serepeca, Miss. Augusta  31.0
+</code></pre>
+
+<p><strong>我们可以尝试:</strong></p>
+
+<p>Working hypothesis: if your group (mostly family) survived then you survived as well, unless you were a man (and presumably helped your wife/daughter/lady friend). We could go through the trouble here to identify families by last name. However</p>
+
+<p>一个有效的假设：如果一个团体(主要是家人)生还，除非你是个男性（假设帮助了你的女性家人）那么你也会生还。我们可以根据姓来判断。</p>
+
+<p>然而</p>
 
 <ol>
-<li>左括号权值最高，但右括号出现之前不能出栈。</li>
-<li>在拿到优先级低于栈顶操作符的操作符时才触发操作符出栈，一直出到左括号比操作符优先级低的栈顶前（貌似是废话，因为简单示例的操作符只有2个权值）</li>
+<li>通常姓氏在乘客名单里并不唯一。</li>
+<li>像我们看到的一样，相似名字的并比一定分享票。</li>
 </ol>
 
-<h4 id="toc_5">后缀表达式计算</h4>
+<p>因此，一个分享票可能是一个非常好的特征。当然这假设也应通过姓氏测试。我们看到在各个团体内<em>票价</em>都是相同的。下面我们会有更多的探索。</p>
 
-<p>这个就是遍历一遍，数字都进栈，碰到操作符就pop出两个计算后把结果push进去，遍历完剩下的一个就是最终结果了。</p>
+<p><a id='relations'></a></p>
 
-<h2 id="toc_6">队列</h2>
+<p><a href="#top">Go to the top of the page</a></p>
 
-<p>因为太简单所以略过了。。</p>
+<h1 id="toc_7">3. Relations between features</h1>
 
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">5/29/2017 21:21 下午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='algorithm.html'>算法</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
+<p>在单独检查了可用特征后你也许意识到有些特征是关联的。是不是年龄和性别会对生还产生交叉影响？仓位等级与票价关联？他们的关联是否强到使某些关联成为冗余信息？我们来看下。</p>
 
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14959068134134.html">
-                
-                  <h1>计算机系统基础大纲</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>考试题型:问答、分析、编程<br/>
-总分:40分</p>
+<p>现在我们将单个线索关联起来从更高的角度去看。</p>
 
-<h2 id="toc_0">一、处理器体系结构</h2>
+<p>我们以一个<strong>特征关联概览</strong>开始。这里我们展示一个数值变量间的<em>关联矩阵</em>。我们排除掉了<em>PassengerId</em>。在图中，更强的协方差具有更深的颜色(蓝-，红+)，越白协方差程度越低。</p>
 
-<ul>
-<li>CPU中的时序电路</li>
-<li>单周期处理器的设计</li>
-<li>流水线处理器的基本原理</li>
-<li>Data Hazard的处理</li>
-<li>流水线设计中的其他问题</li>
-</ul>
-
-<h2 id="toc_1">二、优化程序性能</h2>
-
-<ul>
-<li>优化程序性能</li>
-<li>优化编译器的能力和局限性以及表示程序性能、</li>
-<li>特定体系结构或应用特性的性能优化、限制因素、确认和消除性能瓶颈 </li>
-</ul>
-
-<h2 id="toc_2">三、存储器结构及虚拟存储器</h2>
-
-<ul>
-<li>局部性</li>
-<li>存储器层级结构</li>
-<li>计算机高速缓存器原理</li>
-<li>高速缓存对性能的影响</li>
-<li>地址空间</li>
-<li>虚拟存储器</li>
-<li>虚拟内存的管理</li>
-<li>翻译和映射</li>
-<li>TLB、动 态存储器分配和垃圾收集</li>
-</ul>
-
-<h2 id="toc_3">四、链接、进程及并发编程</h2>
-
-<ul>
-<li>静态链接</li>
-<li>目标文件</li>
-<li>符号和符号表</li>
-<li>重定位和加载</li>
-<li>动态链接库</li>
-<li>异常和进程</li>
-<li>进程控制和信号</li>
-<li>进程间的通信</li>
-<li>进程间信号量的控制信号量</li>
-<li>各种并发编程模式</li>
-<li>共享变量和线程同步</li>
-<li>其他并行问题 </li>
-</ul>
-
-<h2 id="toc_4">五、系统级I/O和网络编程</h2>
-
-<ul>
-<li>I/O相关概念</li>
-<li>文件及文件操作</li>
-<li>共享文件</li>
-<li>网络编程</li>
-<li>客户端-服务器模型</li>
-<li>套接字接又</li>
-<li>HTTP请求</li>
-<li>Web服务器。</li>
-</ul>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">5/28/2017 1:40 上午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='course.html'>课程</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14959067581040.html">
-                
-                  <h1>数据结构与算法大纲</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>考试题型:问答、分析、编程<br/>
-总分:60分 </p>
-
-<h2 id="toc_0">一、栈、队列和向量</h2>
-
-<ul>
-<li>单链表</li>
-<li>双向链表</li>
-<li>环形链表</li>
-<li>带哨兵节点的链表</li>
-<li>栈的基本概念和性质</li>
-<li>栈ADT及其顺序，链接实现</li>
-<li>栈的应用</li>
-<li>栈与递归</li>
-<li>队列的基本概念和性质,队列ADT及其顺序,链接实现</li>
-<li>队列的应用</li>
-<li>向量基本概念和性质</li>
-<li>向量ADT及其数组、链接实现</li>
-</ul>
-
-<h2 id="toc_1">二、树</h2>
-
-<ul>
-<li>树的基本概念和术语</li>
-<li>树的前序,中序,后序,层次序遍历</li>
-<li>二叉树及其性质</li>
-<li>普通树与二叉树的转换</li>
-<li>树的存储结构</li>
-<li>标准形式</li>
-<li>完全树(complete tree)的数组形式存储</li>
-<li>树的应用</li>
-<li>Huffman树的定义与应用;</li>
-</ul>
-
-<h2 id="toc_2">三、查找</h2>
-
-<ul>
-<li>查找的基本概念</li>
-<li>对线性关系结构的查找</li>
-<li>顺序查找</li>
-<li>二分查找</li>
-<li>Hash查找法</li>
-<li>常见的Hash函数(直接定址法,随机数法)</li>
-<li>hash冲突的概念</li>
-<li>解决冲突的方法(开散列方法/拉链法,闭散列方法/开址定址法)</li>
-<li>二次聚集现象</li>
-<li>BST树定义，性质,ADT及其实现</li>
-<li>BST树查找,插入,删除算法</li>
-<li>平衡树 (AVL) 的定义,性质,ADT及其实现,平衡树查找,插入算法,平衡因子的概念</li>
-<li>优先队列与堆,堆的定义</li>
-<li>堆的生成,调整算法</li>
-<li>范围查询</li>
-</ul>
-
-<h2 id="toc_3">四、排序</h2>
-
-<ul>
-<li>排序基本概念</li>
-<li>插入排序</li>
-<li>希尔排序</li>
-<li>选择排序</li>
-<li>快速排序</li>
-<li>合并排序</li>
-<li>基数排序</li>
-<li>等排序算法基本思想,</li>
-<li>算法代码及基本的时间复杂度分析</li>
-</ul>
-
-<h2 id="toc_4">五、图</h2>
-
-<ul>
-<li>图的基本概念</li>
-<li>图的存储结构</li>
-<li>邻接矩阵,邻接表</li>
-<li>图的遍历,广度度优先遍历和深度优先遍历</li>
-<li>最小生成树基本概念</li>
-<li>Prim算法</li>
-<li>Kruskal算法</li>
-<li>最短路径问题</li>
-<li>广度优 先遍历算法</li>
-<li>Dijkstra算法</li>
-<li>Floyd算法</li>
-<li>拓扑排序。</li>
-</ul>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">5/28/2017 1:39 上午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='course.html'>课程</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14959021333435.html">
-                
-                  <h1>软件工程大纲</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>考试题型:概念问答题、实践案例题<br/>
-总分:50分</p>
-
-<h2 id="toc_0">一、软件过程</h2>
-
-<ul>
-<li>软件过程的概念</li>
-<li>经典软件过程模型的特点(瀑布模型、增量模型、演化模 型、统一过程模型)</li>
-<li>过程评估与CMM/CMMI的基本概念</li>
-<li>敏捷宣言与敏捷过程的特点。</li>
-</ul>
-
-<h2 id="toc_1">二、软件需求</h2>
-
-<ul>
-<li>软件需求的概念</li>
-<li>需求工程的基本过程</li>
-<li>分层数据流模型</li>
-<li>用例和场景建模及其UML表达(用例图、活动图、泳道图、顺序图)</li>
-<li>数据模型建模及其UML表达(类图)</li>
-<li>行为模型建模及其UML表达(状态机图)。</li>
-</ul>
-
-<h2 id="toc_2">三、软件设计与构造</h2>
-
-<ul>
-<li>软件体系结构及体系结构风格的概念</li>
-<li>设计模式的概念</li>
-<li>模块化设计的基本思想及概念(抽象、分解、模块化、封装、信息隐藏、功能独立)</li>
-<li>软件重构的概念</li>
-<li>软件体系结构的UML建模(包图、类图、构件图、顺序图、部署图)</li>
-<li>接口的概念</li>
-<li>面向对象设计原则(开闭原则、Liskov替换原则、依赖 转置原则、接又隔离原则)</li>
-<li>内聚与耦合的概念</li>
-<li>常见的内聚和耦合类型。</li>
-</ul>
-
-<h2 id="toc_3">四、软件测试</h2>
-
-<ul>
-<li>软件测试及测试用例的概念</li>
-<li>单元测试、集成测试、确认测试、系统测试、回归测试的概念</li>
-<li>调试的概念、调试与测试的关系</li>
-<li>测试覆盖度的概念</li>
-<li>白盒测试、黑盒测试的概念</li>
-<li>代码圈复杂度的计算方法</li>
-<li>白盒测试中的基本路径测试方法</li>
-<li>黑盒测试中的等价类划分方法。</li>
-</ul>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">5/28/2017 0:22 上午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='course.html'>课程</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14958952545569.html">
-                
-                  <h1>storm 安装笔记</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<ul>
-<li>环境</li>
-<li>安装</li>
-<li>配置</li>
-<li>测试</li>
-</ul>
-
-<h2 id="toc_0">环境</h2>
-
-<p>本次安装使用ubuntu-14.04,storm-1.0.2,.</p>
-
-<h2 id="toc_1">安装</h2>
-
-<h3 id="toc_2">1.zookeeper安装</h3>
-
-<p>这里直接使用docker镜像<a href="https://github.com/jplock/docker-zookeeper">jplock/zookeeper</a> 运行即可.</p>
-
-<h3 id="toc_3">2,storm</h3>
-
-<p>解压即可.</p>
-
-<h2 id="toc_4">配置</h2>
-
-<p>该目录需要有读写权限.</p>
-
-<pre><code>storm.local.dir: &quot;/tmp/storm/&quot;
+<pre><code class="language-python">plt.figure(figsize=(14,12))
+foo = sns.heatmap(train.drop(&#39;PassengerId&#39;,axis=1).corr(), vmax=0.6, square=True, annot=True)
 </code></pre>
 
-<p>这应该是工作节点的thrift端口,几个端口对应每个worker节点几个线程.</p>
+<p><img src="media/14967180723369/output_47_0.png" alt="png"/></p>
 
-<pre><code>supervisor.slots.ports:
-- 10001
-- 10002
+<p><em>正向关联与反向关联</em>绝对值越接近1关联程度越高。对角线都是1。</p>
+
+<p>The matrix gives us an overview as to which features are particularly interesting for our analysis. Both strongly positive or negative correlations with the <em>Survived</em> feature are valuable. Strong correlations between two other features would suggest that only one of them is necessary for our model (and including the other would in fact induce noise and potentially lead to over-fitting).</p>
+
+<p>这个矩阵使我们可以看到那些对我们的分析特别有意思的特征。特征值与<em>Survived</em>关联值绝对值越大越有价值。两个其他特征关联过高会驱使我们放弃其中一个特征。</p>
+
+<p><strong>我们看到:</strong></p>
+
+<ul>
+<li><em>Pclass</em> 与 <em>Fare</em> 相关</li>
+<li><em>SibSp</em> 与 <em>Parch</em> 弱相关。</li>
+<li><em>Pclass</em> 与 <em>Survived</em> 相关程度很高</li>
+</ul>
+
+<p>继续，我们绘制了数值特征的 <em>Pairplot</em>。这种图能更详细的将变量间的关联展现出来。</p>
+
+<p>In addition, we plot a <strong>Pairplot</strong> of the numerical features. This kind of plot is a more detailed visualisation of relationships between variables. It shows scatter plots for the different feature combinations plus a distribution of each feature on the diagonal. Again, the upper right and lower left triangle contain the same information. This kind of plot is vastly more useful for a set of continuous variables, instead of the categorical or integer values we have here. Nonetheless, it is a valuable exploratory tool that has a place in everyone&#39;s toolbox.</p>
+
+<p>This plot is inspired by, and realised much more aesthetically in, the <a href="https://www.kaggle.com/arthurtok/introduction-to-ensembling-stacking-in-python">comprehensive Ensemble Stacking Kernel by Anisotropic</a>  </p>
+
+<pre><code class="language-python">cols = [&#39;Survived&#39;,&#39;Pclass&#39;,&#39;Age&#39;,&#39;SibSp&#39;,&#39;Parch&#39;,&#39;Fare&#39;]
+g = sns.pairplot(data=train.dropna(), vars=cols, size=1.5,
+                 hue=&#39;Survived&#39;, palette=[nosurv_col,surv_col])
+g.set(xticklabels=[])
 </code></pre>
 
-<h2 id="toc_5">使用</h2>
-
-<pre><code>storm jar Getting-Started-0.0.1-SNAPSHOT.jar com.kanke.test.ClusterEdition
+<pre><code>&lt;seaborn.axisgrid.PairGrid at 0x7f7a591097f0&gt;
 </code></pre>
 
-<p>注意,storm集群与单机版不同,并不会立即调用clean生命周期,测试打印需写在excute周期内,打印在[INFO]的[STDO]中.</p>
+<p><img src="media/14967180723369/output_50_1.png" alt="png"/></p>
+
+<pre><code class="language-python">msurv = train[(train[&#39;Survived&#39;]==1) &amp; (train[&#39;Sex&#39;]==&quot;male&quot;)]
+fsurv = train[(train[&#39;Survived&#39;]==1) &amp; (train[&#39;Sex&#39;]==&quot;female&quot;)]
+mnosurv = train[(train[&#39;Survived&#39;]==0) &amp; (train[&#39;Sex&#39;]==&quot;male&quot;)]
+fnosurv = train[(train[&#39;Survived&#39;]==0) &amp; (train[&#39;Sex&#39;]==&quot;female&quot;)]
+
+plt.figure(figsize=[13,5])
+plt.subplot(121)
+sns.distplot(fsurv[&#39;Age&#39;].dropna().values, bins=range(0, 81, 1), kde=False, color=surv_col)
+sns.distplot(fnosurv[&#39;Age&#39;].dropna().values, bins=range(0, 81, 1), kde=False, color=nosurv_col,
+            axlabel=&#39;Female Age&#39;)
+plt.subplot(122)
+sns.distplot(msurv[&#39;Age&#39;].dropna().values, bins=range(0, 81, 1), kde=False, color=surv_col)
+sns.distplot(mnosurv[&#39;Age&#39;].dropna().values, bins=range(0, 81, 1), kde=False, color=nosurv_col,
+            axlabel=&#39;Male Age&#39;)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a0c1c82e8&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_51_1.png" alt="png"/></p>
+
+<p><strong>We learn:</strong></p>
+
+<ul>
+<li><p>For females the survival chances appear to be higher between 18 and 40, whereas for men in that age range the odds are flipped. This difference between 18-40 yr olds might be a better feature than <em>Sex</em> and <em>Age</em> by themselves.</p></li>
+<li><p>Boys have proportional better survival chances than men, whereas girls have similar chances as women have. Rather small numbers, though. </p></li>
+</ul>
+
+<p>We study the correlation of <em>Age</em> with <em>Pclass</em> using a <em>violin plot</em>, which is also split between survived (right half) and not survived (left half). Check out the other visualisations in your forked copy.</p>
+
+<pre><code class="language-python">#foo = combine[&#39;Age&#39;].hist(by=combine[&#39;Pclass&#39;], bins=np.arange(0,81,1),
+#                          layout=[3,1], sharex=True, figsize=[8,12])
+
+#foo = sns.boxplot(x=&quot;Pclass&quot;, y=&quot;Age&quot;, hue=&quot;Survived&quot;, data=train)
+
+#sns.violinplot(x=&quot;Pclass&quot;, y=&quot;Age&quot;, data=combine, inner=None)
+#sns.swarmplot(x=&quot;Pclass&quot;, y=&quot;Age&quot;, data=combine, color=&quot;w&quot;, alpha=.5)
+
+sns.violinplot(x=&quot;Pclass&quot;, y=&quot;Age&quot;, hue=&quot;Survived&quot;, data=train, split=True)
+plt.hlines([0,10], xmin=-1, xmax=3, linestyles=&quot;dotted&quot;)
+</code></pre>
+
+<pre><code>&lt;matplotlib.collections.LineCollection at 0x7f7a0c43b2e8&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_54_1.png" alt="png"/></p>
+
+<p><em>Violin plots</em> are a modified version of boxplots, where the shape is a &quot;kernel density estimate&quot; of the underlying distribution. These estimates are smoothed and therefore extend beyond the actual values (look closely at the dotted zero level). I have also indicated <em>Age == 10</em>, which we will use to define children (vs teenagers) in the engineering part below.</p>
+
+<p><strong>We learn:</strong></p>
+
+<ul>
+<li>Age decreases progressively as Pclass decreases from 1st to 3rd</li>
+<li>Most older passengers are 1st class, but very few children are. This conflates the impact of <em>Age</em> and <em>Pclass</em> on the survival chances.</li>
+<li>In 1st class, younger adults had better survival chances than older ones.</li>
+<li>Most children in 2nd class survived, and the majority in 3rd class did too.</li>
+</ul>
+
+<p>For a view into <em>Pclass</em> vs <em>Sex</em> let&#39;s use a <em>mosaic plot</em> for a 2-dimensional overview.</p>
+
+<pre><code class="language-python">dummy = mosaic(train,[&quot;Survived&quot;,&quot;Sex&quot;,&quot;Pclass&quot;])
+</code></pre>
+
+<p><img src="media/14967180723369/output_57_0.png" alt="png"/></p>
+
+<p>Also, we will start to use <em>factorplots</em>, i.e. groups of <em>pointplots</em>, from the <em>seaborn</em> plotting package to visualise the categorical relations:</p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Pclass&quot;, y=&quot;Survived&quot;, hue=&quot;Sex&quot;, col=&quot;Embarked&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+
+# for some reason in this plot the colours for m/f are flipped:
+#grid = sns.FacetGrid(train, col=&#39;Embarked&#39;, size=2.2, aspect=1.6)
+#grid.map(sns.pointplot, &#39;Pclass&#39;, &#39;Survived&#39;, &#39;Sex&#39;, ci=95.0, palette=&#39;deep&#39;)
+#grid.add_legend()
+</code></pre>
+
+<p><img src="media/14967180723369/output_59_0.png" alt="png"/></p>
+
+<p><strong>We learn:</strong></p>
+
+<ul>
+<li>Both the factorplot and the mosaicplot indicate that almost all females that died were 3rd class passengers.</li>
+<li>For males being in 1st class gives a survival boost, otherwise the proportions look roughly similar.</li>
+<li>Except for 3rd class, the survival for <em>Embarked == Q</em> is close to 100% split between male and female.</li>
+</ul>
+
+<p>Let&#39;s follow up the numbers for <em>Pclass vs Embarked</em> with a <em>pandas crosstab plot</em>:</p>
+
+<pre><code class="language-python">tab = pd.crosstab(combine[&#39;Embarked&#39;], combine[&#39;Pclass&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Port embarked&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Pclass      1    2    3
+Embarked               
+C         141   28  101
+Q           3    7  113
+S         177  242  495
+</code></pre>
+
+<p><img src="media/14967180723369/output_61_1.png" alt="png"/></p>
+
+<p><strong>We learn:</strong></p>
+
+<ul>
+<li>a high percentage of those embarked at &quot;C&quot; were 1st class passengers.</li>
+<li>almost everyone who embarked at &quot;Q&quot; went to 3rd class (this means that the clear separation in the factorplot for &quot;Q&quot; isn&#39;t very meaningful, unfortunately).</li>
+</ul>
+
+<p>The 2nd point is somewhat curious, since we recall from above that the survival chances for &quot;Q&quot; were actually slightly better than for &quot;S&quot;. Not significantly so, of course, but certainly not worse even though &quot;S&quot; had a higher percentage of 1st and 2nd class passengers.</p>
+
+<p>It seems that embarking at &quot;Q&quot; improved your chances for survival if you were a 3rd class passenger. Let&#39;s investigate that a bit more:</p>
+
+<pre><code class="language-python">sns.barplot(x=&quot;Embarked&quot;, y=&quot;Survived&quot;, hue=&quot;Pclass&quot;, data=train)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a09ba8a58&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_63_1.png" alt="png"/></p>
+
+<p>Ok, now from here it looks more like &quot;S&quot; is the interesting port since survival is less probably for that one if you are a 3rd class passenger. Otherwise  there is no significant difference within each class.</p>
+
+<p>There seems to be some impact here that isn&#39;t captured by the passenger class. What about the other strong feature, Sex?</p>
+
+<pre><code class="language-python">tab = pd.crosstab(combine[&#39;Embarked&#39;], combine[&#39;Sex&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Port embarked&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Sex       female  male
+Embarked              
+C            113   157
+Q             60    63
+S            291   623
+</code></pre>
+
+<p><img src="media/14967180723369/output_65_1.png" alt="png"/></p>
+
+<p>Now this is somewhat expected since it explains the difference between &quot;S&quot; and the other ports. Therefore, it seems that between more 1st class passengers embarking at &quot;C&quot; and more men at &quot;S&quot; there doesn&#39;t seem to be much actual influence in the port of embarkation.</p>
+
+<p>However, the last plot should also indicate that ...</p>
+
+<pre><code class="language-python">tab = pd.crosstab(combine[&#39;Pclass&#39;], combine[&#39;Sex&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Pclass&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Sex     female  male
+Pclass              
+1          144   179
+2          106   171
+3          216   493
+</code></pre>
+
+<p><img src="media/14967180723369/output_67_1.png" alt="png"/></p>
+
+<p>... there were more males among the 3rd class passengers. Possibly travelling alone?</p>
+
+<pre><code class="language-python">sib = pd.crosstab(train[&#39;SibSp&#39;], train[&#39;Sex&#39;])
+print(sib)
+dummy = sib.div(sib.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Siblings&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+
+parch = pd.crosstab(train[&#39;Parch&#39;], train[&#39;Sex&#39;])
+print(parch)
+dummy = parch.div(parch.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Parent/Children&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Sex    female  male
+SibSp              
+0         174   434
+1         106   103
+2          13    15
+3          11     5
+4           6    12
+5           1     4
+8           3     4
+Sex    female  male
+Parch              
+0         194   484
+1          60    58
+2          49    31
+3           4     1
+4           2     2
+5           4     1
+6           1     0
+</code></pre>
+
+<p><img src="media/14967180723369/output_69_1.png" alt="png"/></p>
+
+<p><img src="media/14967180723369/output_69_2.png" alt="png"/></p>
+
+<p>Sort of, yes. This goes some way to explain features like better survival for SibSp = 1-3. But I think that it doesn&#39;t cover all the signal in the Parch feature.</p>
+
+<p><strong>We learn:</strong></p>
+
+<ul>
+<li><p>Different percentages of passenger classes and sexes have embarked from different ports, which is reflected in the lower survival rates for &quot;S&quot; (more men, fewer 1st class) compared to &quot;C&quot; (more women and 1st class).</p></li>
+<li><p>It&#39;s hard to say at this stage whether there is any real impact left for the <em>Embarked</em> feature once we correct for these connections. We will come back to this in the modelling stage when we will study feature importances and significances (soon).</p></li>
+</ul>
+
+<p>Finally, let&#39;s check what&#39;s going on between <em>Age</em> and <em>Embarked</em>:</p>
+
+<pre><code class="language-python">sns.violinplot(x=&quot;Embarked&quot;, y=&quot;Age&quot;, hue=&quot;Survived&quot;, data=train, split=True)
+plt.hlines([0,10], xmin=-1, xmax=3, linestyles=&quot;dotted&quot;)
+</code></pre>
+
+<pre><code>&lt;matplotlib.collections.LineCollection at 0x7f7a098dc198&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_72_1.png" alt="png"/></p>
+
+<p>The curious distribution for the &quot;Q&quot; survivors somewhat follows the overall trend for 3rd class passengers (which make up the vast majority of &quot;Q&quot;) but is notably narrower. Not many of the children there survived, but then there were not many children to begin with. Let&#39;s come back to this point in discussing the derived features.</p>
+
+<p><strong>We learn:</strong><br/>
+There don&#39;t seem to be strong differences in <em>Age</em> among the <em>Embarked</em> categories that would point at an imbalance that goes beyond the influence of <em>Pclass</em> and <em>Sex</em>. </p>
+
+<p>Let&#39;s study the relation between <em>Fare</em> and <em>Pclass</em> in more detail:</p>
+
+<pre><code class="language-python">plt.figure(figsize=[12,10])
+plt.subplot(311)
+ax1 = sns.distplot(np.log10(surv[&#39;Fare&#39;][surv[&#39;Pclass&#39;]==1].dropna().values+1), kde=False, color=surv_col)
+ax1 = sns.distplot(np.log10(nosurv[&#39;Fare&#39;][nosurv[&#39;Pclass&#39;]==1].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax1.set_xlim(0,np.max(np.log10(train[&#39;Fare&#39;].dropna().values)))
+plt.subplot(312)
+ax2 = sns.distplot(np.log10(surv[&#39;Fare&#39;][surv[&#39;Pclass&#39;]==2].dropna().values+1), kde=False, color=surv_col)
+ax2 = sns.distplot(np.log10(nosurv[&#39;Fare&#39;][nosurv[&#39;Pclass&#39;]==2].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax2.set_xlim(0,np.max(np.log10(train[&#39;Fare&#39;].dropna().values)))
+plt.subplot(313)
+ax3 = sns.distplot(np.log10(surv[&#39;Fare&#39;][surv[&#39;Pclass&#39;]==3].dropna().values+1), kde=False, color=surv_col)
+ax3 = sns.distplot(np.log10(nosurv[&#39;Fare&#39;][nosurv[&#39;Pclass&#39;]==3].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax3.set_xlim(0,np.max(np.log10(train[&#39;Fare&#39;].dropna().values)))
+plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+</code></pre>
+
+<p><img src="media/14967180723369/output_75_0.png" alt="png"/></p>
+
+<p><strong>We learn:</strong></p>
+
+<ul>
+<li>There is a broad distribution between the 1st class passenger fares (rich -&gt; super rich)</li>
+<li>There&#39;s an interesting bimodality in the 2nd class cabins and a long tail in the 3rd class ones. (<em>TODO: check cumulative fare question</em>)</li>
+<li>For each class there is strong evidence that the cheaper cabins were worse for survival. A similar effect can be seen in a <em>boxplot</em>:</li>
+</ul>
+
+<pre><code class="language-python">ax = sns.boxplot(x=&quot;Pclass&quot;, y=&quot;Fare&quot;, hue=&quot;Survived&quot;, data=train);
+ax.set_yscale(&#39;log&#39;)
+</code></pre>
+
+<p><img src="media/14967180723369/output_77_0.png" alt="png"/></p>
+
+<p><a id='missing'></a></p>
+
+<p><a href="#top">Go to the top of the page</a></p>
+
+<h1 id="toc_8">4. Filling in missing values</h1>
+
+<p>After studying the relations between the different features let&#39;s fill in a few missing values based on what we learned.</p>
+
+<p>In my opinion, the only training feature for which it makes sense to fill in the NAs is <em>Embarked</em>. Too many <em>Cabin</em> numbers are missing. And for <em>Age</em> we will choose a different approach below. We fill in the 1 missing <em>Fare</em> value in the test data frame accordingly.</p>
+
+<p>Let&#39;s find the two passengers and assign the most likely port based on what we found so far:</p>
+
+<pre><code class="language-python">print(train[train[&#39;Embarked&#39;].isnull()])
+</code></pre>
+
+<pre><code>     PassengerId  Survived  Pclass                                       Name  \
+61            62         1       1                        Icard, Miss. Amelie   
+829          830         1       1  Stone, Mrs. George Nelson (Martha Evelyn)   
+
+        Sex   Age  SibSp  Parch  Ticket  Fare Cabin Embarked  
+61   female  38.0      0      0  113572  80.0   B28      NaN  
+829  female  62.0      0      0  113572  80.0   B28      NaN  
+</code></pre>
+
+<p>These are two women that travelled together in 1st class, were 38 and 62 years old, and had no family on board.</p>
+
+<pre><code class="language-python">combine.where((combine[&#39;Embarked&#39;] !=&#39;Q&#39;) &amp; (combine[&#39;Pclass&#39;] &lt; 1.5) &amp; \
+    (combine[&#39;Sex&#39;] == &quot;female&quot;)).groupby([&#39;Embarked&#39;,&#39;Pclass&#39;,&#39;Sex&#39;,&#39;Parch&#39;,&#39;SibSp&#39;]).size()
+</code></pre>
+
+<pre><code>Embarked  Pclass  Sex     Parch  SibSp
+C         1.0     female  0.0    0.0      30
+                                 1.0      20
+                          1.0    0.0      10
+                                 1.0       6
+                          2.0    0.0       2
+                                 2.0       2
+                          3.0    1.0       1
+S         1.0     female  0.0    0.0      20
+                                 1.0      20
+                                 2.0       3
+                          1.0    0.0       7
+                                 1.0       6
+                          2.0    0.0       4
+                                 1.0       5
+                                 3.0       3
+                          4.0    1.0       1
+dtype: int64
+</code></pre>
+
+<p>Admittedly, these are quite a few grouping levels, but 30 (&quot;C&quot;) vs 20 (&quot;S&quot;) are numbers that are still large enough to be useful in this context. In addition, already a grouping without the <em>Parch</em> and <em>SibSp</em> features suggests similar numbers for women in 1st class embarking from &quot;C&quot; (71) vs &quot;S&quot; (69) (in contrast to the larger overall number of all 1st class passengers leaving from &quot;S&quot;).</p>
+
+<p>Another recent kernel (<a href="https://www.kaggle.com/varimp/a-mostly-tidyverse-tour-of-the-titanic">definitely worth checking out</a>) makes a convincing case for predicting <em>Embarked == &quot;S&quot;</em> for these two passengers (see also the comments). However, in my opinion we have better reasons to impute &quot;C&quot; instead. I recommend that you weigh the arguments and make your own decision.</p>
+
+<p><em>(How much does it actually matter? Well, in the big picture these are only 2 passengers and their impact on our model accuracy won&#39;t be large. However, since the main point of this challenge is to practice data analysis it is certainly worth to take your time to examine the question in a bit more detail.)</em></p>
+
+<pre><code class="language-python">train[&#39;Embarked&#39;].iloc[61] = &quot;C&quot;
+train[&#39;Embarked&#39;].iloc[829] = &quot;C&quot;
+</code></pre>
+
+<pre><code class="language-python">print(test[test[&#39;Fare&#39;].isnull()])
+</code></pre>
+
+<pre><code>     PassengerId  Pclass                Name   Sex   Age  SibSp  Parch Ticket  \
+152         1044       3  Storey, Mr. Thomas  male  60.5      0      0   3701   
+
+     Fare Cabin Embarked  
+152   NaN   NaN        S  
+</code></pre>
+
+<pre><code class="language-python">print(test[test[&#39;Fare&#39;].isnull()])
+</code></pre>
+
+<pre><code>     PassengerId  Pclass                Name   Sex   Age  SibSp  Parch Ticket  \
+152         1044       3  Storey, Mr. Thomas  male  60.5      0      0   3701   
+
+     Fare Cabin Embarked  
+152   NaN   NaN        S  
+</code></pre>
+
+<p>A 60-yr old 3rd class passenger without family on board. We will base our <em>Fare</em> prediction on the median of the 3rd-class fares:</p>
+
+<pre><code class="language-python">test[&#39;Fare&#39;].iloc[152] = combine[&#39;Fare&#39;][combine[&#39;Pclass&#39;] == 3].dropna().median()
+print(test[&#39;Fare&#39;].iloc[152])
+</code></pre>
+
+<pre><code>8.05
+</code></pre>
+
+<p><a id='derived'></a></p>
+
+<p><a href="#top">Go to the top of the page</a></p>
+
+<h1 id="toc_9">5. Derived (engineered) features</h1>
+
+<p>The next idea is to define new features based on the existing ones that allow for a split into survived/not-survived with higher confidence than the existing features. An example would be &quot;rich woman&quot; vs &quot;poor man&quot;, but this particular distinction should be handled well by most classifiers. We&#39;re looking for something a bit more subtle here. This is the part where the detective puts individual clues together to see whether their sum is more than its parts.</p>
+
+<p>This part of the analysis is called <em>Feature Engineering</em>. I prefer the approach to list all the new features that we define together in one place, to keep an overview. Every time we can think of a new feature, we come back here to define it and then study it further down. We compute the new features in the combined data set, to make sure that all feature realisations are complete, and then split the combine data again into train and test.</p>
+
+<p>The clever way of computing the <em>Shared_ticket</em> values (using <em>group_by</em> and <em>np.where</em>) was contributed by <a href="https://www.kaggle.com/georgechou">GeorgeChou</a> in the comments. Many thanks! </p>
+
+<pre><code class="language-python">combine = pd.concat([train.drop(&#39;Survived&#39;,1),test])
+survived = train[&#39;Survived&#39;]
+
+combine[&#39;Child&#39;] = combine[&#39;Age&#39;]&lt;=10
+combine[&#39;Cabin_known&#39;] = combine[&#39;Cabin&#39;].isnull() == False
+combine[&#39;Age_known&#39;] = combine[&#39;Age&#39;].isnull() == False
+combine[&#39;Family&#39;] = combine[&#39;SibSp&#39;] + combine[&#39;Parch&#39;]
+combine[&#39;Alone&#39;]  = (combine[&#39;SibSp&#39;] + combine[&#39;Parch&#39;]) == 0
+combine[&#39;Large_Family&#39;] = (combine[&#39;SibSp&#39;]&gt;2) | (combine[&#39;Parch&#39;]&gt;3)
+combine[&#39;Deck&#39;] = combine[&#39;Cabin&#39;].str[0]
+combine[&#39;Deck&#39;] = combine[&#39;Deck&#39;].fillna(value=&#39;U&#39;)
+combine[&#39;Ttype&#39;] = combine[&#39;Ticket&#39;].str[0]
+combine[&#39;Title&#39;] = combine[&#39;Name&#39;].str.split(&quot;, &quot;, expand=True)[1].str.split(&quot;.&quot;, expand=True)[0]
+combine[&#39;Fare_cat&#39;] = pd.DataFrame(np.floor(np.log10(combine[&#39;Fare&#39;] + 1))).astype(&#39;int&#39;)
+combine[&#39;Bad_ticket&#39;] = combine[&#39;Ttype&#39;].isin([&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;A&#39;,&#39;L&#39;,&#39;W&#39;])
+combine[&#39;Young&#39;] = (combine[&#39;Age&#39;]&lt;=30) | (combine[&#39;Title&#39;].isin([&#39;Master&#39;,&#39;Miss&#39;,&#39;Mlle&#39;]))
+combine[&#39;Shared_ticket&#39;] = np.where(combine.groupby(&#39;Ticket&#39;)[&#39;Name&#39;].transform(&#39;count&#39;) &gt; 1, 1, 0)
+combine[&#39;Ticket_group&#39;] = combine.groupby(&#39;Ticket&#39;)[&#39;Name&#39;].transform(&#39;count&#39;)
+combine[&#39;Fare_eff&#39;] = combine[&#39;Fare&#39;]/combine[&#39;Ticket_group&#39;]
+combine[&#39;Fare_eff_cat&#39;] = np.where(combine[&#39;Fare_eff&#39;]&gt;16.0, 2, 1)
+combine[&#39;Fare_eff_cat&#39;] = np.where(combine[&#39;Fare_eff&#39;]&lt;8.5,0,combine[&#39;Fare_eff_cat&#39;])
+test = combine.iloc[len(train):]
+train = combine.iloc[:len(train)]
+train[&#39;Survived&#39;] = survived
+
+surv = train[train[&#39;Survived&#39;]==1]
+nosurv = train[train[&#39;Survived&#39;]==0]
+</code></pre>
+
+<p>Now let&#39;s study the new features and see how they relate to the survival chances:</p>
+
+<h3 id="toc_10"><em>Child</em></h3>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Survived&quot;, hue=&quot;Child&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+tab = pd.crosstab(train[&#39;Child&#39;], train[&#39;Pclass&#39;])
+print(tab)
+tab = pd.crosstab(train[&#39;Child&#39;], train[&#39;Sex&#39;])
+print(tab)
+</code></pre>
+
+<pre><code>Pclass    1    2    3
+Child                
+False   213  167  447
+True      3   17   44
+Sex    female  male
+Child              
+False     283   544
+True       31    33
+</code></pre>
+
+<p><img src="media/14967180723369/output_98_1.png" alt="png"/></p>
+
+<p>The <em>Pclass == 1</em> plot looks interesting at first, but there are only 3 children in this group which makes the apparent pattern just random noise. The other two passenger classes are more interesting, especially for the male children. Note, that since we are selecting by <em>Age</em>, which has many missing values, a number of children will be in the <em>Child == False</em> group. Nonetheless, this seems useful.</p>
+
+<p><strong>We learn:</strong> Male children appear to have a survival advantage in 2nd and 3rd class. We should include the <em>Child</em> feature in our model testing.</p>
+
+<h3 id="toc_11"><em>Cabin_known</em></h3>
+
+<pre><code class="language-python">cab = pd.crosstab(train[&#39;Cabin_known&#39;], train[&#39;Survived&#39;])
+print(cab)
+dummy = cab.div(cab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Cabin known&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Survived       0    1
+Cabin_known          
+False        481  206
+True          68  136
+</code></pre>
+
+<p><img src="media/14967180723369/output_101_1.png" alt="png"/></p>
+
+<p>As suspected, it is more likely to know the cabin of a passenger who survived. This could be useful.</p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Survived&quot;, hue=&quot;Cabin_known&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_103_0.png" alt="png"/></p>
+
+<p>However, we see again that a large part of this effect disappears once we control for <em>Sex</em> and <em>Pclass</em>. </p>
+
+<p><strong>We learn:</strong> There remains a potential trend for males and for 3rd class passengers but the uncertainties are large. This feature should be tested in the modelling stage.</p>
+
+<h3 id="toc_12"><em>Deck</em></h3>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Deck&#39;], train[&#39;Survived&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Deck&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Survived    0    1
+Deck              
+A           8    7
+B          12   35
+C          24   35
+D           8   25
+E           8   24
+F           5    8
+G           2    2
+T           1    0
+U         481  206
+</code></pre>
+
+<p><img src="media/14967180723369/output_106_1.png" alt="png"/></p>
+
+<p>Ok, so what can we tell from the Deck (derived from the Cabin number)? First of all the overall survival statistics is much better than for the full sample, which is what we found above. Beyond that, the best decks for survival were B, D, and E with about 66% chance. C and F are around 60%. A and G at 50%. The only passenger on deck T died, but that&#39;s hardly robust statistics.</p>
+
+<p>The largest number of cases we have is for B vs C. Let&#39;s see whether that&#39;s significant:</p>
+
+<pre><code class="language-python">stats.binom_test(x=12,n=12+35,p=24/(24.+35.))
+</code></pre>
+
+<pre><code>0.037415527401218264
+</code></pre>
+
+<p>Just about formally significant (i.e. &lt; 5%). It might be worth our while to include this feature in at least the initial stages of modelling to see how it performs.</p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Deck&quot;, y=&quot;Survived&quot;, hue=&quot;Sex&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_110_0.png" alt="png"/></p>
+
+<p>In addition, there is some variation between the 1st class male passengers, but it doesn&#39;t look overly significant.</p>
+
+<h3 id="toc_13"><em>Ttype and Bad_ticket</em></h3>
+
+<p>Let&#39;s have a look at the ticket numbers and see whether we can extract some additional deck information from them. Above, we created a new feature called <em>Ttype</em> which defines the type of a ticket through the first digit of the ticket number.</p>
+
+<pre><code class="language-python">print(train[&#39;Ttype&#39;].unique())
+print(test[&#39;Ttype&#39;].unique())
+</code></pre>
+
+<pre><code>[&#39;A&#39; &#39;P&#39; &#39;S&#39; &#39;1&#39; &#39;3&#39; &#39;2&#39; &#39;C&#39; &#39;7&#39; &#39;W&#39; &#39;4&#39; &#39;F&#39; &#39;L&#39; &#39;9&#39; &#39;6&#39; &#39;5&#39; &#39;8&#39;]
+[&#39;3&#39; &#39;2&#39; &#39;7&#39; &#39;A&#39; &#39;6&#39; &#39;W&#39; &#39;S&#39; &#39;P&#39; &#39;C&#39; &#39;1&#39; &#39;F&#39; &#39;4&#39; &#39;9&#39; &#39;L&#39;]
+</code></pre>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Ttype&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(x=&quot;Ttype&quot;, y=&quot;Survived&quot;, data=train, ci=95.0, color=&quot;blue&quot;)
+</code></pre>
+
+<pre><code>Survived    0   1
+Ttype            
+1          54  92
+2          98  85
+3         229  72
+4           8   2
+5           3   0
+6           5   1
+7           8   1
+8           2   0
+9           0   1
+A          27   2
+C          31  16
+F           3   4
+L           3   1
+P          23  42
+S          44  21
+W          11   2
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a08d2cbe0&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_115_2.png" alt="png"/></p>
+
+<p>Based on this plot we define a new feature called <em>Bad_ticket</em> under which we collect all the ticket numbers that start with digits which suggest less than 25% survival (e.g. <em>4</em>, <em>5</em>, or <em>A</em>). We are aware that some of the survival fractions we see above are based on small number statistics (e.g. 2 vs 0 for <em>8</em>). It is well possible that some of our &quot;bad tickets&quot; are merely statistical fluctuations from the base survival rate of 38%.  The barplot shows mean survival fractions and the associated 95% confidence limits, which are large for the sparse samples.</p>
+
+<p>However, the significant difference between e.g. <em>1</em> and <em>3</em> (based on large enough numbers) suggests that this new feature could still contain some useful information. I think that without external information, which we are avoiding in this notebook, we can&#39;t do much better in trying to tie the ticket number to the survival statistics.</p>
+
+<p>Of course, it&#39;s not the tickets themselves that are &quot;bad&quot; for survival, but the possibility that the ticket numbers might encode certain areas of the ship that would have led to higher or lower survival chances.</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Bad_ticket&#39;], train[&#39;Survived&#39;])
+print(tab)
+g = sns.factorplot(x=&quot;Bad_ticket&quot;, y=&quot;Survived&quot;, hue=&quot;Sex&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<pre><code>Survived      0    1
+Bad_ticket          
+False       253  261
+True        296   81
+</code></pre>
+
+<p><img src="media/14967180723369/output_117_1.png" alt="png"/></p>
+
+<p>The factorplot suggests that bad tickets are worse for male passengers, and 3rd class passengers. The individual significances are not overwhelming, but the trend itself might be useful.</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Deck&#39;], train[&#39;Bad_ticket&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Deck&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Bad_ticket  False  True 
+Deck                    
+A              14      1
+B              44      3
+C              56      3
+D              24      9
+E              27      5
+F               9      4
+G               2      2
+T               1      0
+U             337    350
+</code></pre>
+
+<p><img src="media/14967180723369/output_119_1.png" alt="png"/></p>
+
+<p>The last plot doesn&#39;t inspire much confidence in a strong correlation between <em>Deck</em> and <em>Bad_ticket</em>, but maybe it will be useful otherwise.</p>
+
+<p><strong>We learn:</strong> <em>Bad_ticket</em> might be a lower order effect that could give us some additional accuracy. We should test it out in the modelling stage.</p>
+
+<h3 id="toc_14"><em>Age_known</em></h3>
+
+<p>Similar to the known Cabin numbers, what about the <em>passengers for which we know the age</em>?</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Age_known&#39;], train[&#39;Survived&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Age known&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Survived     0    1
+Age_known          
+False      125   52
+True       424  290
+</code></pre>
+
+<p><img src="media/14967180723369/output_123_1.png" alt="png"/></p>
+
+<p>As we would expect intuitively, it appears that we are more likely to know someones age if the survived the disaster. There&#39;s a difference of about 30% vs 40% and it should be significant:</p>
+
+<pre><code class="language-python">stats.binom_test(x=424,n=424+290,p=125/(125.+52.))
+</code></pre>
+
+<pre><code>1.5623264542193693e-10
+</code></pre>
+
+<p>Very much so. However, we have seen before that there might be imbalances in the dominating features <em>Sex</em> and <em>Plcass</em> that create an apparent signal. Is this another of these cases?</p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Age_known&quot;, hue=&quot;Embarked&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_127_0.png" alt="png"/></p>
+
+<p>It actually is. Turns out that we are more likely to know the age of higher class passengers or women, which are the strongest survival predictors we have found, so far. (Of course, the causality might as well go the other way, but that&#39;s not really the question here. What we want to find are the best predictors for survival.)</p>
+
+<p><strong>We learn:</strong> <br/>
+There is a strong impact of <em>Sex</em> and <em>Pclass</em> on this new feature. This might be enough to explain all the variance in the <em>Age_known</em> variable. We should test the predictive power in our modelling.</p>
+
+<h3 id="toc_15"><em>Family</em></h3>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Family&#39;], train[&#39;Survived&#39;])
+print(tab)
+dummy = tab.div(tab.sum(1).astype(float), axis=0).plot(kind=&quot;bar&quot;, stacked=True)
+dummy = plt.xlabel(&#39;Family members&#39;)
+dummy = plt.ylabel(&#39;Percentage&#39;)
+</code></pre>
+
+<pre><code>Survived    0    1
+Family            
+0         374  163
+1          72   89
+2          43   59
+3           8   21
+4          12    3
+5          19    3
+6           8    4
+7           6    0
+10          7    0
+</code></pre>
+
+<p><img src="media/14967180723369/output_130_1.png" alt="png"/></p>
+
+<p><strong>We learn:</strong><br/>
+Again, we find that having 1-3 family members works best for survival. This feature is a mix of <em>SibSp</em> and <em>Parch</em>, which increases the overall numbers we can work with, but might smooth out some more subtle effects.</p>
+
+<h3 id="toc_16"><em>Alone</em></h3>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Alone&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(&#39;Alone&#39;, &#39;Survived&#39;, data=train)
+</code></pre>
+
+<pre><code>Survived    0    1
+Alone             
+False     175  179
+True      374  163
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a09c37208&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_133_2.png" alt="png"/></p>
+
+<p>Travelling alone appears bad enough to be significant.</p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Alone&quot;, hue=&quot;Embarked&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_135_0.png" alt="png"/></p>
+
+<p>But more men were travelling alone than women did. Especially among the 3rd class passengers. Also this feature should be evaluated in our modelling step, to see if it&#39;s still significant in the presence of the <em>Sex</em> feature.</p>
+
+<h3 id="toc_17"><em>Large_Family</em></h3>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Large_Family&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(&#39;Large_Family&#39;, &#39;Survived&#39;, data=train)
+</code></pre>
+
+<pre><code>Survived        0    1
+Large_Family          
+False         501  334
+True           48    8
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a09d7df28&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_138_2.png" alt="png"/></p>
+
+<p>In the same way, having a large family appears to be not good for survival.</p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Large_Family&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_140_0.png" alt="png"/></p>
+
+<p>But most large families were travelling in 3rd class. The tentative imbalance between male and female 3rd class probably reflect the observation we made earlier that men were more likely to travel alone.</p>
+
+<h3 id="toc_18"><em>Shared_ticket</em></h3>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Shared_ticket&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(&#39;Shared_ticket&#39;, &#39;Survived&#39;, data=train)
+</code></pre>
+
+<pre><code>Survived         0    1
+Shared_ticket          
+0              351  130
+1              198  212
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a09162278&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_143_2.png" alt="png"/></p>
+
+<p>Sharing a ticket appears to be good for survival.</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Shared_ticket&#39;], train[&#39;Sex&#39;])
+print(tab)
+g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Shared_ticket&quot;, hue=&quot;Embarked&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<pre><code>Sex            female  male
+Shared_ticket              
+0                 103   378
+1                 211   199
+</code></pre>
+
+<p><img src="media/14967180723369/output_145_1.png" alt="png"/></p>
+
+<p>But again the sharing of tickets is more frequent with females and 1st class passengers. This is consistent with the other statistics that show that women were more likely to travel together with larger families.</p>
+
+<p><strong>We learn:</strong> Several of these derived parameters are strongly correlated with <em>Sex</em> and <em>Pclass</em>. Whether there is actual signal in them that a model can use to improve the learning accuracy needs to be investigated.</p>
+
+<h3 id="toc_19"><em>Title</em></h3>
+
+<p>What can we learn from the titles in the passenger names? These could give us a direct, independent way to estimate the missing age values, so let&#39;s look at all the available titles, their frequency, and mean age. For this, we look at the <em>combined</em> data set to make sure that we don&#39;t miss any titles that might be in <em>train</em> or <em>test</em> only:</p>
+
+<pre><code class="language-python">print(combine[&#39;Age&#39;].groupby(combine[&#39;Title&#39;]).count())
+print(combine[&#39;Age&#39;].groupby(combine[&#39;Title&#39;]).mean())
+
+print(&quot;There are %i unique titles in total.&quot;%(len(combine[&#39;Title&#39;].unique())))
+</code></pre>
+
+<pre><code>Title
+Capt              1
+Col               4
+Don               1
+Dona              1
+Dr                7
+Jonkheer          1
+Lady              1
+Major             2
+Master           53
+Miss            210
+Mlle              2
+Mme               1
+Mr              581
+Mrs             170
+Ms                1
+Rev               8
+Sir               1
+the Countess      1
+Name: Age, dtype: int64
+Title
+Capt            70.000000
+Col             54.000000
+Don             40.000000
+Dona            39.000000
+Dr              43.571429
+Jonkheer        38.000000
+Lady            48.000000
+Major           48.500000
+Master           5.482642
+Miss            21.774238
+Mlle            24.000000
+Mme             24.000000
+Mr              32.252151
+Mrs             36.994118
+Ms              28.000000
+Rev             41.250000
+Sir             49.000000
+the Countess    33.000000
+Name: Age, dtype: float64
+There are 18 unique titles in total.
+</code></pre>
+
+<p>Ok, so we have 18 different titles, but many of them only apply to a handful of people. The dominating ones are Mr (581), Miss (210), Mrs (170), and Master (53); with the number referring to the combined data. Here are the age distributions for those:</p>
+
+<pre><code class="language-python">dummy = combine[combine[&#39;Title&#39;].isin([&#39;Mr&#39;,&#39;Miss&#39;,&#39;Mrs&#39;,&#39;Master&#39;])]
+foo = dummy[&#39;Age&#39;].hist(by=dummy[&#39;Title&#39;], bins=np.arange(0,81,1))
+</code></pre>
+
+<p><img src="media/14967180723369/output_151_0.png" alt="png"/></p>
+
+<p>We see that <em>Master</em> is capturing the male children/teenagers very well, whereas <em>Miss</em> applies to girls as well as younger women up to about 40. <em>Mrs</em> does not contain many teenagers, but has a sizeable overlap with <em>Miss</em>; especially in the range of 20-30 years old.</p>
+
+<p>Nevertheless, <em>Miss</em> is more likely to indicate a younger woman. Overall, there is a certain amount of variance and we&#39;re not going to be able to pinpoint a certain age based on the title.</p>
+
+<p>Therefore, we will use 2 <em>Age Groups</em>, updating to the <em>Young</em> variable we defined above. The idea is to address the issue of missing <em>Age</em> values by combining the <em>Age</em> and <em>Title</em> features into a single feature that should still contain some of the signal regarding survival.</p>
+
+<p>For this, we define everyone under 30 <em>or</em> with a title of <em>Master</em>, <em>Miss</em>, or <em>Mlle</em> (Mademoiselle) as <em>Young</em>. All the other titles we group into <em>Not Young</em>. This is a bit of a generalisation in terms of how <em>Miss</em> and <em>Mrs</em> overlap, but it might be a useful starting point. All the other rare titles (like <em>Don</em> or <em>Lady</em>) have average ages that are high enough to count as <em>Not Young</em>.</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Young&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(&#39;Young&#39;, &#39;Survived&#39;, data=train)
+</code></pre>
+
+<pre><code>Survived    0    1
+Young             
+False     284  127
+True      265  215
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a08647eb8&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_153_2.png" alt="png"/></p>
+
+<p>Finally, we model a fare category, <em>Fare_cat</em>, as an ordinal integer variable based on the logarithmic fare values:</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Young&#39;], train[&#39;Pclass&#39;])
+print(tab)
+g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Young&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<pre><code>Pclass    1    2    3
+Young                
+False   135   78  198
+True     81  106  293
+</code></pre>
+
+<p><img src="media/14967180723369/output_155_1.png" alt="png"/></p>
+
+<p>Because of the larger number of &quot;Miss&quot; vs &quot;Master&quot; mostly women are classified as &quot;Young&quot;.  We also recover the age difference between the ticket classes that was already obvious in earlier plots. Both factors mean that the impact of <em>Young</em> has to be studied carefully.</p>
+
+<h3 id="toc_20"><em>Fare_cat</em></h3>
+
+<p>Let&#39;s remind ourselves of the distribution of <em>Fare</em> with respect to <em>Pclass</em>:</p>
+
+<pre><code class="language-python">plt.figure(figsize=[12,10])
+plt.subplot(311)
+ax1 = sns.distplot(np.log10(surv[&#39;Fare&#39;][surv[&#39;Pclass&#39;]==1].dropna().values+1), kde=False, color=surv_col)
+ax1 = sns.distplot(np.log10(nosurv[&#39;Fare&#39;][nosurv[&#39;Pclass&#39;]==1].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax1.set_xlim(0,np.max(np.log10(train[&#39;Fare&#39;].dropna().values+1)))
+plt.subplot(312)
+ax2 = sns.distplot(np.log10(surv[&#39;Fare&#39;][surv[&#39;Pclass&#39;]==2].dropna().values+1), kde=False, color=surv_col)
+ax2 = sns.distplot(np.log10(nosurv[&#39;Fare&#39;][nosurv[&#39;Pclass&#39;]==2].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax2.set_xlim(0,np.max(np.log10(train[&#39;Fare&#39;].dropna().values+1)))
+plt.subplot(313)
+ax3 = sns.distplot(np.log10(surv[&#39;Fare&#39;][surv[&#39;Pclass&#39;]==3].dropna().values+1), kde=False, color=surv_col)
+ax3 = sns.distplot(np.log10(nosurv[&#39;Fare&#39;][nosurv[&#39;Pclass&#39;]==3].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax3.set_xlim(0,np.max(np.log10(train[&#39;Fare&#39;].dropna().values+1)))
+plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+</code></pre>
+
+<p><img src="media/14967180723369/output_159_0.png" alt="png"/></p>
+
+<p>To simplify this broad distribution, we decide to classify the fares into <em>3 fare categories</em>: 0-10, 10-100, and above 100. This transformation can be easily achieved using the base 10 logarithm:</p>
+
+<pre><code class="language-python">pd.DataFrame(np.floor(np.log10(train[&#39;Fare&#39;] + 1))).astype(&#39;int&#39;).head(5)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Fare</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The &quot;+1&quot; means that our boundaries are slightly shifted in terms of the &quot;real&quot; <em>Fare</em>. However, this shift avoids computing issues for the zero-fare passengers and it makes little difference for our understanding of the fare groups. In fact, in the plot above the offset had already been applied as well.</p>
+
+<p>At the start of this section we define a new feature, <em>Fare_cat</em>, as fare categories in the same way. Let&#39;s try it out:</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Fare_cat&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(&#39;Fare_cat&#39;, &#39;Survived&#39;, data=train)
+</code></pre>
+
+<pre><code>Survived    0    1
+Fare_cat          
+0         249   62
+1         286  241
+2          14   39
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a088d1588&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_163_2.png" alt="png"/></p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Fare_cat&quot;, hue=&quot;Embarked&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_164_0.png" alt="png"/></p>
+
+<p>Our &quot;usual&quot; factorplot examination highlights the differences between <em>Pclass</em> (as expected) but also shows some interesting variations within the <em>Sex</em> feature. This might be related to the fact that women were more likely to share a cabin, and it would therefore indicate that the <em>Fare</em> might be a fare per cabin and not per passenger.</p>
+
+<h3 id="toc_21"><em>Fare_eff_cat</em></h3>
+
+<p>Let&#39;s investigate the <em>Fare affair</em> in more detail. First, we make sure that the passengers in each group really had the same <em>Fare</em> values:</p>
+
+<pre><code class="language-python">combine.groupby(&#39;Ticket&#39;)[&#39;Fare&#39;].transform(&#39;std&#39;).hist()
+np.sum(combine.groupby(&#39;Ticket&#39;)[&#39;Fare&#39;].transform(&#39;std&#39;) &gt; 0)
+</code></pre>
+
+<pre><code>2
+</code></pre>
+
+<p><img src="media/14967180723369/output_168_1.png" alt="png"/></p>
+
+<p>Almost 100% yes. Above, we extract the standard deviation of the <em>Fares</em> among the ticket groups. A standard deviation of zero means that there&#39;s no difference. Only 2 values stand out. This is a small number that we could ignore, but we are curious, aren&#39;t we?</p>
+
+<pre><code class="language-python">combine.iloc[np.where(combine.groupby(&#39;Ticket&#39;)[&#39;Fare&#39;].transform(&#39;std&#39;) &gt; 0)]
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>...</th>
+      <th>Deck</th>
+      <th>Ttype</th>
+      <th>Title</th>
+      <th>Fare_cat</th>
+      <th>Bad_ticket</th>
+      <th>Young</th>
+      <th>Shared_ticket</th>
+      <th>Ticket_group</th>
+      <th>Fare_eff</th>
+      <th>Fare_eff_cat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>138</th>
+      <td>139</td>
+      <td>3</td>
+      <td>Osen, Mr. Olaf Elon</td>
+      <td>male</td>
+      <td>16.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7534</td>
+      <td>9.2167</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>U</td>
+      <td>7</td>
+      <td>Mr</td>
+      <td>1</td>
+      <td>True</td>
+      <td>True</td>
+      <td>1</td>
+      <td>2</td>
+      <td>4.60835</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>876</th>
+      <td>877</td>
+      <td>3</td>
+      <td>Gustafsson, Mr. Alfred Ossian</td>
+      <td>male</td>
+      <td>20.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7534</td>
+      <td>9.8458</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>U</td>
+      <td>7</td>
+      <td>Mr</td>
+      <td>1</td>
+      <td>True</td>
+      <td>True</td>
+      <td>1</td>
+      <td>2</td>
+      <td>4.92290</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 27 columns</p>
+</div>
+
+<p>It&#39;s Mr Osen and Mr Gustafsson on Ticket 7534. Their <em>Fares</em> are close enough, though, to include them in the general treatment.</p>
+
+<p>Now, let&#39;s think for a moment: Identical fares could mean that the fare for a cabin was shared equally among the passengers, in which case our previous treatment would have been justified. However, it <em>could</em> also mean that the listed value is the <em>cumulative fare per cabin</em> and it was simply recorded as the same value for each passenger. Intuitively, this doesn&#39;t seem so plausible, since you typically record what is paid for a ticket and not for a cabin. But let&#39;s investigate this for a moment and check how it would transform the <em>Fare</em> distribution. For this, we create a <em>Fare_eff</em> feature above, which we derive by dividing <em>Fare</em> by the number of people sharing a ticket (<em>Ticket_group</em>; which we also newly created).</p>
+
+<pre><code class="language-python">plt.figure(figsize=[12,10])
+plt.subplot(311)
+ax1 = sns.distplot(np.log10(surv[&#39;Fare_eff&#39;][surv[&#39;Pclass&#39;]==1].dropna().values+1), kde=False, color=surv_col)
+ax1 = sns.distplot(np.log10(nosurv[&#39;Fare_eff&#39;][nosurv[&#39;Pclass&#39;]==1].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax1.set_xlim(0,np.max(np.log10(train[&#39;Fare_eff&#39;].dropna().values+1)))
+plt.subplot(312)
+ax2 = sns.distplot(np.log10(surv[&#39;Fare_eff&#39;][surv[&#39;Pclass&#39;]==2].dropna().values+1), kde=False, color=surv_col)
+ax2 = sns.distplot(np.log10(nosurv[&#39;Fare_eff&#39;][nosurv[&#39;Pclass&#39;]==2].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax2.set_xlim(0,np.max(np.log10(train[&#39;Fare_eff&#39;].dropna().values+1)))
+plt.subplot(313)
+ax3 = sns.distplot(np.log10(surv[&#39;Fare_eff&#39;][surv[&#39;Pclass&#39;]==3].dropna().values+1), kde=False, color=surv_col)
+ax3 = sns.distplot(np.log10(nosurv[&#39;Fare_eff&#39;][nosurv[&#39;Pclass&#39;]==3].dropna().values+1), kde=False, color=nosurv_col,axlabel=&#39;Fare&#39;)
+ax3.set_xlim(0,np.max(np.log10(train[&#39;Fare_eff&#39;].dropna().values+1)))
+plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+</code></pre>
+
+<p><img src="media/14967180723369/output_172_0.png" alt="png"/></p>
+
+<p>Now <strong>that</strong> is interesting. We see that the distributions become significantly narrower and that the tails and bimodality become much weaker (after getting rid of the zero-fare values for both groups). The really expensive <em>Fares</em> in <em>Pclass == 1</em> are pretty much all gone. Here&#39;s how the standard deviations compare:</p>
+
+<pre><code class="language-python">print(combine[combine[&#39;Fare&#39;]&gt;1].groupby(&#39;Pclass&#39;)[&#39;Fare&#39;].std())
+print(combine[combine[&#39;Fare_eff&#39;]&gt;1].groupby(&#39;Pclass&#39;)[&#39;Fare_eff&#39;].std())
+</code></pre>
+
+<pre><code>Pclass
+1    80.259713
+2    13.382064
+3    11.476600
+Name: Fare, dtype: float64
+Pclass
+1    14.675124
+2     2.031927
+3     1.366691
+Name: Fare_eff, dtype: float64
+</code></pre>
+
+<p>We might even be at a stage now where we can investigate the few outliers more in detail:</p>
+
+<pre><code class="language-python">combine[(combine[&#39;Pclass&#39;]==1) &amp; (combine[&#39;Fare_eff&#39;]&gt;0) &amp; (combine[&#39;Fare_eff&#39;]&lt;10)]
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>...</th>
+      <th>Deck</th>
+      <th>Ttype</th>
+      <th>Title</th>
+      <th>Fare_cat</th>
+      <th>Bad_ticket</th>
+      <th>Young</th>
+      <th>Shared_ticket</th>
+      <th>Ticket_group</th>
+      <th>Fare_eff</th>
+      <th>Fare_eff_cat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>872</th>
+      <td>873</td>
+      <td>1</td>
+      <td>Carlsson, Mr. Frans Olof</td>
+      <td>male</td>
+      <td>33.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>695</td>
+      <td>5.0</td>
+      <td>B51 B53 B55</td>
+      <td>...</td>
+      <td>B</td>
+      <td>6</td>
+      <td>Mr</td>
+      <td>0</td>
+      <td>True</td>
+      <td>False</td>
+      <td>0</td>
+      <td>1</td>
+      <td>5.0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>1 rows × 27 columns</p>
+</div>
+
+<p>That&#39;s really cheap for a 1st class cabin. Maybe a transcription error in the data itself?</p>
+
+<pre><code class="language-python">combine[(combine[&#39;Pclass&#39;]==3) &amp; (np.log10(combine[&#39;Fare_eff&#39;])&gt;1.2)]
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>...</th>
+      <th>Deck</th>
+      <th>Ttype</th>
+      <th>Title</th>
+      <th>Fare_cat</th>
+      <th>Bad_ticket</th>
+      <th>Young</th>
+      <th>Shared_ticket</th>
+      <th>Ticket_group</th>
+      <th>Fare_eff</th>
+      <th>Fare_eff_cat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>451</th>
+      <td>452</td>
+      <td>3</td>
+      <td>Hagland, Mr. Ingvald Olai Olsen</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>0</td>
+      <td>65303</td>
+      <td>19.9667</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>U</td>
+      <td>6</td>
+      <td>Mr</td>
+      <td>1</td>
+      <td>True</td>
+      <td>False</td>
+      <td>0</td>
+      <td>1</td>
+      <td>19.9667</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>490</th>
+      <td>491</td>
+      <td>3</td>
+      <td>Hagland, Mr. Konrad Mathias Reiersen</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>0</td>
+      <td>65304</td>
+      <td>19.9667</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>U</td>
+      <td>6</td>
+      <td>Mr</td>
+      <td>1</td>
+      <td>True</td>
+      <td>False</td>
+      <td>0</td>
+      <td>1</td>
+      <td>19.9667</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 27 columns</p>
+</div>
+
+<p>And that&#39;s quite expensive for a 3rd class ticket. Maybe these two actually shared a ticket / cabin and we have another transcription / data entry error? The ticket numbers are very similar and someone could easily write &quot;303&quot; instead of &quot;304&quot;. Will we ever know? Maybe not. Does it matter much? Probably not.</p>
+
+<p>More importantly, there is a reasonable argument to be made for this new <em>Fare_eff</em> feature to represent the actual fare better than the original feature. For once, it splits much cleaner between the <em>Pclasses</em>:</p>
+
+<pre><code class="language-python">ax = sns.boxplot(x=&quot;Pclass&quot;, y=&quot;Fare_eff&quot;, hue=&quot;Survived&quot;, data=train)
+ax.set_yscale(&#39;log&#39;)
+ax.hlines([8.5,16],-1,4, linestyles=&#39;dashed&#39;)
+</code></pre>
+
+<pre><code>&lt;matplotlib.collections.LineCollection at 0x7f7a09ee7c18&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_180_1.png" alt="png"/></p>
+
+<p>So well, in fact that defining new fare categories seems almost redundant because <em>Pclass</em> already captures most of this signal. Nonetheless, we&#39;ll try; because we are optimistic people at heart. We use the dashed lines in the plot above for an (empirical) division into 3 classes, which separate the cheaper <em>Fare_eff</em> of a <em>Pclass</em> group from the more expensive ones of the next one. The new feature is called <em>Fare_eff_cat</em> and behaves as follows:</p>
+
+<pre><code class="language-python">tab = pd.crosstab(train[&#39;Fare_eff_cat&#39;], train[&#39;Survived&#39;])
+print(tab)
+sns.barplot(&#39;Fare_eff_cat&#39;, &#39;Survived&#39;, data=train)
+</code></pre>
+
+<pre><code>Survived        0    1
+Fare_eff_cat          
+0             346  120
+1             128   87
+2              75  135
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f7a081a6780&gt;
+</code></pre>
+
+<p><img src="media/14967180723369/output_182_2.png" alt="png"/></p>
+
+<pre><code class="language-python">g = sns.factorplot(x=&quot;Sex&quot;, y=&quot;Fare_eff_cat&quot;, hue=&quot;Embarked&quot;, col=&quot;Pclass&quot;,
+                   data=train, aspect=0.9, size=3.5, ci=95.0)
+</code></pre>
+
+<p><img src="media/14967180723369/output_183_0.png" alt="png"/></p>
+
+<p><a id='encode'></a></p>
+
+<p><a href="#top">Go to the top of the page</a></p>
+
+<h1 id="toc_22">6. Preparing for modelling</h1>
+
+<p>Before we start exploring the different models we are modifying the categorical string column types to integer. This is necessary since not all classifiers can handle string input.</p>
+
+<pre><code class="language-python">combine = pd.concat([train.drop(&#39;Survived&#39;,1),test])
+survived = train[&#39;Survived&#39;]
+
+combine[&quot;Sex&quot;] = combine[&quot;Sex&quot;].astype(&quot;category&quot;)
+combine[&quot;Sex&quot;].cat.categories = [0,1]
+combine[&quot;Sex&quot;] = combine[&quot;Sex&quot;].astype(&quot;int&quot;)
+combine[&quot;Embarked&quot;] = combine[&quot;Embarked&quot;].astype(&quot;category&quot;)
+combine[&quot;Embarked&quot;].cat.categories = [0,1,2]
+combine[&quot;Embarked&quot;] = combine[&quot;Embarked&quot;].astype(&quot;int&quot;)
+combine[&quot;Deck&quot;] = combine[&quot;Deck&quot;].astype(&quot;category&quot;)
+combine[&quot;Deck&quot;].cat.categories = [0,1,2,3,4,5,6,7,8]
+combine[&quot;Deck&quot;] = combine[&quot;Deck&quot;].astype(&quot;int&quot;)
+
+test = combine.iloc[len(train):]
+train = combine.iloc[:len(train)]
+train[&#39;Survived&#39;] = survived
+
+train.loc[:,[&quot;Sex&quot;,&quot;Embarked&quot;]].head()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Sex</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>For a final overview before the modelling stage we have another look at the correlation matrix between all old and new features:</p>
+
+<pre><code class="language-python">ax = plt.subplots( figsize =( 12 , 10 ) )
+foo = sns.heatmap(train.drop(&#39;PassengerId&#39;,axis=1).corr(), vmax=1.0, square=True, annot=True)
+</code></pre>
+
+<p><img src="media/14967180723369/output_190_0.png" alt="png"/></p>
+
+<p>We designed a number of new features, and unsurprisingly several of those are correlated with the original features we used to create them. For instance <em>Fare_cat</em> and <em>Fare</em>. Or <em>Family</em> and <em>SibSp/Parch</em>. In the modelling step, we will first determine which of the features carry the most signal (<em>to be done</em>) and then use them to train a number of different classifiers.</p>
+
+<p><a id='model'></a></p>
+
+<p><a href="#top">Go to the top of the page</a></p>
+
+<h1 id="toc_23">7. Modelling</h1>
+
+<p>Let&#39;s summarise briefly what we found in our data exploration:</p>
+
+<ul>
+<li><p>sex and ticket class are the main factors</p></li>
+<li><p>there seem to be additional impacts from:</p>
+
+<ul>
+<li>age: young men vs young women; (male) children</li>
+<li>relatives: parch = 1-3, sibsp = 1-2 (somewhat explained by sex but not completely)</li>
+<li>maybe the cabin deck, but not many are known</li>
+</ul></li>
+<li><p>other apparent effects appear to be strongly connected to the sex/class features:</p>
+
+<ul>
+<li>port of embarkation</li>
+<li>fare</li>
+<li>sharing a ticket</li>
+<li>large family</li>
+<li>travelling alone</li>
+<li>known cabin number</li>
+<li>known age</li>
+</ul></li>
+</ul>
+
+<h2 id="toc_24"><em>Splitting the train sample into two sub-samples: training and testing</em></h2>
+
+<p>This is best practice for evaluating the performance of our models, which should not be tested on the same data they are trained on. This avoids overfitting.</p>
+
+<pre><code class="language-python">training, testing = train_test_split(train, test_size=0.2, random_state=0)
+print(&quot;Total sample size = %i; training sample size = %i, testing sample size = %i&quot;\
+     %(train.shape[0],training.shape[0],testing.shape[0]))
+</code></pre>
+
+<pre><code>Total sample size = 891; training sample size = 712, testing sample size = 179
+</code></pre>
+
+<h2 id="toc_25"><em>Test and select the model features</em></h2>
+
+<p>Now we are ready to model. We start with a <em>Logistic Regression</em> to assess the importance of the individual model features. We know that by definition some of our engineered features will have a <em>high collinearity</em> (i.e. behave similarly) with other new or existing features. For instance, <em>Young</em> was designed to replace <em>Age</em> and <em>Title</em> as a combination of the two. Other correlations are visible in the heatmap above. The initial modelling will allow us to decide which features are worth to take to the next step.</p>
+
+<p>This is an iterative process in which you improve your model step by step, until you have found the largest feature combination which still has significant impact. Removing less important features will help you to reduce the noise in your prediction and allow your model to generalise to new data (which is our priority goal in machine learning.)</p>
+
+<p><em>TODO: This part is still quite rudimentary and will be expanded in future versions. For now, we just continue with a rather intuitive set of important features.</em>  </p>
+
+<pre><code class="language-python">cols = [&#39;Sex&#39;,&#39;Pclass&#39;,&#39;Cabin_known&#39;,&#39;Large_Family&#39;,&#39;Parch&#39;,
+        &#39;SibSp&#39;,&#39;Young&#39;,&#39;Alone&#39;,&#39;Shared_ticket&#39;,&#39;Child&#39;]
+tcols = np.append([&#39;Survived&#39;],cols)
+
+df = training.loc[:,tcols].dropna()
+X = df.loc[:,cols]
+y = np.ravel(df.loc[:,[&#39;Survived&#39;]])
+</code></pre>
+
+<pre><code class="language-python">clf_log = LogisticRegression()
+clf_log = clf_log.fit(X,y)
+score_log = clf_log.score(X,y)
+print(score_log)
+</code></pre>
+
+<pre><code>0.813202247191
+</code></pre>
+
+<pre><code class="language-python">pd.DataFrame(list(zip(X.columns, np.transpose(clf_log.coef_))))
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Sex</td>
+      <td>[-2.42825566216]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Pclass</td>
+      <td>[-0.565188465958]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Cabin_known</td>
+      <td>[0.649105426184]</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Large_Family</td>
+      <td>[-1.39309133365]</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Parch</td>
+      <td>[-0.0278510516617]</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>SibSp</td>
+      <td>[-0.256674350944]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Young</td>
+      <td>[0.445284608599]</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Alone</td>
+      <td>[-0.0720315867615]</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Shared_ticket</td>
+      <td>[0.168334040051]</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Child</td>
+      <td>[1.41589725098]</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>TODO: Say something about the contributions and follow up with some ANOVA-like analysis</p>
+
+<h2 id="toc_26"><em>Run and describe several different classifiers</em></h2>
+
+<p>Based on the first look we define the input columns we&#39;ll be working with. We also create our training and testing feature sets.</p>
+
+<pre><code class="language-python">cols = [&#39;Sex&#39;,&#39;Pclass&#39;,&#39;Cabin_known&#39;,&#39;Large_Family&#39;,&#39;Shared_ticket&#39;,&#39;Young&#39;,&#39;Alone&#39;,&#39;Child&#39;]
+tcols = np.append([&#39;Survived&#39;],cols)
+
+df = training.loc[:,tcols].dropna()
+X = df.loc[:,cols]
+y = np.ravel(df.loc[:,[&#39;Survived&#39;]])
+
+df_test = testing.loc[:,tcols].dropna()
+X_test = df_test.loc[:,cols]
+y_test = np.ravel(df_test.loc[:,[&#39;Survived&#39;]])
+</code></pre>
+
+<p><strong>Logistic Regression</strong> again, this time with only the selected columns</p>
+
+<pre><code class="language-python">clf_log = LogisticRegression()
+clf_log = clf_log.fit(X,y)
+score_log = cross_val_score(clf_log, X, y, cv=5).mean()
+print(score_log)
+</code></pre>
+
+<pre><code>0.806320599788
+</code></pre>
+
+<p><strong>Perceptron</strong></p>
+
+<pre><code class="language-python">clf_pctr = Perceptron(
+    class_weight=&#39;balanced&#39;
+    )
+clf_pctr = clf_pctr.fit(X,y)
+score_pctr = cross_val_score(clf_pctr, X, y, cv=5).mean()
+print(score_pctr)
+</code></pre>
+
+<pre><code>0.758412180168
+</code></pre>
+
+<p><em>Perceptron:</em> This is a binary classifier that creates a linear decision boundary based on a (hyper-) plane in the parameter space.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Perceptron">Source</a></p>
+
+<p><strong>K Nearest Neighbours:</strong></p>
+
+<pre><code class="language-python">clf_knn = KNeighborsClassifier(
+    n_neighbors=10,
+    weights=&#39;distance&#39;
+    )
+clf_knn = clf_knn.fit(X,y)
+score_knn = cross_val_score(clf_knn, X, y, cv=5).mean()
+print(score_knn)
+</code></pre>
+
+<pre><code>0.804763431554
+</code></pre>
+
+<p><em>Nearest Neighbours</em>: a non-parametric classifier that uses the training data closest to each test data point to classify it. <em>K</em> is simply the number of neighbours that are making the decision by majority vote. This is a simple yet powerful method that works well for irregular decision boundaries.</p>
+
+<p>Important parameters:</p>
+
+<ul>
+<li><p>n_neighbors: choosing the right <em>k</em> depends heavily on the data. Larger values suppress noise but smooth out decision boundaries. Default: 5.</p></li>
+<li><p>weights: <em>uniform</em> assigns equal weight to each neighbour, whereas <em>distance</em> gives more weight to neighbours that are closer.</p></li>
+</ul>
+
+<p><a href="http://scikit-learn.org/stable/modules/neighbors.html">Source</a></p>
+
+<p><strong>Support Vector Machine:</strong></p>
+
+<pre><code class="language-python">clf_svm = svm.SVC(
+    class_weight=&#39;balanced&#39;
+    )
+clf_svm.fit(X, y)
+score_svm = cross_val_score(clf_svm, X, y, cv=5).mean()
+print(score_svm)
+</code></pre>
+
+<pre><code>0.824531965886
+</code></pre>
+
+<p><em>Support Vector Machine:</em> This classifier fits a (set of) hyper-plane(s) in the high-dimensional space of the training features so that this plane has the largest distance to any training data points. This is easy to visualise in 2 dimensions as e.g. 1 line that separates 2 classes (see the link below). In higher dimensions only mathematics can save you.</p>
+
+<p>The <em>support vectors</em> are a subset of training data points used in the decision function. For unbalanced problems setting <em>class_weight=&#39;balanced&#39;</em> might be helpful (compare decision tree notes).</p>
+
+<p>Advantages: Effectiv in high dimensions and versatile with different kernel options.</p>
+
+<p><a href="http://scikit-learn.org/stable/modules/svm.html">Source</a></p>
+
+<p><strong>Bagging:</strong></p>
+
+<pre><code class="language-python">bagging = BaggingClassifier(
+    KNeighborsClassifier(
+        n_neighbors=2,
+        weights=&#39;distance&#39;
+        ),
+    oob_score=True,
+    max_samples=0.5,
+    max_features=1.0
+    )
+clf_bag = bagging.fit(X,y)
+score_bag = clf_bag.oob_score_
+print(score_bag)
+</code></pre>
+
+<pre><code>0.801966292135
+</code></pre>
+
+<p><em>Bagging</em> is a general ensemble method. This means it&#39;s a way to average over a (large) number of individual classifiers to improve their accuracy by reducing the variance (= noise). The estimator (above it&#39;s a KNN) is used multiple times on <em>subsets</em> of the training sample and then it uses the average vote.</p>
+
+<p>Bagging for a decision tree classifier should be the same as using a <em>Random Forest</em> (see below).</p>
+
+<p>Strictly speaking, bagging is only the correct term if the sub samples are drawn with <em>replacement</em> (i.e. put back into the bag, I suppose). Otherwise it&#39;s called <em>Pasting</em>.</p>
+
+<p>If sub-samples are used then the remaining samples (the ones not in the bag we&#39;re drawing the data from) can be used in <em>out-of-bag (oob)</em> estimates (-&gt; <em>oob_score=True</em>). This is a kind of inbuilt cross-validation step, since the accuracy (score) of the classifier is estimated on data it wasn&#39;t trained on.</p>
+
+<p><a href="http://scikit-learn.org/stable/modules/ensemble.html#bagging-meta-estimator">Source</a></p>
+
+<p><strong>Decision Tree:</strong></p>
+
+<pre><code class="language-python">clf_tree = tree.DecisionTreeClassifier(
+    #max_depth=3,\
+    class_weight=&quot;balanced&quot;,\
+    min_weight_fraction_leaf=0.01\
+    )
+clf_tree = clf_tree.fit(X,y)
+score_tree = cross_val_score(clf_tree, X, y, cv=5).mean()
+print(score_tree)
+</code></pre>
+
+<pre><code>0.811904876664
+</code></pre>
+
+<p><em>Decision Tree:</em> One of the classifiers that&#39;s easiest to visualise. Each tree is a series of if-then-else decisions. Example: <em>if</em> sex ==  male <em>then</em> go left <em>else</em> go right. Here, <em>left</em> and <em>right</em> defines a split at a so called <em>node</em> - the decision itself. The first split can be followed up by additional ones to narrow down the decision criteria (based on the subset defined by each previous split).</p>
+
+<p>One visualisation of this process is a tree trunk <em>branching off</em> into successively smaller structures. Hence: decision <em>tree</em>. Consequently, the result of the final splits are called <em>leaf notes</em> - on a tree, it doesn&#39;t get smaller than leafs.</p>
+
+<p>Advantages of decision trees are that they can deal with both numerical and categorical data, are able to handle multi-output problems, and are easy to follow and interpret.</p>
+
+<p>Disadvantages include:</p>
+
+<ul>
+<li><p>Problem: A tendency to overfitting. Solution: pruning, setting maximum depth, or PCA beforehand to find the right number of features. Visualising the tree helps to understand how well it is fitting the data.</p></li>
+<li><p>Problem: Unstable to small variations in the data. Solution: ensembles.</p></li>
+<li><p>Problem: Creating biased trees if some classes dominate. Solution: balance the data set by either sampling the same number of samples from each class or by adjusting the <em>sample_weight</em> parameter to normalise the sum of the class weights to the same value. Following that, parameter <em>min_weight_fraction_leaf</em> is less biased towards dominating classes.</p></li>
+<li><p>Problem: Being just not easy to fit to certain concepts that don&#39;t lend themselves to clear yes-or-no decisions. Solution: Use a different classifier.</p></li>
+</ul>
+
+<p>Additional notes:</p>
+
+<ul>
+<li><p>Parameters <em>min_samples_split</em> and <em>min_samples_leaf</em> control the number of samples at a leaf note. min_samples_leaf=5 is a useful initial value. A small number will lead to overfitting, a large number prevents learning.</p></li>
+<li><p>For sparse X convert to sparse <em>csc_matrix</em> to speed up the learning</p></li>
+</ul>
+
+<p>All of the information above is digested from the <a href="http://scikit-learn.org/stable/modules/tree.html">sklearn documentation</a></p>
+
+<p><strong>Random Forest</strong></p>
+
+<pre><code class="language-python">clf_rf = RandomForestClassifier(
+    n_estimators=1000, \
+    max_depth=None, \
+    min_samples_split=10 \
+    #class_weight=&quot;balanced&quot;, \
+    #min_weight_fraction_leaf=0.02 \
+    )
+clf_rf = clf_rf.fit(X,y)
+score_rf = cross_val_score(clf_rf, X, y, cv=5).mean()
+print(score_rf)
+</code></pre>
+
+<pre><code>0.820256668713
+</code></pre>
+
+<p><em>Random Forest:</em> As the name suggests, this classifier is using a number of decision trees instead of just a single one. Thereby, this is an <em>ensemble method</em> which combines the results of individual classifiers to improve the accuracy. Think of it as an average of estimators. An individual estimator may have a poor accuracy but if you combine several of them the resulting mean (or median) average will have a reduced uncertainty. Similar to the standard error of the mean for sampling normal distributions.</p>
+
+<p>There are two types of ensemble methods: <em>boosting</em>, used below, and <em>averaging</em> (or <em>bagging</em>; see above). A random forest is an averaging classifier for which we train several estimators independently and then average over their individual predictions. Boosting works best for weak learners (e.g. decision stumps) whereas for Bagging/Averaging to be successful we want to overfit a little</p>
+
+<p>The <em>random</em> in <em>random forest</em> comes from the method of training each tree using a random bootstrap sample (i.e. one with replacement) of the original training set. Further randomness is introduced by making the node split dependent on a random subset of features instead of all of them. Here single trees are combined through the average of the prediction probabilities.</p>
+
+<p>In addition to the tree parameters, the most important settings are:</p>
+
+<ul>
+<li><p>n_estimators: number of trees. The larger the better, although improvements become marginal eventually</p></li>
+<li><p>max_features: number of random features per subset. Lower numbers decrease variance and increase bias. Rule of thumb for classification: max_features = sqrt(all_features). This is the default setting.</p></li>
+</ul>
+
+<p>One suggestion is to use a large number of highly overfitted trees with small split limits and no depth limit.</p>
+
+<p>Once more, this info was digested from the <a href="http://scikit-learn.org/stable/modules/ensemble.html#forest">sklearn documentation</a></p>
+
+<p><strong>Extremely Randomised Trees</strong></p>
+
+<pre><code class="language-python">clf_ext = ExtraTreesClassifier(
+    max_features=&#39;auto&#39;,
+    bootstrap=True,
+    oob_score=True,
+    n_estimators=1000,
+    max_depth=None,
+    min_samples_split=10
+    #class_weight=&quot;balanced&quot;,
+    #min_weight_fraction_leaf=0.02
+    )
+clf_ext = clf_ext.fit(X,y)
+score_ext = cross_val_score(clf_ext, X, y, cv=5).mean()
+print(score_ext)
+</code></pre>
+
+<pre><code>0.821665119418
+</code></pre>
+
+<p><em>Extremely Randomised Trees</em> is an ensemble classifier similar to random forests. An additional randomness is introduced by selecting random thresholds for each feature and using the best-performing threshold.</p>
+
+<p>Here we also use an &quot;Out-of-bag score&quot; (<em>oob_score = True</em>). This means that we grow our trees from a sub-sample of the training sample (using bootstrapping: <em>boostrap = True</em>) and estimate the accuracy based on those entries that were not picked (i.e. &quot;left out of the bag&quot;). This gives us a better impression how robust our results are towards generalisation, i.e. how well the classifier that was trained on a particular sample can be applied to new data. </p>
+
+<p>Because this is ultimately our goal: to apply the classification method we &quot;learn&quot; from the training data to any data (in particular the one that is used to judge this competition). There is little use in having a classifier that replicates perfectly the training data by following every random noise feature in that data (called <em>overfitting</em>) but doesn&#39;t perform well with new data.</p>
+
+<p>The principles of <em>bootstrapping</em> and the <em>out-of-bag score</em> can be applied to most classifiers and we already used them in the <em>bagging</em> classifier above. Here we just focus a bit on the underlying idea.</p>
+
+<p><strong>Gradient Boosting:</strong></p>
+
+<pre><code class="language-python">import warnings
+warnings.filterwarnings(&quot;ignore&quot;)
+
+clf_gb = GradientBoostingClassifier(
+            #loss=&#39;exponential&#39;,
+            n_estimators=1000,
+            learning_rate=0.1,
+            max_depth=3,
+            subsample=0.5,
+            random_state=0).fit(X, y)
+clf_gb.fit(X,y)
+score_gb = cross_val_score(clf_gb, X, y, cv=5).mean()
+print(score_gb)
+</code></pre>
+
+<pre><code>0.811805685075
+</code></pre>
+
+<p><em>Gradient boosting:</em> This is what we call the step-by-step improvement of a weak classifier (like a tree with only 1 node) by successively applying this classifier to the residuals of the previous classifier&#39;s results. </p>
+
+<p>For example: we fit a tree, determine its results (prediction: survived vs not survived), compute the residuals of this prediction vs the real survival numbers (all in the training data, of course), and then fit another tree to these residuals. This tree can now consider the full number of training samples for splitting a node at another feature, instead of having to deal with the decreased sample after the first original node (and the resulting impact of random fluctuations). This can be done again and again for n_estimator number of times.</p>
+
+<p>The weak classifier itself does not necessarily have to be a tree, but a tree seems to be the favourite approach to use here. Another convention is to initialise this sequence of models with a single prediction value (like the mean of the training survival values).</p>
+
+<p>Instead of reducing the residuals (and the corresponding squared errors) Gradient Boosting focusses on minimising the <em>Loss Function</em> by training the classifier on the <em>gradient</em> of this function. The Loss Function describes how much the prediction is improved when shifting the predicted values by a certain amount. The method of <em>Gradient Decent</em> uses this Loss Function to iteratively move into the direction of its greatest decent (i.e. most negative first derivative). The step sizes can vary from iteration to iteration.</p>
+
+<p>An additional concept is <em>Shrinkage</em>. Here, the size of each step multiplied by a factor (0,1]. In the model parameters, this factor is called the <em>learning_rate</em>. Lower learning rates make for a slower decent which seems to be empirically more effective. </p>
+
+<p>One more step is to provide a sampling of rows and features, like in the random forest discussed above, to increase the diversity in tree splits and thereby a larger amount of information for the method to work with.</p>
+
+<p>The important parameters are:</p>
+
+<ul>
+<li><p>n_estimators: number of boosting stages; more is better</p></li>
+<li><p>learning_rate: smaller steps need more stages</p></li>
+<li><p>max_depth: tune for best performance; depends on interaction of features</p></li>
+<li><p>subsample: only train on a sub sample of the data set drawn without replacement. This is called <em>Stochastic Gradient Decent</em></p></li>
+</ul>
+
+<p><a href="http://blog.kaggle.com/2017/01/23/a-kaggle-master-explains-gradient-boosting/">Source 1</a></p>
+
+<p><a href="http://scikit-learn.org/stable/modules/ensemble.html#gradient-tree-boosting">Source 2</a></p>
+
+<p>In addition: This is the only instance where we import a module right when it&#39;s needed instead of up top. Normally, I would recommend not to ignore warnings but to fix what&#39;s causing them. However, here we get 1 warning per n_estimators from a depreciation warning in the inner workings of the classifier, over which we have no control. Therefore: ignore.</p>
+
+<p><strong>Ada Boost:</strong></p>
+
+<pre><code class="language-python">clf_ada = AdaBoostClassifier(n_estimators=400, learning_rate=0.1)
+clf_ada.fit(X,y)
+score_ada = cross_val_score(clf_ada, X, y, cv=5).mean()
+print(score_ada)
+</code></pre>
+
+<pre><code>0.811964391617
+</code></pre>
+
+<p><em>AdaBoost</em>: A boosting classifier that fits sequences of weak learners that are progressively weighted toward those features that the previous weak learners misclassified.</p>
+
+<p><strong>eXtreme Gradient Boosting:</strong></p>
+
+<pre><code class="language-python">clf_xgb = xgb.XGBClassifier(
+    max_depth=2,
+    n_estimators=500,
+    subsample=0.5,
+    learning_rate=0.1
+    )
+clf_xgb.fit(X,y)
+score_xgb = cross_val_score(clf_xgb, X, y, cv=5).mean()
+print(score_xgb)
+</code></pre>
+
+<pre><code>0.820266657725
+</code></pre>
+
+<p><em>eXtreme Gradient Boosting:</em> It&#39;s a good name for a band and also the flavour of the month tool for kaggle competitions in 2016.</p>
+
+<h2 id="toc_27"><em>Examining/Optimising one classifier in more detail:</em></h2>
+
+<p>For each of these various classifiers we can have a closer look to improve their performance and understand their output. As an example we&#39;ll be using the <em>Extremely Randomized Trees</em>, but any other classifier can be substituted instead.</p>
+
+<p>We will start with a <em>grid search algorithm</em> to find the best parameters to run our classifier. This is called <a href="http://scikit-learn.org/stable/modules/grid_search.html"><em>tuning of the hyper-parameters</em></a>. The idea is to define a number of possible values for each hyper-parameter. Together, these sets of values define a grid (which is quite easy to visualise in two dimensions). Then, we evaluate the score of the classifier at each grid point and pick the one parameter combination that gives us the best score.</p>
+
+<pre><code class="language-python">clf_ext = ExtraTreesClassifier(max_features=&#39;auto&#39;,bootstrap=True,oob_score=True)
+param_grid = { &quot;criterion&quot; : [&quot;gini&quot;, &quot;entropy&quot;],
+              &quot;min_samples_leaf&quot; : [1, 5, 10],
+              &quot;min_samples_split&quot; : [8, 10, 12],
+              &quot;n_estimators&quot;: [20, 50, 100]}
+gs = GridSearchCV(estimator=clf_ext, param_grid=param_grid, scoring=&#39;accuracy&#39;, cv=3)
+gs = gs.fit(X,y)
+print(gs.best_score_)
+print(gs.best_params_)
+</code></pre>
+
+<pre><code>0.818820224719
+{&#39;criterion&#39;: &#39;gini&#39;, &#39;min_samples_leaf&#39;: 5, &#39;min_samples_split&#39;: 12, &#39;n_estimators&#39;: 50}
+</code></pre>
+
+<p>With these optimised parameters let&#39;s have a look at the feature importance that this classifier gives us:</p>
+
+<pre><code class="language-python">clf_ext = ExtraTreesClassifier(
+    max_features=&#39;auto&#39;,
+    bootstrap=True,
+    oob_score=True,
+    criterion=&#39;gini&#39;,
+    min_samples_leaf=5,
+    min_samples_split=8,
+    n_estimators=50
+    )
+clf_ext = clf_ext.fit(X,y)
+score_ext = clf_ext.score(X,y)
+print(score_ext)
+pd.DataFrame(list(zip(X.columns, np.transpose(clf_ext.feature_importances_))) \
+            ).sort_values(1, ascending=False)
+</code></pre>
+
+<pre><code>0.830056179775
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Sex</td>
+      <td>0.512424</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Pclass</td>
+      <td>0.166970</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Cabin_known</td>
+      <td>0.088989</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Large_Family</td>
+      <td>0.055078</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Child</td>
+      <td>0.050103</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Young</td>
+      <td>0.047280</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Alone</td>
+      <td>0.042488</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Shared_ticket</td>
+      <td>0.036667</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>As expected, <em>Pclass</em> and <em>Sex</em> have the most impact, but our engineered features are doing not bad either.</p>
+
+<p>Following a suggestion by <a href="https://www.kaggle.com/kiralt">Taner</a> in the comments we also use a <em>Confusion Matrix</em> to evaluate the performance of our classifier. A confusion matrix contains more information than a simple score because it shows how many data points of each class were correctly/incorrectly classified. It&#39;s like a correlation matrix, in a sense. A plot will explain it better than 1000 words. First we define some plotting function; then we plot.</p>
+
+<pre><code class="language-python"># Taner&#39;s code
+def show_confusion_matrix(cnf_matrix, class_labels):
+    plt.matshow(cnf_matrix,cmap=plt.cm.YlGn,alpha=0.7)
+    ax = plt.gca()
+    ax.set_xlabel(&#39;Predicted Label&#39;, fontsize=16)
+    ax.set_xticks(range(0,len(class_labels)))
+    ax.set_xticklabels(class_labels,rotation=45)
+    ax.set_ylabel(&#39;Actual Label&#39;, fontsize=16, rotation=90)
+    ax.set_yticks(range(0,len(class_labels)))
+    ax.set_yticklabels(class_labels)
+    ax.xaxis.set_label_position(&#39;top&#39;)
+    ax.xaxis.tick_top()
+
+    for row in range(len(cnf_matrix)):
+        for col in range(len(cnf_matrix[row])):
+            ax.text(col, row, cnf_matrix[row][col], va=&#39;center&#39;, ha=&#39;center&#39;, fontsize=16)
+
+# sklearn example code
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title=&#39;Confusion matrix&#39;,
+                          cmap=plt.cm.Blues):
+    &quot;&quot;&quot;
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    &quot;&quot;&quot;
+    plt.imshow(cm, interpolation=&#39;nearest&#39;, cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    if normalize:
+        cm = cm.astype(&#39;float&#39;) / cm.sum(axis=1)[:, np.newaxis]
+        print(&quot;Normalized confusion matrix&quot;)
+    else:
+        print(&#39;Confusion matrix, without normalization&#39;)
+
+    print(cm)
+
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, cm[i, j],
+                 horizontalalignment=&quot;center&quot;,
+                 color=&quot;white&quot; if cm[i, j] &gt; thresh else &quot;black&quot;)
+
+    plt.tight_layout()
+    plt.ylabel(&#39;True label&#39;)
+    plt.xlabel(&#39;Predicted label&#39;)
+
+class_names = [&quot;Dead&quot;, &quot;Alive&quot;]
+cnf_matrix = confusion_matrix(clf_ext.predict(X_test),y_test)
+
+# from: http://notmatthancock.github.io/2015/10/28/confusion-matrix.html
+def show_confusion_matrix2(C,class_labels=[&#39;0&#39;,&#39;1&#39;]):
+    &quot;&quot;&quot;
+    C: ndarray, shape (2,2) as given by scikit-learn confusion_matrix function
+    class_labels: list of strings, default simply labels 0 and 1.
+
+    Draws confusion matrix with associated metrics.
+    &quot;&quot;&quot;
+    import matplotlib.pyplot as plt
+    import numpy as np
+    
+    assert C.shape == (2,2), &quot;Confusion matrix should be from binary classification only.&quot;
+    
+    # true negative, false positive, etc...
+    tn = C[0,0]; fp = C[0,1]; fn = C[1,0]; tp = C[1,1];
+
+    NP = fn+tp # Num positive examples
+    NN = tn+fp # Num negative examples
+    N  = NP+NN
+
+    fig = plt.figure(figsize=(8,8))
+    ax  = fig.add_subplot(111)
+    ax.imshow(C, interpolation=&#39;nearest&#39;, cmap=plt.cm.gray)
+
+    # Draw the grid boxes
+    ax.set_xlim(-0.5,2.5)
+    ax.set_ylim(2.5,-0.5)
+    ax.plot([-0.5,2.5],[0.5,0.5], &#39;-k&#39;, lw=2)
+    ax.plot([-0.5,2.5],[1.5,1.5], &#39;-k&#39;, lw=2)
+    ax.plot([0.5,0.5],[-0.5,2.5], &#39;-k&#39;, lw=2)
+    ax.plot([1.5,1.5],[-0.5,2.5], &#39;-k&#39;, lw=2)
+
+    # Set xlabels
+    ax.set_xlabel(&#39;Predicted Label&#39;, fontsize=16)
+    ax.set_xticks([0,1,2])
+    ax.set_xticklabels(class_labels + [&#39;&#39;])
+    ax.xaxis.set_label_position(&#39;top&#39;)
+    ax.xaxis.tick_top()
+    # These coordinate might require some tinkering. Ditto for y, below.
+    ax.xaxis.set_label_coords(0.34,1.06)
+
+    # Set ylabels
+    ax.set_ylabel(&#39;True Label&#39;, fontsize=16, rotation=90)
+    ax.set_yticklabels(class_labels + [&#39;&#39;],rotation=90)
+    ax.set_yticks([0,1,2])
+    ax.yaxis.set_label_coords(-0.09,0.65)
+
+
+    # Fill in initial metrics: tp, tn, etc...
+    ax.text(0,0,
+            &#39;True Neg: %d\n(Num Neg: %d)&#39;%(tn,NN),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    ax.text(0,1,
+            &#39;False Neg: %d&#39;%fn,
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    ax.text(1,0,
+            &#39;False Pos: %d&#39;%fp,
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+
+    ax.text(1,1,
+            &#39;True Pos: %d\n(Num Pos: %d)&#39;%(tp,NP),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    # Fill in secondary metrics: accuracy, true pos rate, etc...
+    ax.text(2,0,
+            &#39;False Pos Rate: %.2f&#39;%(fp / (fp+tn+0.)),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    ax.text(2,1,
+            &#39;True Pos Rate: %.2f&#39;%(tp / (tp+fn+0.)),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    ax.text(2,2,
+            &#39;Accuracy: %.2f&#39;%((tp+tn+0.)/N),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    ax.text(0,2,
+            &#39;Neg Pre Val: %.2f&#39;%(1-fn/(fn+tn+0.)),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+    ax.text(1,2,
+            &#39;Pos Pred Val: %.2f&#39;%(tp/(tp+fp+0.)),
+            va=&#39;center&#39;,
+            ha=&#39;center&#39;,
+            bbox=dict(fc=&#39;w&#39;,boxstyle=&#39;round,pad=1&#39;))
+
+
+    plt.tight_layout()
+    plt.show()
+</code></pre>
+
+<pre><code class="language-python">show_confusion_matrix(cnf_matrix,class_names)
+#show_confusion_matrix2(cnf_matrix,class_names)
+#plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
+#                     title=&#39;Normalized confusion matrix&#39;)
+#sns.heatmap(cnf_matrix, annot=True)
+</code></pre>
+
+<p><img src="media/14967180723369/output_246_0.png" alt="png"/></p>
+
+<p>Here we see that in the testing data set (based on our train/test split) 12 people who survived were misclassified as dead, whereas 21 who died were misclassified as having survived. That is roughly 20% of the cases that were classified correctly. The confusion matrix plot would allow us to identify significant <em>imbalances</em> in our prediction between the false positives and the false negatives. For instance if the off-diagonal elements were 0 and 30. For our case there doesn&#39;t seem to be an imbalance.</p>
+
+<p>Here we use Taner&#39;s function and also include the &quot;official&quot; <a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html">sklearn example</a> for plotting confusion matrices. The latter one, which you can comment also includes the possibility to plot a <em>normalised</em> confusion matrix. In addition, we include the option to use a confusion matrix from <a href="http://notmatthancock.github.io/2015/10/28/confusion-matrix.html">this website</a> which shows more information if we need it. Alternatively, you can use a seaborn heatmap for a quick and easy (but less pretty) plot. Just change the comment tags to switch between the options. Admittedly, 4 different ones are a bit of an overkill, but why not document what we found.</p>
+
+<h2 id="toc_28"><em>Model validation</em></h2>
+
+<p>We want to make sure that our classifiers are not overfitting random data features. One of the most popular ways to check a model for robustness is called <em>cross validation</em>.</p>
+
+<p>It&#39;s an approach similar to bootstrapping, where we use smaller samples from our data set to check whether the classifier gives similar results for each of them.</p>
+
+<p>First a simple cross-validation using the helper function <em>cross_val_score</em>. By default, the data is divided up into <em>k</em> equally sized sub-samples (or <em>folds</em>) and the classifier is trained on <em>k-1</em> of them and evaluated on the remaining one (e.g. for k = 4 we use 4 samples, leave each of them out once and train on the other 3, then evaluate on the one we&#39;ve left out). This process is called <em>K-fold cross validation</em>.  The parameter <em>cv</em> here defines the<em>number</em> of folds (or alternatively something more complex as described in the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html">docs</a> ).  The method used for computing the scores is by default the native scoring method of the classifier (but can be changed).</p>
+
+<p>More background info <a href="http://scikit-learn.org/stable/modules/cross_validation.html">here</a>.</p>
+
+<p><em>We&#39;ve already used this cross-validation above to compute the scores for the individual classifiers.</em></p>
+
+<pre><code class="language-python">clf = clf_ext
+scores = cross_val_score(clf, X, y, cv=5)
+print(scores)
+print(&quot;Mean score = %.3f, Std deviation = %.3f&quot;%(np.mean(scores),np.std(scores)))
+</code></pre>
+
+<pre><code>[ 0.79020979  0.84615385  0.78321678  0.81690141  0.84397163]
+Mean score = 0.816, Std deviation = 0.026
+</code></pre>
+
+<p>As far as I can see, there&#39;s still quite a bit of variation here.</p>
+
+<p>Final validation with the testing data set:</p>
+
+<pre><code class="language-python">score_ext_test = clf_ext.score(X_test,y_test)
+print(score_ext_test)
+</code></pre>
+
+<pre><code>0.815642458101
+</code></pre>
+
+<p>TODO: Expand this section</p>
+
+<h2 id="toc_29"><em>Ranking of models and features</em></h2>
+
+<p><strong>Ranking of models.</strong> I&#39;ve &#39;borrowed&#39; that one straight from this very nice kernel, because it&#39;s a useful summary display of how our models perform:<br/>
+<a href="https://www.kaggle.com/startupsci/titanic/titanic-data-science-solutions">https://www.kaggle.com/startupsci/titanic/titanic-data-science-solutions</a></p>
+
+<pre><code class="language-python">models = pd.DataFrame({
+    &#39;Model&#39;: [&#39;Support Vector Machines&#39;, &#39;KNN&#39;, &#39;Logistic Regression&#39;, 
+              &#39;Random Forest&#39;, &#39;Gradient Boosting&#39;, &#39;Bagging KNN&#39;, 
+              &#39;Decision Tree&#39;,&#39;XGBoost&#39;,&#39;ExtraTree&#39;,&#39;Perceptron&#39;],
+    &#39;Score&#39;: [score_svm, score_knn, score_log, score_rf, score_gb, score_bag,
+              score_tree,score_xgb,score_ext,score_pctr]})
+models.sort_values(by=&#39;Score&#39;, ascending=False)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>8</th>
+      <td>ExtraTree</td>
+      <td>0.830056</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Support Vector Machines</td>
+      <td>0.824532</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>XGBoost</td>
+      <td>0.820267</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Random Forest</td>
+      <td>0.820257</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Decision Tree</td>
+      <td>0.811905</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Gradient Boosting</td>
+      <td>0.811806</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Logistic Regression</td>
+      <td>0.806321</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>KNN</td>
+      <td>0.804763</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Bagging KNN</td>
+      <td>0.801966</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Perceptron</td>
+      <td>0.758412</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>At face value, some classifiers perform better than others. However, the differences between the methods are relatively small and more likely due to more or less over-fitting than anything else. (Except, possibly, for the Perceptron. There a bit more tuning might be appropriate.)</p>
+
+<p>For additional insight we compare the <em>feature_importance</em> output of all the classifiers for which it exists:</p>
+
+<pre><code class="language-python">summary = pd.DataFrame(list(zip(X.columns, \
+    np.transpose(clf_tree.feature_importances_), \
+    np.transpose(clf_rf.feature_importances_), \
+    np.transpose(clf_ext.feature_importances_), \
+    np.transpose(clf_gb.feature_importances_), \
+    np.transpose(clf_ada.feature_importances_), \
+    np.transpose(clf_xgb.feature_importances_), \
+    )), columns=[&#39;Feature&#39;,&#39;Tree&#39;,&#39;RF&#39;,&#39;Extra&#39;,&#39;GB&#39;,&#39;Ada&#39;,&#39;Xtreme&#39;])
+  
+summary[&#39;Median&#39;] = summary.median(1)
+summary.sort(&#39;Median&#39;, ascending=False)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Feature</th>
+      <th>Tree</th>
+      <th>RF</th>
+      <th>Extra</th>
+      <th>GB</th>
+      <th>Ada</th>
+      <th>Xtreme</th>
+      <th>Median</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Sex</td>
+      <td>0.633335</td>
+      <td>0.500182</td>
+      <td>0.512424</td>
+      <td>0.171290</td>
+      <td>0.1575</td>
+      <td>0.155925</td>
+      <td>0.335736</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Pclass</td>
+      <td>0.115488</td>
+      <td>0.156167</td>
+      <td>0.166970</td>
+      <td>0.231537</td>
+      <td>0.1600</td>
+      <td>0.199584</td>
+      <td>0.163485</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Cabin_known</td>
+      <td>0.067423</td>
+      <td>0.084794</td>
+      <td>0.088989</td>
+      <td>0.132796</td>
+      <td>0.0200</td>
+      <td>0.093555</td>
+      <td>0.086892</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Shared_ticket</td>
+      <td>0.006158</td>
+      <td>0.043915</td>
+      <td>0.036667</td>
+      <td>0.126536</td>
+      <td>0.1075</td>
+      <td>0.114345</td>
+      <td>0.075707</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Large_Family</td>
+      <td>0.096111</td>
+      <td>0.065679</td>
+      <td>0.055078</td>
+      <td>0.056103</td>
+      <td>0.1450</td>
+      <td>0.076923</td>
+      <td>0.071301</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Young</td>
+      <td>0.019033</td>
+      <td>0.047425</td>
+      <td>0.047280</td>
+      <td>0.124396</td>
+      <td>0.0925</td>
+      <td>0.147609</td>
+      <td>0.069962</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Alone</td>
+      <td>0.012482</td>
+      <td>0.042636</td>
+      <td>0.042488</td>
+      <td>0.088526</td>
+      <td>0.1700</td>
+      <td>0.122661</td>
+      <td>0.065581</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Child</td>
+      <td>0.049970</td>
+      <td>0.059202</td>
+      <td>0.050103</td>
+      <td>0.068816</td>
+      <td>0.1475</td>
+      <td>0.089397</td>
+      <td>0.064009</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The <em>feature importance</em> tells us how much impact an individual feature has on the decisions within the classifier. Alongside the individual features we also compute a <em>median</em> importance.</p>
+
+<p>The overall result is not very surprising: <em>Sex</em> and <em>Pclass</em> are the dominant features while everything else is of similar, significantly lower importance.</p>
+
+<p>The devil here is in the details:</p>
+
+<ul>
+<li>Why is <em>Sex</em> so much weaker for the boosting algorithms? And why have features like <em>Alone</em> more impact when boosted? Is it because of the lower tree depth?</li>
+<li>What can we learn from these discrepancies with respect to parameter optimisation for the individual classifiers?</li>
+</ul>
+
+<h2 id="toc_30"><em>Stacking / Ensemble methods</em></h2>
+
+<p>Each of the individual classifiers we have used above has its strengths and weaknesses, and we should always choose the classifier that&#39;s best equipped to handle a certain problem and/or has been found to perform with the highest accuracy. But wouldn&#39;t it be nice to combine all these different classifiers to get a more accurate overall prediction? This is possible through an approach called <em>Ensemble methods</em>. We have already encountered this strategy in our Random Forests or Bagging estimators above, where the aim was to get a more accurate estimate from combining multiple runs of a single classifier (like a Decision Tree; for instance).</p>
+
+<p>Now, we want to combine the results of <em>different kinds of classifiers</em> to improve our prediction.</p>
+
+<p>The easiest method to combine different classifiers is through a <strong>Voting Classifier</strong>. It does exactly what the name suggests: each individual classifier makes a certain prediction and then the <em>majority vote</em> is used for each row. This majority process can either give all individual votes the same importance or assign different weights to make some classifiers have more impact than others.</p>
+
+<p>Voting can be more powerful when used with weights, so that several weaker classifiers can only successfully vote against one/two stronger ones if they consistently agree on a specific prediction. This is expected to increase the accuracy of the final prediction. Read more in the extensive <a href="https://mlwave.com/kaggle-ensembling-guide/">Kaggle Ensemble Guide</a>.</p>
+
+<p>Below, we decide to assign different, somewhat arbitrary weight according to how we think each classifier performs. </p>
+
+<pre><code class="language-python">clf_vote = VotingClassifier(
+    estimators=[
+        #(&#39;tree&#39;, clf_tree),
+        (&#39;knn&#39;, clf_knn),
+        (&#39;svm&#39;, clf_svm),
+        (&#39;extra&#39;, clf_ext),
+       #(&#39;gb&#39;, clf_gb),
+        (&#39;xgb&#39;, clf_xgb),
+        (&#39;percep&#39;, clf_pctr),
+        (&#39;logistic&#39;, clf_log),
+        #(&#39;RF&#39;, clf_rf),
+        ],
+    weights=[2,2,3,3,1,2],
+    voting=&#39;hard&#39;)
+clf_vote.fit(X,y)
+
+scores = cross_val_score(clf_vote, X, y, cv=5, scoring=&#39;accuracy&#39;)
+print(&quot;Voting: Accuracy: %0.2f (+/- %0.2f)&quot; % (scores.mean(), scores.std()))
+
+#for clf, label in zip(
+#    [clf_tree,clf_knn,clf_svm,clf_ext,clf_gb,clf_xgb,clf_pctr,clf_log,clf_rf,clf_bag,clf_vote],
+#    [&#39;tree&#39;,&#39;knn&#39;,&#39;svm&#39;,&#39;extra&#39;,&#39;gb&#39;,&#39;xgb&#39;,&#39;percep&#39;,&#39;logistic&#39;,&#39;RF&#39;,&#39;Bag&#39;,&#39;Ensemble&#39;]):
+#    scores = cross_val_score(clf, X, y, cv=5, scoring=&#39;accuracy&#39;)
+#    print(&quot;Accuracy: %0.2f (+/- %0.2f) [%s]&quot; % (scores.mean(), scores.std(), label))
+</code></pre>
+
+<pre><code>Voting: Accuracy: 0.82 (+/- 0.02)
+</code></pre>
+
+<p>In the next step, we will try to incorporate the information from the great <a href="https://www.kaggle.com/arthurtok/introduction-to-ensembling-stacking-in-python">Introduction to Ensembling/Stacking in Python by Anisotropic</a> into our script.</p>
+
+<p>We start out by copying the relevant parts of the script verbatim (standing on the shoulders of giants, and so on ...) and making it run in our environment. Afterwards, we will try to gradually adapt and simplify the approach, to make use of the work we have already done above for all the individual classifiers. Hopefully, this will result in a better understanding of stacking.</p>
+
+<p><em>If you want a step by step overview then have a good look at <a href="https://www.kaggle.com/arthurtok/introduction-to-ensembling-stacking-in-python">Anisotropic&#39;s Kernel</a> and the references therein. Seriously, you should check it out. It&#39;s great.</em></p>
+
+<pre><code class="language-python"># adjust these methods to my notation:
+train = X
+
+# training and train/test split parameters
+ntrain = train.shape[0]
+ntest = test.shape[0]
+SEED = 0 # for reproducibility
+NFOLDS = 5 # set folds for out-of-fold prediction
+kf = KFold(n_splits=NFOLDS, random_state=SEED)
+
+# Class to extend the Sklearn classifier; this basically unifies the way we call each classifier 
+class SklearnHelper(object):
+    def __init__(self, clf, seed=0, params=None):
+        params[&#39;random_state&#39;] = seed
+        self.clf = clf(**params)
+
+    def train(self, x_train, y_train):
+        self.clf.fit(x_train, y_train)
+
+    def predict(self, x):
+        return self.clf.predict(x)
+    
+    def fit(self,x,y):
+        return self.clf.fit(x,y)
+</code></pre>
+
+<pre><code class="language-python"># function for out-of-fold prediction
+def get_oof(clf, x_train, y_train, x_test):
+    oof_train = np.zeros((ntrain,))
+    oof_test = np.zeros((ntest,))
+    oof_test_skf = np.empty((NFOLDS, ntest))
+    
+    # split data in NFOLDS training vs testing samples
+    for i, (train_index, test_index) in enumerate(kf.split(x_train)):
+        # select train and test sample
+        x_tr = x_train[train_index]
+        y_tr = y_train[train_index]
+        x_te = x_train[test_index]
+        
+        # train classifier on training sample
+        clf.train(x_tr, y_tr)
+        
+        # predict classifier for testing sample
+        oof_train[test_index] = clf.predict(x_te)
+        # predict classifier for original test sample
+        oof_test_skf[i, :] = clf.predict(x_test)
+    
+    # take the median of all NFOLD test sample predictions
+    # (changed from mean to preserve binary classification)
+    oof_test[:] = np.median(oof_test_skf,axis=0)
+    return oof_train.reshape(-1, 1), oof_test.reshape(-1, 1)
+</code></pre>
+
+<pre><code class="language-python"># Put in our parameters for selected classifiers
+# Random Forest parameters
+rf_params = {
+    &#39;n_estimators&#39;: 500,
+     &#39;warm_start&#39;: True, 
+     #&#39;max_features&#39;: 0.2,
+    &#39;max_depth&#39;: 6,
+    &#39;min_samples_leaf&#39;: 2,
+    &#39;max_features&#39; : &#39;sqrt&#39;,
+}
+
+# Extra Trees Parameters
+et_params = {
+    &#39;n_estimators&#39;:500,
+    #&#39;max_features&#39;: 0.5,
+    &#39;max_depth&#39;: 8,
+    &#39;min_samples_leaf&#39;: 2,
+}
+
+# AdaBoost parameters
+ada_params = {
+    &#39;n_estimators&#39;: 500,
+    &#39;learning_rate&#39; : 0.75
+}
+
+# Gradient Boosting parameters
+gb_params = {
+    &#39;n_estimators&#39;: 500,
+     #&#39;max_features&#39;: 0.2,
+    &#39;max_depth&#39;: 5,
+    &#39;min_samples_leaf&#39;: 2,
+}
+
+# Support Vector Classifier parameters 
+svc_params = {
+    &#39;kernel&#39; : &#39;linear&#39;,
+    &#39;C&#39; : 0.025
+    }
+</code></pre>
+
+<pre><code class="language-python"># Create objects for each classifier
+rf = SklearnHelper(clf=RandomForestClassifier, seed=SEED, params=rf_params)
+et = SklearnHelper(clf=ExtraTreesClassifier, seed=SEED, params=et_params)
+ada = SklearnHelper(clf=AdaBoostClassifier, seed=SEED, params=ada_params)
+gb = SklearnHelper(clf=GradientBoostingClassifier, seed=SEED, params=gb_params)
+svc = SklearnHelper(clf=svm.SVC, seed=SEED, params=svc_params)
+</code></pre>
+
+<pre><code class="language-python"># Create Numpy arrays of train, test and target dataframes to feed into our models
+y_train = y
+train = X
+foo = test.loc[:,cols]
+x_train = train.values 
+x_test = foo.values
+</code></pre>
+
+<pre><code class="language-python"># Create our OOF train and test predictions. These base results will be used as new features
+et_oof_train, et_oof_test = get_oof(et, x_train, y_train, x_test) # Extra Trees
+rf_oof_train, rf_oof_test = get_oof(rf,x_train, y_train, x_test) # Random Forest
+ada_oof_train, ada_oof_test = get_oof(ada, x_train, y_train, x_test) # AdaBoost 
+gb_oof_train, gb_oof_test = get_oof(gb,x_train, y_train, x_test) # Gradient Boost
+svc_oof_train, svc_oof_test = get_oof(svc,x_train, y_train, x_test) # Support Vector Classifier
+
+print(&quot;Training is complete&quot;)
+</code></pre>
+
+<pre><code>Training is complete
+</code></pre>
+
+<pre><code class="language-python">base_predictions_train = pd.DataFrame( {&#39;RandomForest&#39;: rf_oof_train.ravel(),
+     &#39;ExtraTrees&#39;: et_oof_train.ravel(),
+     &#39;AdaBoost&#39;: ada_oof_train.ravel(),
+      &#39;SVM&#39; : svc_oof_train.ravel(),
+      &#39;GradientBoost&#39;: gb_oof_train.ravel()
+    })
+base_predictions_train.head()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AdaBoost</th>
+      <th>ExtraTrees</th>
+      <th>GradientBoost</th>
+      <th>RandomForest</th>
+      <th>SVM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">plt.figure(figsize=(12,10))
+foo = sns.heatmap(base_predictions_train.corr(), vmax=1.0, square=True, annot=True)
+</code></pre>
+
+<p><img src="media/14967180723369/output_274_0.png" alt="png"/></p>
+
+<p>Stacking of classifiers that have less correlation gives better results. Intuitively, classifiers that are highly correlated, like <em>ExtraTrees</em> and <em>GradientBoost</em> above, are already so similar that stacking doesn&#39;t change the result in a significant way. This is reflected in the relatively low correlation index of the SVM with everything else.</p>
+
+<p>Therefore, it would be more useful to replace the predominantly tree-based sample of classifiers with a more diverse set. </p>
+
+<pre><code class="language-python">x_train = np.concatenate(( et_oof_train, rf_oof_train, ada_oof_train, gb_oof_train, svc_oof_train), axis=1)
+x_test = np.concatenate(( et_oof_test, rf_oof_test, ada_oof_test, gb_oof_test, svc_oof_test), axis=1)
+</code></pre>
+
+<pre><code class="language-python">x_train
+</code></pre>
+
+<pre><code>array([[ 1.,  1.,  1.,  1.,  1.],
+       [ 0.,  0.,  0.,  0.,  0.],
+       [ 0.,  0.,  0.,  0.,  0.],
+       ..., 
+       [ 0.,  0.,  0.,  0.,  0.],
+       [ 0.,  1.,  1.,  0.,  1.],
+       [ 0.,  0.,  0.,  0.,  0.]])
+</code></pre>
+
+<pre><code class="language-python">clf_stack = xgb.XGBClassifier(
+    #learning_rate = 0.02,
+ n_estimators= 2000,
+ max_depth= 4,
+ min_child_weight= 2,
+ #gamma=1,
+ gamma=0.9,                        
+ subsample=0.8,
+ colsample_bytree=0.8,
+ objective= &#39;binary:logistic&#39;,
+ scale_pos_weight=1)
+clf_stack = clf_stack.fit(x_train, y_train)
+stack_pred = clf_stack.predict(x_test)
+</code></pre>
+
+<pre><code class="language-python">scores = cross_val_score(clf_stack, x_train, y_train, cv=5)
+print(scores)
+print(&quot;Mean score = %.3f, Std deviation = %.3f&quot;%(np.mean(scores),np.std(scores)))
+</code></pre>
+
+<pre><code>[ 0.7972028   0.86013986  0.81818182  0.81690141  0.85815603]
+Mean score = 0.830, Std deviation = 0.025
+</code></pre>
+
+<p>Coming soon: The next step will use the pre-packaged stacking classifier of the mlxtend package. </p>
+
+<p><a id='submit'></a></p>
+
+<p><a href="#top">Go to the top of the page</a></p>
+
+<h1 id="toc_31">8. Preparing our prediction for submission</h1>
+
+<p><strong>Finally</strong>, we pick our favourite classifier and <strong>predict</strong> the expected survival for the passengers in the <em>test</em> data set. The result is <strong>written to a submission file</strong> according to the competition rules (418 rows; only include the columns <em>PassengerId</em> and <em>Survived</em>). </p>
+
+<pre><code class="language-python">clf = clf_vote
+df2 = test.loc[:,cols].fillna(method=&#39;pad&#39;)
+surv_pred = clf.predict(df2)
+</code></pre>
+
+<pre><code class="language-python">submit = pd.DataFrame({&#39;PassengerId&#39; : test.loc[:,&#39;PassengerId&#39;],
+                       #&#39;Survived&#39;: surv_pred.T})
+                       &#39;Survived&#39;: stack_pred.T})
+submit.to_csv(&quot;../working/submit.csv&quot;, index=False)
+#submit.to_csv(&quot;submit.csv&quot;, index=False)
+</code></pre>
+
+<pre><code class="language-python">submit.head()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>892</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>893</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>894</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>895</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>896</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="language-python">submit.shape
+</code></pre>
+
+<pre><code>(418, 2)
+</code></pre>
+
+<p>The file <em>submit.csv</em> will now appear in the <em>Output</em> tab of this Kernel and can be submitted to the competition directly from there. (Or at least it used to be. There seem to be some issues with this option at the moment.)</p>
+
+<p>&nbsp;</p>
+
+<p><em>Best of success and enjoy learning!</em></p>
+
+<pre><code class="language-python">
+</code></pre>
 
                         
                       </div>
@@ -565,10 +3523,337 @@
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span class="date">6/6/2017 11:1 上午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='doc.html'>文档</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14964206226772.html">
+                
+                  <h1>Kaggle卫星图片竞赛思路</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<ol>
+<li>旋转不变性</li>
+<li>缩放不变性</li>
+<li>多个神经网络叠加</li>
+<li>滤镜单独训练个神经网络</li>
+</ol>
+
+<p>总结下：</p>
+
+<ol>
+<li>样本图片旋转层</li>
+<li>样本图片缩放层</li>
+<li>多个神经网络缩放</li>
+</ol>
+
+<h2 id="toc_0">样本缩放</h2>
+
+<p>图片质量不高，样本缩放应保证包含较重要信息，比如边缘的图像，城镇等。<br/>
+* 尝试下随机四分缩放</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">6/3/2017 0:23 上午</span>
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14962993796548.html">
+                
+                  <h1>keras 手打Mnist测试</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>导入，有些是多余的，这个print_function还没搞懂式子</p>
+
+<pre><code class="language-python">import keras
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras import backend as K
+import numpy as np
+</code></pre>
+
+<p>创建Tensorboard监听</p>
+
+<pre><code class="language-python">cbks=keras.callbacks.TensorBoard(log_dir=&#39;/tmp/logs&#39;, histogram_freq=0, write_graph=True,  write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)
+</code></pre>
+
+<p>加载数据</p>
+
+<pre><code class="language-python">(x_train,y_train),(x_test,y_test) = mnist.load_data()
+</code></pre>
+
+<p>** 数据要做reshape添加通道 **</p>
+
+<pre><code class="language-python">x_train = np.reshape(x_train,(len(x_train),28,28,1))
+x_test = np.reshape(x_test,(len(x_test),28,28,1))
+</code></pre>
+
+<p>这里要把y转换成1维十通道的向量（因为要与神经网络输出对应）</p>
+
+<pre><code class="language-python">y_train = keras.utils.to_categorical(y_train, 10)
+</code></pre>
+
+<p>ok 数据到这里就准备好了</p>
+
+<p>下面创建模型</p>
+
+<pre><code class="language-python">model = Sequential()
+</code></pre>
+
+<p>添加一个卷积层</p>
+
+<ul>
+<li>64 个卷积核</li>
+<li>(28,28,1)x 是（28*28）的1通道图</li>
+<li>边界 valid 丢弃右侧多余边界/same 用0填充</li>
+<li>‘relu’激活函数</li>
+</ul>
+
+<pre><code class="language-python">model.add(Conv2D(64,(3,3),input_shape=(28,28,1),strides=2,padding=&#39;valid&#39;,activation=&#39;relu&#39;))
+</code></pre>
+
+<p>做个4*4的池化</p>
+
+<pre><code class="language-python">model.add(MaxPooling2D(pool_size=(4,4)))
+</code></pre>
+
+<p>把图片拍平了丢给一个2层网络</p>
+
+<pre><code class="language-python">model.add(Flatten())
+model.add(Dense(10,activation=&#39;softmax&#39;))
+</code></pre>
+
+<p>编译网络，指定优化器，损失函数，评价指标。</p>
+
+<pre><code class="language-python">model.compile(optimizer=&#39;rmsprop&#39;,
+              loss=&#39;categorical_crossentropy&#39;,
+              metrics=[&#39;accuracy&#39;])
+</code></pre>
+
+<p>这里再看下训练数据的格式</p>
+
+<pre><code class="language-python">np.shape(x_train),np.shape(y_train)
+</code></pre>
+
+<pre><code>((60000, 28, 28, 1), (60000, 10))
+</code></pre>
+
+<p>要开始训练了，注意tensorboard是在这个阶段放进去的</p>
+
+<p>当这个步骤开始后就可以在运行tensorflow的服务器上执行：</p>
+
+<p><code>tensorboard --logdir=&#39;/tmp/logs&#39; --host 192.168.130.230</code></p>
+
+<p>来开启tensorboard服务了，访问地址在服务开启后会打出来</p>
+
+<pre><code class="language-python">model.fit(x_train,y_train,epochs=10,verbose=1,batch_size=200,callbacks=[cbks],validation_split=0.1)
+</code></pre>
+
+<pre><code>Train on 54000 samples, validate on 6000 samples
+Epoch 1/10
+54000/54000 [==============================] - 0s - loss: 11.8321 - acc: 0.2545 - val_loss: 11.6785 - val_acc: 0.2672
+Epoch 2/10
+54000/54000 [==============================] - 0s - loss: 11.5241 - acc: 0.2814 - val_loss: 11.5208 - val_acc: 0.2840
+Epoch 3/10
+54000/54000 [==============================] - 0s - loss: 11.5023 - acc: 0.2839 - val_loss: 11.5455 - val_acc: 0.2817
+Epoch 4/10
+54000/54000 [==============================] - 0s - loss: 10.8901 - acc: 0.3165 - val_loss: 8.4736 - val_acc: 0.4560
+Epoch 5/10
+54000/54000 [==============================] - 0s - loss: 7.2009 - acc: 0.5308 - val_loss: 6.6652 - val_acc: 0.5737
+Epoch 6/10
+54000/54000 [==============================] - 0s - loss: 5.1571 - acc: 0.6478 - val_loss: 5.0852 - val_acc: 0.6655
+Epoch 7/10
+54000/54000 [==============================] - 0s - loss: 4.9678 - acc: 0.6682 - val_loss: 5.0733 - val_acc: 0.6668
+Epoch 8/10
+54000/54000 [==============================] - 0s - loss: 4.9384 - acc: 0.6726 - val_loss: 5.0504 - val_acc: 0.6728
+Epoch 9/10
+54000/54000 [==============================] - 0s - loss: 4.9237 - acc: 0.6750 - val_loss: 5.0476 - val_acc: 0.6708
+Epoch 10/10
+54000/54000 [==============================] - 0s - loss: 3.7022 - acc: 0.7319 - val_loss: 3.3021 - val_acc: 0.7682
+
+
+
+
+
+&lt;keras.callbacks.History at 0x7fbd1f1c5a58&gt;
+</code></pre>
+
+<p>这里看一下帮助，发现可以像sklearn一样指定验证集大小，就添加到前面了，也可以使用<code>validation_data: tuple (x_val, y_val) or tuple</code>手动设置</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">6/1/2017 14:42 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14962271262431.html">
+                
+                  <h1>jupyter 免加密连接</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>很简单：</p>
+
+<p>写个脚本</p>
+
+<p><code>jupyter notebook --port=9999 --ip=192.168.130.230</code></p>
+
+<ul>
+<li><code>0.0.0.0</code>就是本机可以访问</li>
+<li><code>192.168....</code>就是内网可以访问</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/31/2017 18:38 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14961980378781.html">
+                
+                  <h1>Keras LSTM</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Hochreiter 于1997年发明的长时记忆单元</p>
+
+<p>想深入的了解该算法，看这里：<br/>
+<a href="http://deeplearning.net/tutorial/lstm.html">this tutorial</a>.</p>
+
+<h1 id="toc_0">Arguments</h1>
+
+<ul>
+<li>units: 输出空间的维度</li>
+<li>activation: Activation function to use
+        (see <a href="../activations.md">activations</a>).
+        要使用的激活函数，如果是None啥都不用
+        (也就是说 &quot;linear&quot; activation: <code>a(x) = x</code>).</li>
+<li>recurrent_activation: 用于复现步骤的激活函数
+        (see <a href="../activations.md">activations</a>).</li>
+<li>use_bias: Boolean:是否使用偏置</li>
+<li>kernel_initializer:             用于初始化核矩阵权值的方法
+        (see <a href="../initializers.md">initializers</a>).</li>
+<li>recurrent_initializer: 用于初始化复现步阶段现行转换权值矩阵的方法
+        (see <a href="../initializers.md">initializers</a>).</li>
+<li>bias_initializer: 偏置向量生成器
+        (see <a href="../initializers.md">initializers</a>).</li>
+<li>unit_forget_bias: Boolean.是否在遗忘单元上加偏置，如果为真，在初始化的时候会在遗忘门上加 1，将他设置为真将强制使用bias_initializer=&quot;zeros&quot;,在这个连接中建议使用这个选项</li>
+<li><p>This is recommended in <a href="http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf">Jozefowicz et al.</a></p></li>
+<li><p>kernel_regularizer:用于核矩阵权值的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>recurrent_regularizer:用于创建核矩阵权值的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>bias_regularizer: 用于偏置向量的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>activity_regularizer:用于输出激活值的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>kernel_constraint: 用于核矩阵的限制函数<br/>
+        (see <a href="../constraints.md">constraints</a>).</p></li>
+<li><p>recurrent_constraint: 用于重现矩阵的限制函数<br/>
+        (see <a href="../constraints.md">constraints</a>).</p></li>
+<li><p>bias_constraint: 用于偏置向量的限制函数<br/>
+        (see <a href="../constraints.md">constraints</a>).</p></li>
+<li><p>dropout: Float.输入做线性转换时丢弃的比例</p></li>
+<li><p>recurrent_dropout: 重现做线性转换时要丢弃的比例</p>
+
+<h1 id="toc_1">References</h1>
+
+<blockquote>
+<ul>
+<li><a href="http://deeplearning.cs.cmu.edu/pdfs/Hochreiter97_lstm.pdf">Long short-term memory</a> (original 1997 paper)</li>
+<li><a href="http://www.mitpressjournals.org/doi/pdf/10.1162/089976600300015015">Learning to forget: Continual prediction with LSTM</a></li>
+<li><a href="http://www.cs.toronto.edu/%7Egraves/preprint.pdf">Supervised sequence labeling with recurrent neural networks</a></li>
+<li><a href="http://arxiv.org/abs/1512.05287">A Theoretically Grounded Application of Dropout in Recurrent Neural Networks</a></li>
+</ul>
+</blockquote></li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/31/2017 10:33 上午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='doc.html'>文档</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -660,31 +3945,31 @@
 	      
 		      
 			      <li class="post">
-			        <a href="14977968463363.html">二叉树</a>
+			        <a href="15015102563853.html">软件工程基础</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14969159275994.html">Faster R-CNN</a>
+			        <a href="15015093939550.html">新大纲</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14969041690185.html">Faster R-CNN：趋近实时物体检测的区域建议网络</a>
+			        <a href="15012188936637.html">Jena RDF API</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14967180723369.html"></a>
+			        <a href="14988073837096.html">自动补全标签思路</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="14964206226772.html">Kaggle卫星图片竞赛思路</a>
+			        <a href="14987984386703.html">sql 字段</a>
 			      </li>
 		     
 		  
@@ -760,7 +4045,7 @@ Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
     </script>
 
     <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
 
 
   </body>

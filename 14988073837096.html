@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  线性表 - AI迷思
+  自动补全标签思路 - AI迷思
   
   </title>
   
@@ -119,14 +119,14 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>线性表</h1>
+          <h1>自动补全标签思路</h1>
      
         <div class="read-more clearfix">
-          <span class="date">5/29/2017 21:21 下午</span>
+          <span class="date">6/30/2017 15:23 下午</span>
 
           <span>posted in&nbsp;</span> 
           
-              <span class="posted-in"><a href='algorithm.html'>算法</a></span>
+              <span class="posted-in"><a href='tech.html'>技术栈</a></span>
            
          
           <span class="comments">
@@ -139,71 +139,17 @@
       </div><!-- article -->
 
       <div class="article-content">
-      <p>向量指的应该就是序列表</p>
+      <h2 id="toc_0">1.svm分类器</h2>
 
-<p>栈和队列都有序列实现和链表实现</p>
+<p>使用svm分类器主要工作在于特征工程，额，这个已经有了。</p>
 
-<h2 id="toc_0">序列（Array Vector）</h2>
+<h2 id="toc_1">2.Word2Vec+LSTM</h2>
 
-<p>太简单略过，有考点再补充</p>
+<p>先训练Word2Vec，再用LSTM训练Sentence2Vec，再用LSTM训练Room2Vec，再训练分类器，啊哈哈哈哈。</p>
 
-<h2 id="toc_1">链表（List）</h2>
+<p>思路是先压缩，再分类。</p>
 
-<p><em>哨兵节点指的貌似就是空头尾节点</em><br/>
-太简单略过，有考点再补充</p>
-
-<h2 id="toc_2">栈</h2>
-
-<p>栈是后入先出的数据结构，可以用链表或者数组实现。</p>
-
-<p>“技术栈”的意思大抵如此，新学的技术取起来比较快，旧的知识取起来比较慢。</p>
-
-<h3 id="toc_3">算式求值</h3>
-
-<p>用栈对算式求值分为两步，书上是倒着讲的，这里把他顺过来。</p>
-
-<ol>
-<li>中缀表达式转为后缀表达式</li>
-<li>后缀表达式求值</li>
-</ol>
-
-<p>这里以一个算式</p>
-
-<p><code>1+2*3+(4*5+6)*7</code><br/>
-来表述流程</p>
-
-<h4 id="toc_4">中缀表达式转后缀表达式</h4>
-
-<p>这里将符号分为两类：</p>
-
-<ul>
-<li>数字</li>
-<li>操作符</li>
-</ul>
-
-<p>通过计算得到的后缀表达式即为输出</p>
-
-<ul>
-<li>读到数字时，立即将数字放到输出中。</li>
-<li>如果读到的是操作符，</li>
-</ul>
-
-<p>这部分只有中缀转后缀比较麻烦一点，但不需要太在理论上推转换逻辑，算两个式子自然就明白了，其实只是常规计算顺序的计算机语言表述。</p>
-
-<p>不大好理解的两点：</p>
-
-<ol>
-<li>左括号权值最高，但右括号出现之前不能出栈。</li>
-<li>在拿到优先级低于栈顶操作符的操作符时才触发操作符出栈，一直出到左括号比操作符优先级低的栈顶前（貌似是废话，因为简单示例的操作符只有2个权值）</li>
-</ol>
-
-<h4 id="toc_5">后缀表达式计算</h4>
-
-<p>这个就是遍历一遍，数字都进栈，碰到操作符就pop出两个计算后把结果push进去，遍历完剩下的一个就是最终结果了。</p>
-
-<h2 id="toc_6">队列</h2>
-
-<p>因为太简单所以略过了。。</p>
+<p>是不是可以直接使用磁带子呢？</p>
 
 
     
@@ -214,16 +160,16 @@
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="14960914407480.html" 
-          title="Previous Post: 日记">&laquo; 日记</a>
+          <a href="15012188936637.html" 
+          title="Previous Post: Jena RDF API">&laquo; Jena RDF API</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="14959068134134.html" 
-          title="Next Post: 计算机系统基础大纲">计算机系统基础大纲 &raquo;</a>
+          <a  href="14987984386703.html" 
+          title="Next Post: sql 字段">sql 字段 &raquo;</a>
       
       </p>
         </div>

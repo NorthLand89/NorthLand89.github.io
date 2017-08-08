@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  线性表 - AI迷思
+  数据结构笔记 - AI迷思
   
   </title>
   
@@ -119,14 +119,14 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>线性表</h1>
+          <h1>数据结构笔记</h1>
      
         <div class="read-more clearfix">
-          <span class="date">5/29/2017 21:21 下午</span>
+          <span class="date">6/26/2017 1:31 上午</span>
 
           <span>posted in&nbsp;</span> 
           
-              <span class="posted-in"><a href='algorithm.html'>算法</a></span>
+              <span class="posted-in"><a href='course.html'>课程</a></span>
            
          
           <span class="comments">
@@ -139,71 +139,49 @@
       </div><!-- article -->
 
       <div class="article-content">
-      <p>向量指的应该就是序列表</p>
+      <h2 id="toc_0">avl</h2>
 
-<p>栈和队列都有序列实现和链表实现</p>
+<p>平衡因子：Balance Factor，BT(T)=\(|h_l-h_r|\)</p>
 
-<h2 id="toc_0">序列（Array Vector）</h2>
+<p>avl 树：BT(t)&lt;2</p>
 
-<p>太简单略过，有考点再补充</p>
+<p>高度为h的平衡二叉树，最小节点数为\(n_h\) 则</p>
 
-<h2 id="toc_1">链表（List）</h2>
+<p><strong>\(n_h=n_{h-1}+n_{h-2}+1\)</strong></p>
 
-<p><em>哨兵节点指的貌似就是空头尾节点</em><br/>
-太简单略过，有考点再补充</p>
+<p><img src="media/14984118813264/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-06-26%20%E4%B8%8A%E5%8D%881.39.06.png" alt="屏幕快照 2017-06-26 上午1.39.06"/></p>
 
-<h2 id="toc_2">栈</h2>
+<p><strong>在实现时记得画图，实际上只有两种场景，记被破坏节点为N，从N到新加入节点前两步相同和前两步不同。</strong></p>
 
-<p>栈是后入先出的数据结构，可以用链表或者数组实现。</p>
+<h2 id="toc_1">堆</h2>
 
-<p>“技术栈”的意思大抵如此，新学的技术取起来比较快，旧的知识取起来比较慢。</p>
+<p>堆中使用哨兵节点可简化逻辑，提升效率。</p>
 
-<h3 id="toc_3">算式求值</h3>
-
-<p>用栈对算式求值分为两步，书上是倒着讲的，这里把他顺过来。</p>
+<p>有两种添加方法，单个插入和构建：</p>
 
 <ol>
-<li>中缀表达式转为后缀表达式</li>
-<li>后缀表达式求值</li>
+<li>单个插入时插入到末尾，递归调整顺序。</li>
+<li>在构建时直接放到数组中，然后倒序二元调整就好了。</li>
 </ol>
 
-<p>这里以一个算式</p>
+<h2 id="toc_2">哈夫曼树(最优二叉树)</h2>
 
-<p><code>1+2*3+(4*5+6)*7</code><br/>
-来表述流程</p>
+<p>带权路径长度(WPL):设二叉树有<strong>n个叶子节点</strong>，每个叶子结点带有权值\(w_k\)，从根节点到每个叶子节点的长度为\(l_k\)，则每个叶子节点的戴荃路径长度值和就是：\(WPL=\sum_{k=1}^n{w_{k}l_{k}}\)</p>
 
-<h4 id="toc_4">中缀表达式转后缀表达式</h4>
+<p>哈夫曼树的特点：<br/>
+* 没有度为1的节点<br/>
+* n个叶子节点的哈夫曼树共有2n-1个节点 \((n_2=n_0-1)\)<br/>
+* 哈夫曼树的任意非叶节点的左右子树交换后仍是哈夫曼树。<br/>
+* 同一组权值，可以存在两棵不同构的哈夫曼树，但WPL都相同。</p>
 
-<p>这里将符号分为两类：</p>
+<h2 id="toc_3">哈夫曼编码</h2>
 
-<ul>
-<li>数字</li>
-<li>操作符</li>
-</ul>
+<p><strong>前缀码prefix code</strong>：任何字符的编码都不是另一字符编码的前缀<br/>
+* 可以无二义地解码</p>
 
-<p>通过计算得到的后缀表达式即为输出</p>
+<p>为了实现前缀码，所以使用树进行编码，当字符仅出现在叶子节点上时，就不可能出现一个字符是另一个编码的前缀。这里左为0，右为1.</p>
 
-<ul>
-<li>读到数字时，立即将数字放到输出中。</li>
-<li>如果读到的是操作符，</li>
-</ul>
-
-<p>这部分只有中缀转后缀比较麻烦一点，但不需要太在理论上推转换逻辑，算两个式子自然就明白了，其实只是常规计算顺序的计算机语言表述。</p>
-
-<p>不大好理解的两点：</p>
-
-<ol>
-<li>左括号权值最高，但右括号出现之前不能出栈。</li>
-<li>在拿到优先级低于栈顶操作符的操作符时才触发操作符出栈，一直出到左括号比操作符优先级低的栈顶前（貌似是废话，因为简单示例的操作符只有2个权值）</li>
-</ol>
-
-<h4 id="toc_5">后缀表达式计算</h4>
-
-<p>这个就是遍历一遍，数字都进栈，碰到操作符就pop出两个计算后把结果push进去，遍历完剩下的一个就是最终结果了。</p>
-
-<h2 id="toc_6">队列</h2>
-
-<p>因为太简单所以略过了。。</p>
+<h2 id="toc_4">图</h2>
 
 
     
@@ -214,16 +192,16 @@
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="14960914407480.html" 
-          title="Previous Post: 日记">&laquo; 日记</a>
+          <a href="14986861730968.html" 
+          title="Previous Post: 直播间机器人识别">&laquo; 直播间机器人识别</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="14959068134134.html" 
-          title="Next Post: 计算机系统基础大纲">计算机系统基础大纲 &raquo;</a>
+          <a  href="14977968463363.html" 
+          title="Next Post: 二叉树">二叉树 &raquo;</a>
       
       </p>
         </div>

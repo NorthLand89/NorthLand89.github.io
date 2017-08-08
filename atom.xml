@@ -4,13 +4,1359 @@
   <title><![CDATA[AI迷思]]></title>
   <link href="http://www.aimyth.com/atom.xml" rel="self"/>
   <link href="http://www.aimyth.com/"/>
-  <updated>2017-06-06T01:00:00+08:00</updated>
+  <updated>2017-07-31T21:58:46+08:00</updated>
   <id>http://www.aimyth.com/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[软件工程基础]]></title>
+    <link href="http://www.aimyth.com/15015102563853.html"/>
+    <updated>2017-07-31T22:10:56+08:00</updated>
+    <id>http://www.aimyth.com/15015102563853.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">一、软件过程</h2>
+
+<h3 id="toc_1">软件过程的概念</h3>
+
+<p>Software Process，也成为软件生存周期过程，是指软件生存周期内的一系列相关过程。</p>
+
+<p><strong>过程：活动的集合</strong></p>
+
+<p><strong>活动：任务的集合</strong></p>
+
+<p><strong>任务：要起到把输入加工成输出的作用</strong></p>
+
+<p>活动的执行可以是：</p>
+
+<ul>
+<li>顺序的</li>
+<li>迭代的（重复的）</li>
+<li>并行的</li>
+<li>嵌套的</li>
+<li>有条件地引发的</li>
+</ul>
+
+<h3 id="toc_2">经典软件过程模型的特点（瀑布模型、增量模型、演化模型、统一过程模型）</h3>
+
+<h4 id="toc_3">瀑布模型特点：</h4>
+
+<ol>
+<li>各个阶段的顺序性和依赖性</li>
+<li>划分逻辑设计和物理设计，尽可能推迟程序的物理实现。</li>
+<li>每个阶段必须完成规定的文档，对其中问题通过复审及早发现，及早解决。</li>
+</ol>
+
+<p>优点：</p>
+
+<ol>
+<li>可强迫开发人员采用规范的方法。</li>
+<li>严格规定了每个阶段必须提交的文档。</li>
+<li>要求每个阶段交出的所有产品都必须经过质量保证小组的仔细验证。</li>
+</ol>
+
+<p>缺点：</p>
+
+<ol>
+<li>用户需求不清是一个常见情况，瀑布模型不接受。</li>
+<li>错误发现迟导致大量返工。</li>
+<li>线性模型导致的开发进度缓慢。</li>
+</ol>
+
+<h4 id="toc_4">增量模型</h4>
+
+<p>与瀑布模型相比，有以下优点：<br/>
+1. 多个版本可以并行开发<br/>
+2. 每个版本都是可运行的产品，每一个线性序列产生软件的一个可发布的增量，他必须是可运行的产品。<br/>
+3. 需求在开发早起是明确的。<br/>
+4. 需求不明确或者变更导致的返工风险更大。</p>
+
+<h4 id="toc_5">演化模型（最广泛的模型）</h4>
+
+<p>自己总结：支持并行开发，增量式递交产品，加快了开发进度，通过迭代环节技术风险和系统集成风险，核心需求确定后即可开始开发，后续变更需求通过迭代演示及时收集改正，保证开发出来的系统真正解决用户的问题。缺点是复杂，迭代的规划和控制是难点，也是成功的关键。</p>
+
+<h4 id="toc_6">统一过程模型</h4>
+
+<p>UP</p>
+
+<p>包括以下三大组成部分：</p>
+
+<ol>
+<li>一整套成功开发软件的原理和最佳实践。</li>
+<li>过程模型和相关的内容模板库。</li>
+<li>过程定义工具。</li>
+</ol>
+
+<p>把软件开发生命周期分为：</p>
+
+<ol>
+<li>先启，所有项目干系人就目标达成共识。目标里程碑。</li>
+<li>精化，建立软件架构基线，解决技术风险，以便为软件的详细设计和实现提供稳定的基础。架构里程碑。</li>
+<li>构建，基于已建立基线的架构完成系统开发。初始能力里程碑。</li>
+<li>产品化，确保最终用户可以使用软件。发布里程碑。</li>
+</ol>
+
+<p>每个阶段的结束就是一个业务决策里程碑（大里程碑）</p>
+
+<h4 id="toc_7">过程评估与CMM/CMMI的基本概念</h4>
+
+<p>关于软件开发过程的问题：<br/>
+* 所定义的软件过程是否适合本组织或本团队？<br/>
+* 过程绩效如何？<br/>
+* 软件过程能力成熟度为几级？<br/>
+* 哪些过程域做的很好，哪些又有不足？</p>
+
+<p>对以上为题的评估，主要有：<br/>
+* CMM/CMMI<br/>
+* ISO/IEC 15504<br/>
+* ISO/IEC 20000<br/>
+* Bootstrap<br/>
+* Trillium<br/>
+* 等</p>
+
+<hr/>
+
+<p>CMM/CMMi:</p>
+
+<p>80年代中期，由美国联盟政府提出，要对软件承包商的软件开发能力进行评估。CMU/SEI与1987年研究发布了Capability Maturity Mode 也就是CMM。CMM在发展过程中衍生出一系列模型，包括：</p>
+
+<ul>
+<li>Software CMM SW-CMM 软件CMM</li>
+<li>System Engineering CMM SE-CMM 系统工程CMM</li>
+<li>Software Acquisition CMM SA-CMM 软件采购CMM</li>
+<li>Integrated Product Team CMM IPT-CMM 集成产品群组CMM</li>
+<li>People CMM P-CMM 人力资源CMM</li>
+</ul>
+
+<p>为了减少采用多种成熟度模型引起不必要的冲突和混淆，解决模型间的细条问题，CMI/SEI在2002年研究发布了软件成熟度模型集成 Capability Matruity Model Integration 也就是CMMI</p>
+
+<p>CMMI 是一个标准簇，它包括以下内容：</p>
+
+<ul>
+<li>CMMI for Development CMMI-DEV 开发模型</li>
+<li>CMMI for Service CMMI-SVC 服务模型</li>
+<li>CMMI for Acquisition CMMI-ACQ 采购模型</li>
+</ul>
+
+<p>CMMI用两种表示法支持不同的改进方法：</p>
+
+<ul>
+<li>组织成熟度方法（阶梯式模型），强调组织成熟度。</li>
+<li>过程能力方法（连续式模型），强调单个过程域的能力。</li>
+</ul>
+
+<p>CMMI 阶梯式模型将软件组织的成熟度分为：</p>
+
+<p>1 初始级<br/>
+2 已管理级<br/>
+3 已定义级<br/>
+4 定量管理级<br/>
+5 持续优化级</p>
+
+<p>进化途径为：<br/>
+1. 有纪律的过程 2<br/>
+2. 标准一致的过程 3<br/>
+3. 可预测的过程 4<br/>
+4. 不断改进的过程 5</p>
+
+<p>CMMI 连续式模型将评估划分为4大块：</p>
+
+<ul>
+<li>过程管理（组织）</li>
+<li>项目管理（项目）</li>
+<li>工程管理（开发）</li>
+<li>支持 （服务）</li>
+</ul>
+
+<h4 id="toc_8">敏捷宣言与敏捷过程的特点</h4>
+
+<p>四个核心价值观：</p>
+
+<ol>
+<li>注重个人和交互胜于过程和工具。</li>
+<li>注重可用的软件胜于事无巨细的文档。</li>
+<li>注重客户协作胜于合同谈判。</li>
+<li>注重随机应变胜于循规蹈矩（恪守计划）。</li>
+</ol>
+
+<p>十二条基本原则：</p>
+
+<ol>
+<li>最优先的目标是通过尽早地，持续地交付高价值的软件来满足客户需要。</li>
+<li>即使到了开发的后期，也欢迎改变需求。</li>
+<li>经常交付可以工作的软件，交付的间隔可以从几周到几个月，交付的时间间隔越短越好。</li>
+<li>在整个项目开发期间，业务人员和开发人员必须每天在一起工作。</li>
+<li>围绕被激励起来的的来构建项目。给他们提供所需要的环境和支持，并且信任他们能够完成工作。</li>
+<li>在团队内部，最具有效果并且富有销路的传递信息的方法，就是面对面的交流。</li>
+<li>可以工作的软件是进度的主要度量标准。</li>
+<li>敏捷过程提倡可持续开发。出资人，开发人员和用户应该总是维持不变的节奏。</li>
+<li>对卓越技术与良好设计的不断追求有助于提高敏捷性。</li>
+<li>简单-尽可能减少工作量的艺术至关重要。</li>
+<li>最好的架构、需求和设计都源自自我组织的团队。</li>
+<li>每隔一定时间，团队都要总结如何更有效率，然后相应地调整自己的行为。</li>
+</ol>
+
+<h3 id="toc_9">二、软件需求</h3>
+
+<p>软件需求的概念；</p>
+
+<h4 id="toc_10">软件需求的概念</h4>
+
+<p>软件需求是<br/>
+1. 用户解决问题或达到目标所需条件或权能（Capability）<br/>
+2. 系统或系统部件要满足合同、标准、规范或其他正式规定文档所需具有的条件或权能。<br/>
+3. 一种反应1、2所述条件或权能的文档说明。</p>
+
+<p>软件需求包括功能性需求和非功能性需求，<a href="https://baike.baidu.com/item/%E9%9D%9E%E5%8A%9F%E8%83%BD%E6%80%A7%E9%9C%80%E6%B1%82">非功能性需求</a>对设计和实现提出了限制，比如性能要求，质量标准或涉及限制等。</p>
+
+<p><em>以上为百科定义</em></p>
+
+<p><strong>需求</strong>:系统必须符合的条件或能力。软件系统必须符合的条件或能力，一般用FURPS+模型定义。</p>
+
+<ul>
+<li>功能性：Functionality。特性、功能和安全性。</li>
+<li>易用性：Usability。用于衡量准备输入、操作盒理解产品输出所付出的努力。</li>
+<li>可靠性：Reliability。可靠性是软件无故障执行一段时间的概率。</li>
+<li>性能：Performanc。性能需求是在功能需求基础上规定的性能参数，包括速度、效率、可用性、准确性、吞吐量、响应时间、资源使用情况。</li>
+<li>可支持性：Supportability。可支持性需求表明进行系统测试、安装、扩展、移植等工作时所需工作量的大小。</li>
+</ul>
+
+<p>其中UPRS合称为非功能需求，或软件质量属性。+是一些补充的需求，比如：</p>
+
+<ul>
+<li>设计约束：Design Constraints。规定或约束了系统的设计，通常任何不允许有一个以上设计选项的需求都可以认为是一个设计约束，例如必须采用某种算法，必须使用某种数据库。</li>
+<li>实现需求：Implementation Requirements。规定了系统必须与之交互操作的外部软件或硬件，以及对这种交互操作所采用的格式、时间或其他因素的约束。</li>
+<li>接口需求：Interface Requirements：规定了系统必须与之交互操作的外部软件或硬件，以及对这种交互操作所采用的格式，时间或其他因素的约束。</li>
+<li>物理需求：Physical Requirements：规定了系统必须具备的物理特征，可用来代表硬件要求，如物理网络配置需求。</li>
+</ul>
+
+<p>软件需求关注的是待开发的系统是什么，而不是如何去开发。</p>
+
+<h4 id="toc_11">需求工程的基本过程</h4>
+
+<p>软件需求包括3个层次：<br/>
+1. 项目干系人需求：Stakeholder Requests，既<code>原始需求</code>，是开发团队调研获得项目干系人对系统的要求。<br/>
+2. 前景文档：Vision，既<code>概要需求</code>，用于记录关键的用户需要和系统特性。<br/>
+3. 软件需求规约：Software Requirement Specification SRS，正式的详细软件需求。</p>
+
+<p>需求工程的基本过程：</p>
+
+<ol>
+<li>需求获取</li>
+<li>需求分析</li>
+<li>需求定义</li>
+<li>需求验证</li>
+<li>需求管理</li>
+</ol>
+
+<p>需求获取包括：</p>
+
+<ul>
+<li>项目前景文档</li>
+<li>术语表</li>
+<li>项目干系人需求</li>
+</ul>
+
+<h4 id="toc_12">用例和场景建模及其UML表达</h4>
+
+<p><strong>用例图</strong></p>
+
+<p>用来描述软件系统的上下文范围以及他提供的功能的概览视图。它从黑盒的角度，描述了谁（或什么）与系统交互，外部希望系统做些什么。</p>
+
+<p><img src="media/15015102563853/15022067461348.png" alt=""/></p>
+
+<p>用例图的基本元素包括</p>
+
+<ol>
+<li>执行者：是与系统交互的实体，可以是人，其他外接的硬件设备或系统。执行者位于子系统外，用人来表示。</li>
+<li>用例：代表执行者希望系统为他们做什么，用椭圆表示，用例不仅仅是系统可以提供的功能，从执行者来看，用例必须是一个完整的活动流程，为使用者提供<code>价值</code>。</li>
+<li>关系：包括<code>执行者和用例间的关系</code>、<code>用例和用例间的关系</code>和<code>执行者与执行者</code>之间的关系。执行者和用例间的关系只有一种，既关联，标识哪个执行者使用哪个用例。用例之间有三种关系：包含、扩展和泛化。执行者之间的关系只有一种：泛化。</li>
+</ol>
+
+<h4 id="toc_13">活动图</h4>
+
+<p>用于刻画一个系统或子系统的工作流程，也可用于描述用例内部的事件流。</p>
+
+<p>活动图的基本元素包括：</p>
+
+<ol>
+<li>动作：Action。是行为的基本单元，一个活动可包含多个动作。动作用圆角矩形标识。</li>
+<li>控制流：Control Flow。用来表示从一个动作到另一个动作的流的控制，用一条带箭头的直线表示。</li>
+<li>控制节点：Control Node。用于协调动作的节点，他决定了活动图的流程。控制节点分为<code>初始节点</code>，<code>终止节点</code>，<code>判断节点</code>，<code>合并节点</code>，<code>分叉节点</code>，<code>汇合节点</code></li>
+<li>对象节点：Object Node。是动作处理的额数据，用矩形表示。</li>
+</ol>
+
+<p><strong>控制节点包括</strong>：</p>
+
+<ul>
+<li>初始节点：活动开始的节点，用实心圆标识。</li>
+<li>终止节点：活动结束的节点，细分为活动终止和流终止。分别用带十字叉的元和带边框的实心圆表示。网上一般都是流终止，书上是活动终止。</li>
+<li>分叉节点：并发流开始。</li>
+<li>汇合节点：并发流结束。</li>
+<li>判断节点：用菱形符号表示。一个判断节点可以有一个进入流和多个离去流。在每个离去流上防止一个布尔表达式，在进入这个分支时判断一次。在所有离去流中，器监护条件应该覆盖所有可能性（不然控制流可能会冻结），同事不应该重叠（否则控制流可能有二义性）。</li>
+<li>合并节点：也用菱形符号表示，一个合并节点可以有多喝进入流和一个离去流。他可以将多个控制路径重新合并，就是说后边都一样了。离去流向的动作会被执行输入流动作数量的和次。</li>
+</ul>
+
+<p><strong>对象节点</strong> </p>
+
+<p>是动作处理的数据，用举行表示。在某些情况下，看到活动中操作的对象会比较有用。但是在所有活动图中这样做会导致活动图变得复杂和臃肿。</p>
+
+<p><strong>分区和泳道</strong><br/>
+活动图中的元素可以用<code>分区（Partition）</code>，<code>泳道（Swimlane）</code>来分组。分组的目的是说明具体活动的责任。</p>
+
+<p><strong>泳道</strong></p>
+
+<p>泳道可以是一个业务单位、部门、小组、执行者、系统、子系统、对象。每个泳道都可以被命名，表示负责者。<br/>
+个人理解就是监护职能划分。<br/>
+<img src="media/15015102563853/15022097288461.jpg" alt=""/></p>
+
+<p><strong>分区</strong><br/>
+好像和泳道是一回事。</p>
+
+<p><strong>时序图</strong></p>
+
+<p><code>状态机</code>可以刻画专注于<code>对象内部的行为</code>。而<code>时序图</code>和<code>通信图</code>可以刻画关注与<code>对象之间的协作</code>。</p>
+
+<p>时序图，又称为序列图、顺序图。它通过描述对象之间发送消息的时间顺序显示多个对象之间的动态合作。时序图用于跟踪同一个上下文环境中一个用例场景的执行，当执行一个场景时，时序图中的每条消息对应了一个类操作或状态机中引起转换的触发事件。</p>
+
+<p><img src="media/15015102563853/15022104098601.jpg" alt=""/></p>
+
+<p>时序图以二维图的形式刻画对象间的动态交互。垂直维是<code>时间(Time)</code>，用于表示对象之间传送消息的时间顺序。水平维是<code>角色(Role)</code>,每个角色有一个名称和一条<code>生命线（Lifeline）</code>。生命线代表整个交互过程中对象的生命期，用垂直虚线表示。生命线之间的箭头连线代表<code>消息（Message）</code>。当对象发送或接收消息时，生命线用双条实线表示。</p>
+
+<p><strong>消息分为3类：</strong></p>
+
+<ul>
+<li>同步消息，既操作调用，用带箭头实心线。</li>
+<li>异步消息，带开放箭头实心线。</li>
+<li>返回消息，带开放箭头的虚线。（书上写实线，但画的是虚线）</li>
+</ul>
+
+<p><code>序列片段</code>可以用来简化时序图，也可以用来表示时序图中的流程控制结构，它主要包括：</p>
+
+<ul>
+<li>交互使用：Interaction Use 左上角ref</li>
+<li>循环：Loop 左上角loop</li>
+<li>条件：Conditional Fragment 左上角alt</li>
+<li>并发：Parallel Fragment 左上角par</li>
+</ul>
+
+<p>需求工程的基本过程；分层数据流模型；用例和场景建模及其UML表达（用例图、活动图、泳道图、顺序图）；数据模型建模及其UML表达（类图）；行为模型建模及其UML表达（状态机图）。</p>
+
+<h3 id="toc_14">三、软件设计与构造</h3>
+
+<p>软件体系结构及体系结构风格的概念；设计模式的概念；模块化设计的基本思想及概念（抽象、分解、模块化、封装、信息隐藏、功能独立）；软件重构的概念；软件体系结构的UML建模（包图、类图、构件图、顺序图、部署图）；接口的概念；面向对象设计原则（开闭原则、Liskov替换原则、依赖转置原则、接口隔离原则）；内聚与耦合的概念、常见的内聚和耦合类型。</p>
+
+<h3 id="toc_15">四、软件测试</h3>
+
+<p>软件测试及测试用例的概念；单元测试、集成测试、确认测试、系统测试、回归测试的概念；调试的概念、调试与测试的关系；测试覆盖度的概念；白盒测试、黑盒测试的概念；代码圈复杂度的计算方法；白盒测试中的基本路径测试方法；黑盒测试中的等价类划分方法。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[新大纲]]></title>
+    <link href="http://www.aimyth.com/15015093939550.html"/>
+    <updated>2017-07-31T21:56:33+08:00</updated>
+    <id>http://www.aimyth.com/15015093939550.html</id>
+    <content type="html"><![CDATA[
+<p>【临时重发】2017年复旦自主命题专业课：《软件工程专业基础综合》考试大纲 <br/>
+2017-06-04MSE热线复旦MSE热线<br/>
+说明：参考书目未指定，因为一般的国内本科阶段教材都能找到相应知识点</p>
+
+<h2 id="toc_0">第一部分软件工程基础</h2>
+
+<p>考试题型：概念问答题、实践案例题<br/>
+总分：50分</p>
+
+<h3 id="toc_1">一、软件过程</h3>
+
+<p>软件过程的概念；经典软件过程模型的特点（瀑布模型、增量模型、演化模型、统一过程模型）；过程评估与CMM/CMMI的基本概念；敏捷宣言与敏捷过程的特点。</p>
+
+<h3 id="toc_2">二、软件需求</h3>
+
+<p>软件需求的概念；需求工程的基本过程；分层数据流模型；用例和场景建模及其UML表达（用例图、活动图、泳道图、顺序图）；数据模型建模及其UML表达（类图）；行为模型建模及其UML表达（状态机图）。</p>
+
+<h3 id="toc_3">三、软件设计与构造</h3>
+
+<p>软件体系结构及体系结构风格的概念；设计模式的概念；模块化设计的基本思想及概念（抽象、分解、模块化、封装、信息隐藏、功能独立）；软件重构的概念；软件体系结构的UML建模（包图、类图、构件图、顺序图、部署图）；接口的概念；面向对象设计原则（开闭原则、Liskov替换原则、依赖转置原则、接口隔离原则）；内聚与耦合的概念、常见的内聚和耦合类型。</p>
+
+<h3 id="toc_4">四、软件测试</h3>
+
+<p>软件测试及测试用例的概念；单元测试、集成测试、确认测试、系统测试、回归测试的概念；调试的概念、调试与测试的关系；测试覆盖度的概念；白盒测试、黑盒测试的概念；代码圈复杂度的计算方法；白盒测试中的基本路径测试方法；黑盒测试中的等价类划分方法。</p>
+
+<h2 id="toc_5">第二部分计算机系统基础</h2>
+
+<p>考试题型：问答、分析<br/>
+总分：40分</p>
+
+<h3 id="toc_6">一、处理器体系结构</h3>
+
+<p>内容：CPU中的时序电路、单周期处理器的设计、流水线处理器的基本原理、Data Hazard的处理、流水线设计中的其他问题</p>
+
+<h3 id="toc_7">二、优化程序性能</h3>
+
+<p>内容：优化程序性能、优化编译器的能力和局限性以及表示程序性能、特定体系结构或应用特性的性能优化、限制因素、确认和消除性能瓶颈</p>
+
+<h3 id="toc_8">三、存储器结构及虚拟存储器</h3>
+
+<p>内容：局部性、存储器层级结构、计算机高速缓存器原理、高速缓存对性能的影响、地址空间、虚拟存储器、虚拟内存的管理、翻译和映射、TLB、动态存储器分配和垃圾收集</p>
+
+<h3 id="toc_9">四、链接、进程及并发编程</h3>
+
+<p>内容：静态链接、目标文件、符号和符号表、重定位和加载、动态链接库、异常和进程、进程控制和信号、进程间的通信、进程间信号量的控制、信号量，各种并发编程模式，共享变量和线程同步，其他并行问题</p>
+
+<h3 id="toc_10">五、系统级I/O和网络编程</h3>
+
+<p>内容：I/O相关概念、文件及文件操作、共享文件、网络编程、客户端-服务器模型，套接字接口、HTTP请求，Web服务器</p>
+
+<h2 id="toc_11">第三部分数据结构</h2>
+
+<p>考试题型：问答、分析、编程（廖老师：可用自己熟悉的程序语言、伪代码均可）<br/>
+总分：60分</p>
+
+<h3 id="toc_12">一、栈（Stack）、队列（Queue）和向量（Vector）</h3>
+
+<p>内容:<br/>
+单链表,双向链表,环形链表,带哨兵节点的链表;<br/>
+栈的基本概念和性质,栈ADT及其顺序,链接实现;栈的应用;栈与递归;<br/>
+队列的基本概念和性质,队列ADT及其顺序,链接实现;队列的应用;<br/>
+向量基本概念和性质;向量ADT及其数组、链接实现;</p>
+
+<h3 id="toc_13">二、树</h3>
+
+<p>内容: 树的基本概念和术语;树的前序,中序,后序,层次序遍历;<br/>
+二叉树及其性质;普通树与二叉树的转换;<br/>
+树的存储结构,标准形式;完全树(complete tree)的数组形式存储;<br/>
+树的应用,Huffman树的定义与应用;</p>
+
+<h3 id="toc_14">三、查找(search)</h3>
+
+<p>内容: 查找的基本概念;对线性关系结构的查找,顺序查找,二分查找;<br/>
+Hash查找法,常见的Hash函数(直接定址法,随机数法),hash冲突的概念, 解决冲突的方法(开散列方法/拉链法,闭散列方法/开址定址法),二次聚集现象;<br/>
+BST树定义,性质,ADT及其实现,BST树查找,插入,删除算法;<br/>
+平衡树 (AVL) 的定义,性质,ADT及其实现,平衡树查找,插入算法,平衡因子的概念;<br/>
+优先队列与堆,堆的定义,堆的生成,调整算法;范围查询;</p>
+
+<h3 id="toc_15">四、排序</h3>
+
+<p>内容: 排序基本概念;插入排序,希尔排序,选择排序,快速排序,合并排序,基数排序等排序算法基本思想,算法代码及基本的时间复杂度分析</p>
+
+<h3 id="toc_16">五、图</h3>
+
+<p>内容：图的基本概念;图的存储结构,邻接矩阵,邻接表;图的遍历,广度度优先遍历和深度优先遍历;最小生成树基本概念,Prim算法,Kruskal算法;最短路径问题,广度优先遍历算法,Dijkstra算法,Floyd算法;拓扑排序。</p>
+
+<p>特色方向报名联系老师：廖炳华 老师<br/>
+特色方向报名老师联系方式：（021）13012893863（含微信）；55664335-809；<a href="mailto:liaobh@fudan.edu.cn">liaobh@fudan.edu.cn</a>。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jena RDF API]]></title>
+    <link href="http://www.aimyth.com/15012188936637.html"/>
+    <updated>2017-07-28T13:14:53+08:00</updated>
+    <id>http://www.aimyth.com/15012188936637.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">前言</h2>
+
+<p>这是一个包含了<strong>W3C资源描述框架（RDF）</strong>和<strong>Jena</strong>,一个RDF的Java API 的教程。这篇教程写个不熟悉RDF但熟悉原型（prototyping）或者其他希望快速实现的程序员。假设读者已经有XML和Java的基础。</p>
+
+<p>在初步理解RDF数据模型钳快速实现会导致挫败和失望。单独学习数据模型比较枯燥，就像猜字谜一样。边学边用更好一点。学一点数据模型就把他弄出来，往复前行。这样理论指导实践而实践又验证了理论。数据模型很简单，所以不会花很多时间。</p>
+
+<p>RDF有XML句法，一些人看起来会觉得比较熟悉。这是幻觉。RDF应该按照它的数据模型来理解。RDF数据可以用XML表述，但理解数据模型比理解句法更重要。</p>
+
+<p>一个JenaAPI的实现，包括源码和本文中的样例代码都可以从<a href="http://jena.apache.org/download/index.cgi">jena.apache.org/download/index.cgi</a> 下载到。</p>
+
+<h2 id="toc_1">正文列表</h2>
+
+<h3 id="toc_2">介绍</h3>
+
+<p>资源描述框架（RDF）是一个描述资源的标准（W3C建议）。什么是资源？ 它的精确定义大家仍然争论。我们可以标识的任何东西都可以想象成资源。你是一个资源，你的主页也是个资源，这篇教程，数字1，和莫比迪克的《白鲸》都是。</p>
+
+<p>我们的样例是关于人的，他们使用名片数据资源<a href="http://www.w3.org/TR/vcard-rdf/">RDF representation of VCARDS</a>,RDF 最好理解为图标中的行，一个简单的vcard看起来可能是这样：<br/>
+<img src="media/15012188936637/15012206702534.png" alt=""/>图1<br/>
+资源项，John Smith 在一个椭圆中显示为唯一资源标识符(URI)，在这个例子中是&quot;http://.../JohnSmith&quot;。</p>
+
+<p>资源包含属性，在这些样例中我们关注与 John Smith的名片上属性的顺序。图1只显示了一个属性，就是全名（FN）。一个属性就代表了一个有向链接，以属性名作为标签。属性名同样也是个URI，但这个URI更长且更笨重。在XML表中可以看到。在“：”之前的的称为命名空间前缀，它代表了一个命名空间。在“：”之后的称为本地名，同样代表一个命名空间。</p>
+
+<p>属性通常在写出RDF的XML文件是可以看到，当在途表或者文本中使用时使用简写更方便一些。严格的说，属性名室友URI定义的，前缀:本地名写法是给URI的命名起个别名。在使用浏览器时没有任何必要把一个属性的URI解析为其他东西。</p>
+
+<p>每个属性对应一个值，在这个样例中值是一个文本，我们可以把它当成字符串，文本可以用长方形标识。</p>
+
+<p>Jena是一个可以用来创建操作RDF图的Java API。Jena有实体类来表征图，资源，属性，和文本。这些表征资源，属性和文本的接口就是Resource接口。在Jena中，图被称为模型并且由Model接口表达。</p>
+
+<p>这些代码创建了一个图：</p>
+
+<pre><code class="language-Java">// some definitions
+static String personURI    = &quot;http://somewhere/JohnSmith&quot;;
+static String fullName     = &quot;John Smith&quot;;
+
+// create an empty Model
+Model model = ModelFactory.createDefaultModel();
+
+// create the resource
+Resource johnSmith = model.createResource(personURI);
+
+// add the property
+ johnSmith.addProperty(VCARD.FN, fullName);
+</code></pre>
+
+<p>在开始时定义了几个常亮和一个空模型，使用<code>ModelFactory</code>的<code>crateDefaultModel()</code>方法创建一个基于内存的模型。Jena的Model接口包含了其他的实现，比如说关联数据库的，ModelFactory也可以使用那些模型。</p>
+
+<p>之后我们创建了John Smith资源并添加了一个属性。这个属性是由一个常量类<code>VCARD</code>提供的，这个类还保存了许多代表VCARD表其他字段的属性。Jena也提供了其他比较常见的表的常量类，比如说RDF和RDF表，Dublin Core和OWL。</p>
+
+<p>这段代码创建了资源并添加了属性，可以用更紧凑的瀑布风格：</p>
+
+<pre><code class="language-Java">Resource johnSmith =
+        model.createResource(personURI)
+             .addProperty(VCARD.FN, fullName);
+</code></pre>
+
+<p>这些代码可以在<code>/src-examples</code>的<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial01.java">totorial 1</a>里找到，作为一个练习，修改这些属性并给你自己搞一张名片吧。</p>
+
+<p>现在让我们添加vcard的更多细节，探索RDF和Jena的更多特性。</p>
+
+<p>在第一个样例中，属性值是文本，RDF属性也可以用其他资源作为他们的值。使用通用的RDF技术，这个样例可以展示John Smith 的名字：</p>
+
+<p><img src="media/15012188936637/15012230925824.png" alt=""/>图2</p>
+
+<p>这里我们添加了一个新的属性，<code>vard:N</code>来代表John Smith的名字结构，在这个模型中有几个有趣的地方。注意vcard:N属性使用了一个资源作为他的值，记住椭圆所代表的符合名并没有URI，他是一个空节点。</p>
+
+<p>下面我们使用Jena来构造这个样例，优势很简单的。从声明几个量和创建空模型开始。</p>
+
+<pre><code class="language-Java">// some definitions
+String personURI    = &quot;http://somewhere/JohnSmith&quot;;
+String givenName    = &quot;John&quot;;
+String familyName   = &quot;Smith&quot;;
+String fullName     = givenName + &quot; &quot; + familyName;
+
+// create an empty Model
+Model model = ModelFactory.createDefaultModel();
+
+// create the resource
+//   and add the properties cascading style
+Resource johnSmith
+  = model.createResource(personURI)
+         .addProperty(VCARD.FN, fullName)
+         .addProperty(VCARD.N,
+                      model.createResource()//此处没有URI
+                           .addProperty(VCARD.Given, givenName)
+                           .addProperty(VCARD.Family, familyName));
+</code></pre>
+
+<p>这段代码在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial02.java">tutorial 2</a>的<code>/src-examples</code>目录下。</p>
+
+<h3 id="toc_3">Statements</h3>
+
+<p>每个RDF模型的边被称为一个陈述(<a href="http://jena.apache.org/tutorials/rdf_api.html#glos-Statement">statement</a>),每个陈述断言了一个资源的事实，一个陈述包括三个部分：</p>
+
+<ul>
+<li>初始对象 三元组的初始对象</li>
+<li>属性 属性描述</li>
+<li>对象 三元组的属性值</li>
+</ul>
+
+<p>一个陈述通常也被称为三元组，因为他有三个部分。</p>
+
+<p>一个RDF模型有陈述的集合来表述。每次调用添加属性都会在模型中新加一个陈述（因为模型是集合，所以重复添加什么的无所谓）。Jena的模型定义了一个<code>listStatements()</code>方法返回了一个<code>StmtIterator</code>，他是一个可以遍历模型所有陈述的迭代器。这个迭代器迭代对象是<code>Statement</code>，<code>Statement</code>接口提供了访问三元组中各个对象的方法。<br/>
+现在我们可以扩展样例2把所有陈述列出并打印出来。完整代码在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial03.java">tutorial 3</a>中.</p>
+
+<pre><code class="language-Java">// list the statements in the Model
+StmtIterator iter = model.listStatements();
+
+// print out the predicate, subject and object of each statement
+while (iter.hasNext()) {
+    Statement stmt      = iter.nextStatement();  // get next statement
+    Resource  subject   = stmt.getSubject();     // get the subject
+    Property  predicate = stmt.getPredicate();   // get the predicate
+    RDFNode   object    = stmt.getObject();      // get the object
+
+    System.out.print(subject.toString());
+    System.out.print(&quot; &quot; + predicate.toString() + &quot; &quot;);
+    if (object instanceof Resource) {
+       System.out.print(object.toString());
+    } else {
+        // object is a literal
+        System.out.print(&quot; \&quot;&quot; + object.toString() + &quot;\&quot;&quot;);
+    }
+
+    System.out.println(&quot; .&quot;);
+} 
+</code></pre>
+
+<p>既然一个陈述的object既可以是文本也可以是资源，那么getObject方法返回的就是一个<code>RDFNode</code>对象，它是Resource和Literal的父类。其下的类是正确的类别，所以代码中使用了instanceOf来判断他的类别。</p>
+
+<p>运行时，程序产生了如下输出：</p>
+
+<pre><code class="language-Java">http://somewhere/JohnSmith http://www.w3.org/2001/vcard-rdf/3.0#N anon:14df86:ecc3dee17b:-7fff .
+anon:14df86:ecc3dee17b:-7fff http://www.w3.org/2001/vcard-rdf/3.0#Family  &quot;Smith&quot; .
+anon:14df86:ecc3dee17b:-7fff http://www.w3.org/2001/vcard-rdf/3.0#Given  &quot;John&quot; .
+http://somewhere/JohnSmith http://www.w3.org/2001/vcard-rdf/3.0#FN  &quot;John Smith&quot; .
+</code></pre>
+
+<p>现在你应该搞懂画图是很简单的事情了。如果你看的仔细，你会发现每一行是一个三元组。模型中有四条边，所以有四个陈述。<code>anon:14df86:ecc3dee17b:-7fff</code>是一个Jena生成的内部标识。他并不是一个URI。他只是一个用Jena实现的内部标签二义。</p>
+
+<p>W3C<a href="http://www.w3.org/2001/sw/RDFCore/">RDFCore Working Group</a>定义了一个类似的<a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>声明。下部分我们就能看到Jena有一个能写出这个格式的输出器。</p>
+
+<h3 id="toc_4">Writing RDF</h3>
+
+<p>Jena有RDF 读写成XML格式的方法。我们可以先把RDF写成文件然后再读出来。</p>
+
+<p>样例3把模型携程了三元组表，样例4则在眼里3的基础上把RDF XML表写到了标准输出中。又上代码了，这次的非常简单，<code>model.write</code>方法使用一个输出流做参数把模型写出去</p>
+
+<pre><code class="language-Java">// now write the model in XML form to a file
+model.write(System.out);
+</code></pre>
+
+<p>输出看起来像是这样：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:vcard=&#39;http://www.w3.org/2001/vcard-rdf/3.0#&#39;
+ &gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/JohnSmith&#39;&gt;
+    &lt;vcard:FN&gt;John Smith&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A0&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A0&quot;&gt;
+    &lt;vcard:Given&gt;John&lt;/vcard:Given&gt;
+    &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>这个RDF详细的表明了XML是如何表达RDF的。RDF的XML格式相当复杂。reader的开发基于之前RFDCore WG的开发，他们有更详细的介绍~。我们还是看一下怎么翻译上边的把。</p>
+
+<p>blablabla</p>
+
+<h3 id="toc_5">Reading RDF</h3>
+
+<p>样例5 演示了如果读取一个XML格式的RDF。在这个向导里，我们提供了一个名片的小数据库。下面的代码会读取并写出它。记住这段代码运行时输入文件路径要填对。</p>
+
+<pre><code class="language-Java"> // create an empty model
+ Model model = ModelFactory.createDefaultModel();
+
+ // use the FileManager to find the input file
+ InputStream in = FileManager.get().open( inputFileName );
+if (in == null) {
+    throw new IllegalArgumentException(
+                                 &quot;File: &quot; + inputFileName + &quot; not found&quot;);
+}
+
+// read the RDF/XML file
+model.read(in, null);
+
+// write it to standard out
+model.write(System.out);
+</code></pre>
+
+<p><code>read()</code>方法的第二个参数是用来解析相关URI的 URI，因为测试文件中没有相关的URI，他可以空着。运行时，<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial05.java">tutorial 5</a>会输出下面的XML：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:vcard=&#39;http://www.w3.org/2001/vcard-rdf/3.0#&#39;
+ &gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A0&quot;&gt;
+    &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;John&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/JohnSmith/&#39;&gt;
+    &lt;vcard:FN&gt;John Smith&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A0&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/SarahJones/&#39;&gt;
+    &lt;vcard:FN&gt;Sarah Jones&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A1&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/MattJones/&#39;&gt;
+    &lt;vcard:FN&gt;Matt Jones&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A2&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A3&quot;&gt;
+    &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;Rebecca&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A1&quot;&gt;
+    &lt;vcard:Family&gt;Jones&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;Sarah&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A2&quot;&gt;
+    &lt;vcard:Family&gt;Jones&lt;/vcard:Family&gt;
+    &lt;vcard:Given&gt;Matthew&lt;/vcard:Given&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&#39;http://somewhere/RebeccaSmith/&#39;&gt;
+    &lt;vcard:FN&gt;Becky Smith&lt;/vcard:FN&gt;
+    &lt;vcard:N rdf:nodeID=&quot;A3&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<h3 id="toc_6">Controlling Prefixes</h3>
+
+<h4 id="toc_7">显式前缀定义</h4>
+
+<p>在上一章节中，我们看到了输出XML定义的命名空间vcard并用前缀来缩写URIs。当RDF仅使用完整的URIs,或者不适用这个缩略表示，Jena提供了使用前缀映射来控制命名空间的方法。下面是示例代码。</p>
+
+<pre><code class="language-Java"> Model m = ModelFactory.createDefaultModel();
+ String nsA = &quot;http://somewhere/else#&quot;;
+ String nsB = &quot;http://nowhere/else#&quot;;
+ Resource root = m.createResource( nsA + &quot;root&quot; );
+ Property P = m.createProperty( nsA + &quot;P&quot; );
+ Property Q = m.createProperty( nsB + &quot;Q&quot; );
+ Resource x = m.createResource( nsA + &quot;x&quot; );
+ Resource y = m.createResource( nsA + &quot;y&quot; );
+ Resource z = m.createResource( nsA + &quot;z&quot; );
+ m.add( root, P, x ).add( root, P, y ).add( y, Q, z );
+ System.out.println( &quot;# -- no special prefixes defined&quot; );
+ m.write( System.out );
+ System.out.println( &quot;# -- nsA defined&quot; );
+ m.setNsPrefix( &quot;nsA&quot;, nsA );
+ m.write( System.out );
+ System.out.println( &quot;# -- nsA and cat defined&quot; );
+ m.setNsPrefix( &quot;cat&quot;, nsB );
+ m.write( System.out );
+</code></pre>
+
+<p>这段代码的输出是三块 RDF/XML,三个不同的前缀映射。第一个默认的，不同于标准的：</p>
+
+<pre><code class="language-XML"># -- no special prefixes defined
+
+&lt;rdf:RDF
+    xmlns:j.0=&quot;http://nowhere/else#&quot;
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:j.1=&quot;http://somewhere/else#&quot; &gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#root&quot;&gt;
+    &lt;j.1:P rdf:resource=&quot;http://somewhere/else#x&quot;/&gt;
+    &lt;j.1:P rdf:resource=&quot;http://somewhere/else#y&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#y&quot;&gt;
+    &lt;j.0:Q rdf:resource=&quot;http://somewhere/else#z&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>我们看到rdf命名空间自动声明了，因为它需要像<a href="rdf:RDF">rdf:RDF</a>和<a href="rdf:resource">rdf:resource</a>一样的标签。XML命名空间的声明同样需要使用P和Q两个属性。但因为他们的前缀并没有在示例的模型中介绍过。他们的命名空间名就变成了<code>j.0</code>和<code>j.1</code>。</p>
+
+<p><code>setNsPrefix(String prefix, String URI)</code> 方法声明了命名空间的URI可以用前缀碎屑。Jena需要前缀来做一个合法的XML命名空间名，并且URI需要以一个非名称(non-name)字符结束。RDF/XML writer会返回XML 命名空间声明的前缀声明并在输出中使用它们。</p>
+
+<pre><code class="language-XML">
+# -- nsA defined
+
+&lt;rdf:RDF
+    xmlns:j.0=&quot;http://nowhere/else#&quot;
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:nsA=&quot;http://somewhere/else#&quot; &gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#root&quot;&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#x&quot;/&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#y&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#y&quot;&gt;
+    &lt;j.0:Q rdf:resource=&quot;http://somewhere/else#z&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>另一个命名空间仍然得到了构造好的名字，但<code>nsA</code>名称现在用于属性标签。在Jena代码中已经没有需要继续使用前缀名了。</p>
+
+<pre><code class="language-XML">
+# -- nsA and cat defined
+
+&lt;rdf:RDF
+    xmlns:cat=&quot;http://nowhere/else#&quot;
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:nsA=&quot;http://somewhere/else#&quot; &gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#root&quot;&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#x&quot;/&gt;
+    &lt;nsA:P rdf:resource=&quot;http://somewhere/else#y&quot;/&gt;
+  &lt;/rdf:Description&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/else#y&quot;&gt;
+    &lt;cat:Q rdf:resource=&quot;http://somewhere/else#z&quot;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<h4 id="toc_8">隐式前缀定义</h4>
+
+<p>就像前缀定义使用<code>setNsPrefix</code>调用一样，Jena会记住<code>model.read()</code>方法中我们使用的前缀。</p>
+
+<p>使用前面部分的输出，粘贴到文件里，运行下面的代码：</p>
+
+<pre><code class="language-Java">Model m2 = ModelFactory.createDefaultModel();
+m2.read( &quot;file:/tmp/fragment.rdf&quot; );
+m2.write( System.out );
+</code></pre>
+
+<p>你会发现输入的前缀在输出中保存了。就算没使用过的前缀都保存了。如果不想再输出中使用的话可以使用<code>removeNsPrefix(String prefix)</code>方法删除前缀。</p>
+
+<p>既然Ntriples不适用任何简易方式写URIs,那么他在输出中不适用前缀并且不提供任何信息。注解**<em>N3</em>，Jena同样支持，不提端前缀名，并且从输入中读取在输出中使用。</p>
+
+<p>Jena 还有其他基于前缀映射的操作。比如提取出包含前缀映射的JavaMap，一次添加一组映射；详细的去看<code>PrefixMapping</code>文档。</p>
+
+<h3 id="toc_9">Jena RDF Packages</h3>
+
+<p>Jena是一个用于网页应用的语义API。对于开发者来说关键的RDF包是<code>org.apache.jena.rdf.model</code>。这个API定义了多想接口这样应用代码在不修改代码的基础上使用不同实现。这个包包含了多个呈现模型，资源，配置，文本，陈述和所有其他RDF的关键概念，还有一个创建模型的ModelFactory。这样应用代码保留了实现时的独立性，最好使用接口，不要指定实现。</p>
+
+<p><code>org.apache.jena.tutorial</code> 包包含了可以工作的样例代码。</p>
+
+<p><code>org.apache.jena...impl</code> 包包含了不同实现。比如说，他们定义了类 <code>ResourceImpl</code>,<code>PropertyImpl</code>和<code>LiteralImpl</code> 这些可以直接使用或者继承泛化的实现。应用应该很少或者从不直接使用这些类。举例来说，不管模型有没有使用，直接创建一个<code>ResourceImpl</code>不如使用<code>createResource</code>方法。两种类型互转是没必要的。</p>
+
+<h3 id="toc_10">Navigating a Model</h3>
+
+<p>看了这么多了，前面的都是创建和读写RDF模型。下面我们看一下如果获取模型持有的数据。</p>
+
+<p>给出一个资源的URI，用模型的<code>Model.getResource(String uri)</code>方法就能拿到这个对象，这个方法定义来返回一个模型中的节点，如果没有就创建一个新的。举例来说，在示例5的模型中取回John Smith资源：</p>
+
+<pre><code class="language-Java">// retrieve the John Smith vcard resource from the model
+Resource vcard = model.getResource(johnSmithURI);
+
+</code></pre>
+
+<p>资源接口定义了大量获取资源属性的方法。<code>Resource.getProperty(Property p)</code> 方法可以方位资源的一个属性。这个方法并不遵从Java的常规方法，它将数据为<code>Statement</code>而不是你期待的<code>Property</code>。把整个陈述返回便于检索它的相关节点。比如说根据寻回vcard:N资源：</p>
+
+<pre><code class="language-Java">// retrieve the value of the N property
+Resource name = (Resource) vcard.getProperty(VCARD.N)
+                                .getObject();
+</code></pre>
+
+<p>通常来说，陈述对象可以是资源或者文本，所以应用代码，知道值一定是一个资源，将返回值转换成Resource。一件Jena一致师徒在做的事情是提供指定类别方法这样应用就不再需要在编译时检查类型。下面的代码可能用起来更方便一些：</p>
+
+<pre><code class="language-Java">// retrieve the value of the N property
+Resource name = vcard.getProperty(VCARD.N)
+                     .getResource();
+</code></pre>
+
+<p>类似第，文本值也可以寻回：</p>
+
+<pre><code class="language-Java">// retrieve the given name property
+String fullName = vcard.getProperty(VCARD.FN)
+                        .getString();
+</code></pre>
+
+<p>在这个例子中，vcard 资源只有一个 <code>vcard：FN</code> 和一个 <code>vcard:n</code>属性，RDF允许资源重复一个属性；比如说Adam也许有几个昵称。我们给他起俩：</p>
+
+<pre><code class="language-Java">// add two nickname properties to vcard
+vcard.addProperty(VCARD.NICKNAME, &quot;Smithy&quot;)
+     .addProperty(VCARD.NICKNAME, &quot;Adman&quot;);
+</code></pre>
+
+<p>就像前面提到过的，Jena 将RDF模型视为一个陈述集合，所以添加一个已经存在于模型中的主语，谓语，宾语并没有影响。Jena并没有定义这两个昵称哪个会被返回。<code>vcard.getProperty(VCARD.NICKNAME)</code>的调用结果将是不确定的。Jena会返回其中一个值，但并不保证两次调用会返回相同的值。</p>
+
+<p>如果一个属性出现了不止一次，那么使用<code>Resource.listProperties（Property p）</code>可以拿到一个包含这些属性的迭代器。这个方法会返回一个Statement泛型的迭代器。</p>
+
+<p>我们可以像这样列举昵称：</p>
+
+<pre><code class="language-Java">// set up the output
+System.out.println(&quot;The nicknames of \&quot;&quot;
+                      + fullName + &quot;\&quot; are:&quot;);
+// list the nicknames
+StmtIterator iter = vcard.listProperties(VCARD.NICKNAME);
+while (iter.hasNext()) {
+    System.out.println(&quot;    &quot; + iter.nextStatement()
+                                    .getObject()
+                                    .toString());
+}
+</code></pre>
+
+<p>这些代码可以在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial06.java">tutorial 6</a>中找到。陈述迭代器<code>iter</code>  可以遍历所有主语是vcard 切谓语是<code>Vcard.NICKNAME</code>的陈述。拿到宾语域并转成字符串。这段代码会输出：</p>
+
+<pre><code>The nicknames of &quot;John Smith&quot; are:
+    Smithy
+    Adman
+</code></pre>
+
+<p>一个资源的所有属性可以使用<code>listProperties()</code>方法列出来。</p>
+
+<h3 id="toc_11">Querying a Model</h3>
+
+<p>上一张我们处理了用已知URI导航模型的案例。这一章我们来搜索模型。核心的Jena提仅提供了功能有限的原始查询。更强大的查询机制由SPARQL提供。</p>
+
+<p><code>Model.listStatements()</code>方法可以列举模型中的所有陈述，可能是查询模型最残暴的方法了。模型大时不推荐使用这种方法。<code>Model.listSubjects</code>也是，但他返回可以遍历所有有属性的资源的迭代器。</p>
+
+<p><code>Model.listSubjectsWithProperty(Property p, RDFNode o)</code>方法会返回一个可遍历所有有资源<code>p</code>和值<code>o</code>的迭代器，如果我们假设只有名片资源有<code>vcard:FN</code>属性，而且它在我们的数据中，所有这样的资源都有这样的一个属性，那么我们可以这样找出所有的vcard：</p>
+
+<pre><code class="language-Java">// list vcards
+ResIterator iter = model.listSubjectsWithProperty(VCARD.FN);
+while (iter.hasNext()) {
+    Resource r = iter.nextResource();
+    ...
+}
+</code></pre>
+
+<p>所有这些方法在一个原始的查询方法上都有一个简单的语法糖<code>model.listStatements(Selector s)</code>,这个方法会返回一个经过Selector s 筛选过的迭代器。这个<code>Selector</code>接口被设计成可扩展的，但现在只有一个实现类：<code>org.apache.jena.rdf.model.SimpleSelector</code>.当需要指定类别而不是接口时<code>SimpleSelector</code>就比较少见了。</p>
+
+<p><code>SimpleSelector</code>构造器接收三个参数：</p>
+
+<p><code>Selector selector = new SimpleSelector(subject, predicate, object)</code></p>
+
+<p>这个选择器会选择所有主谓宾匹配的陈述。<br/>
+如果对应的位置填了null，那么该位置任何值均认为匹配。判断依据为相同的URIs或者相同的空白节点。两个文本的判定则是内容相同；</p>
+
+<p>这样选取所有的内容：</p>
+
+<pre><code class="language-Java">Selector selector = new SimpleSelector(null, null, null);
+</code></pre>
+
+<p>这样选取所有谓语为<code>VCARD.FN</code>的陈述：</p>
+
+<pre><code class="language-Java">Selector selector = new SimpleSelector(null, VCARD.FN, null);
+</code></pre>
+
+<p>作为缩写，一下两种表述是相同的：</p>
+
+<pre><code class="language-Java">listStatements( S, P, O )
+// =
+listStatements( new SimpleSelector( S, P, O ) )
+</code></pre>
+
+<p>下面的代码来自 <a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial07.java">tutorial 7</a> 列举了所有的人的全名：</p>
+
+<pre><code class="language-Java">
+// select all the resources with a VCARD.FN property
+ResIterator iter = model.listSubjectsWithProperty(VCARD.FN);
+if (iter.hasNext()) {
+    System.out.println(&quot;The database contains vcards for:&quot;);
+    while (iter.hasNext()) {
+        System.out.println(&quot;  &quot; + iter.nextResource()
+                                      .getProperty(VCARD.FN)
+                                      .getString());
+    }
+} else {
+    System.out.println(&quot;No vcards were found in the database&quot;);
+}
+         
+</code></pre>
+
+<p>输出应该是这样：</p>
+
+<pre><code>The database contains vcards for:
+  Sarah Jones
+  John Smith
+  Matt Jones
+  Becky Smith
+</code></pre>
+
+<p>你的下一个练习是使用<code>SimpleSelector</code>替换<code>listSubjectsWithProperty</code></p>
+
+<p>让我们看一下如果实现极好的陈述选择。<code>SimpleSelector</code>可以被集成而且他的selects方法可以实现更优的过滤：</p>
+
+<pre><code class="language-Java">// select all the resources with a VCARD.FN property
+// whose value ends with &quot;Smith&quot;
+StmtIterator iter = model.listStatements(
+    new SimpleSelector(null, VCARD.FN, (RDFNode) null) {
+        public boolean selects(Statement s)
+            {return s.getString().endsWith(&quot;Smith&quot;);}
+    });
+</code></pre>
+
+<p>示例代码使用了一个简洁的Java技术，重写了一个方法select，这个方法判断姓是不是“Smith”。注意这个过滤器是针对主语做的，谓语和宾语在select()方法前就做过了，所以其他的测试将只应用于匹配的陈述。</p>
+
+<p>[utorial 8] 中可以看到完整代码，输出类似下面的内容：</p>
+
+<pre><code>The database contains vcards for:
+  John Smith
+  Becky Smith
+</code></pre>
+
+<p>你也许会这么想：</p>
+
+<pre><code>// do all filtering in the selects method
+StmtIterator iter = model.listStatements(
+  new
+      SimpleSelector(null, null, (RDFNode) null) {
+          public boolean selects(Statement s) {
+              return (subject == null   || s.getSubject().equals(subject))
+                  &amp;&amp; (predicate == null || s.getPredicate().equals(predicate))
+                  &amp;&amp; (object == null    || s.getObject().equals(object)) ;
+          }
+     }
+     });
+</code></pre>
+
+<p>他们是等价的：</p>
+
+<pre><code>StmtIterator iter =
+  model.listStatements(new SimpleSelector(subject, predicate, object)
+</code></pre>
+
+<p>机制上他们相同，但第二种表述性能更好一些。</p>
+
+<h3 id="toc_12">Operations on Models</h3>
+
+<p>Jena 提供了三种将模型视为整体的操作。那就是合集，交集和差集。</p>
+
+<p>又犯懒了，直接看图吧：</p>
+
+<p><img src="media/15012188936637/15012377833936.png" alt=""/>图3<br/>
+<img src="media/15012188936637/15012377858005.png" alt=""/>图4<br/>
+<img src="media/15012188936637/15012378315524.png" alt=""/>图5</p>
+
+<p>看看代码怎么写(完整代码在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial09.java">tutorial 9</a>)</p>
+
+<pre><code>// read the RDF/XML files
+model1.read(new InputStreamReader(in1), &quot;&quot;);
+model2.read(new InputStreamReader(in2), &quot;&quot;);
+
+// merge the Models
+Model model = model1.union(model2);
+
+// print the Model as RDF/XML
+model.write(system.out, &quot;RDF/XML-ABBREV&quot;);
+</code></pre>
+
+<p>产生的输出应该是这样的：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+    xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+    xmlns:vcard=&quot;http://www.w3.org/2001/vcard-rdf/3.0#&quot;&gt;
+  &lt;rdf:Description rdf:about=&quot;http://somewhere/JohnSmith/&quot;&gt;
+    &lt;vcard:EMAIL&gt;
+      &lt;vcard:internet&gt;
+        &lt;rdf:value&gt;John@somewhere.com&lt;/rdf:value&gt;
+      &lt;/vcard:internet&gt;
+    &lt;/vcard:EMAIL&gt;
+    &lt;vcard:N rdf:parseType=&quot;Resource&quot;&gt;
+      &lt;vcard:Given&gt;John&lt;/vcard:Given&gt;
+      &lt;vcard:Family&gt;Smith&lt;/vcard:Family&gt;
+    &lt;/vcard:N&gt;
+    &lt;vcard:FN&gt;John Smith&lt;/vcard:FN&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>几遍你不熟悉RDF/XML语法的细节，你也能看出模型如预期般合并在一起了。交集和差集的计算也类似，使用<code>.intersection(Model)</code>和<code>.difference(Model)</code>就行了；更多细节看<a href="http://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html#difference(org.apache.jena.rdf.model.Model)">difference</a>and<a href="http://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html#intersection(org.apache.jena.rdf.model.Model)">intersection</a></p>
+
+<h3 id="toc_13">Containers</h3>
+
+<p>RDF 定义了一个特殊的资源类型来表征事物的集合。这些资源被称为<code>containers</code>。容器的成员必须是文本或资源集合。有三种类型的容器：</p>
+
+<ul>
+<li>BAG 无序集合</li>
+<li>ALT 用于代表候选的无序集合（unordered collection intended to represent alternatives）</li>
+<li>SEQ 有序集合</li>
+</ul>
+
+<p>容器用资源来表征，如果资源是容器的话它的属性会有<code>rdf:type</code>，其中type可能为<code>rdf:Bag</code>, <code>rdf:Alt</code> 或 <code>rdf:Seq</code>或者这仨的子类，基于实际容器的类型。容器的第一个属性是容器的 <code>rdf_1</code>属性；以此类推。<code>rdf_nnn</code>属性就是常规的属性。</p>
+
+<p>举个例子，包含Smith的简单bag vcards容器 看起来可能是这样：</p>
+
+<p><img src="media/15012188936637/15012388174221.png" alt=""/>图6</p>
+
+<p>这样呆子的成员就都用属性 <code>rdf:_1，rdf:_2...</code>这样描述了，我们可以交换rdf:_1 和rdf:_2 属性位置，但没啥影响。</p>
+
+<p>Alt&#39;s是用来表征替补的。举个例子，一个资源代表了一个软件产品。他可能有一个属性来说明它是怎么获得的。这个属性就可能是一个包含了可能下载自那里的链接的ALt集合。Alt&#39;s是无序的，但rdf:_1属性有特殊含义，它代表了默认选择。</p>
+
+<p>容器可以使用基本的资源和属性机制操作，Jena有显示的接口和隐式的类来处理他们。用对象来操作一个容器是不明智的，尽量使用低阶方法来改变容器状态。</p>
+
+<p>让我们修改示例8 的代码：</p>
+
+<pre><code class="language-Java">// create a bag
+Bag smiths = model.createBag();
+
+// select all the resources with a VCARD.FN property
+// whose value ends with &quot;Smith&quot;
+StmtIterator iter = model.listStatements(
+    new SimpleSelector(null, VCARD.FN, (RDFNode) null) {
+        public boolean selects(Statement s) {
+                return s.getString().endsWith(&quot;Smith&quot;);
+        }
+    });
+// add the Smith&#39;s to the bag
+while (iter.hasNext()) {
+    smiths.add(iter.nextStatement().getSubject());
+}
+</code></pre>
+
+<p>如果我们把模型写出去，内容会是这样：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:vcard=&#39;http://www.w3.org/2001/vcard-rdf/3.0#&#39;
+ &gt;
+...
+  &lt;rdf:Description rdf:nodeID=&quot;A3&quot;&gt;
+    &lt;rdf:type rdf:resource=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag&#39;/&gt;
+    &lt;rdf:_1 rdf:resource=&#39;http://somewhere/JohnSmith/&#39;/&gt;
+    &lt;rdf:_2 rdf:resource=&#39;http://somewhere/RebeccaSmith/&#39;/&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>看到袋子容器啥样了吧。</p>
+
+<p>容器接口提供了一个遍历容器内容的迭代器：</p>
+
+<pre><code class="language-Java">// print out the members of the bag
+NodeIterator iter2 = smiths.iterator();
+if (iter2.hasNext()) {
+    System.out.println(&quot;The bag contains:&quot;);
+    while (iter2.hasNext()) {
+        System.out.println(&quot;  &quot; +
+            ((Resource) iter2.next())
+                            .getProperty(VCARD.FN)
+                            .getString());
+    }
+} else {
+    System.out.println(&quot;The bag is empty&quot;);
+}
+</code></pre>
+
+<p>生成内容如下：</p>
+
+<pre><code>The bag contains:
+  John Smith
+  Becky Smith
+</code></pre>
+
+<p>可执行代码可以在<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial10.java">tutorial 10</a>中看到。示例10 把一些复杂的样例整合在一起了。</p>
+
+<p>Jena 类提供的操作容器方法包括新成员，居中插入和移除已有成员。Jena 容器类当前可以保证有序的属性名是连续的。RDFCore WG已经放松了这个限制，这样就可以用碎片来代表容器。这里Jena 未来可能会有改变。</p>
+
+<h3 id="toc_14">More about Literals and Datatypes</h3>
+
+<p>RDF 文本不是简单的字符串。文本有语言标签来表明是什么语言的。“chat”在英语和发育中的意思是不同的。这个奇怪的举动是原生RDF/XML语法认为规定的。</p>
+
+<p>再远一点，文本有两种形式，第一种就是字符串内容。另一种文本内容是类似XML。当一个RDF模型作为RDF/XML写入的时候 会用一个parseType=‘Literal’来代表这种构造方法。</p>
+
+<p>在Jena中，这些文书属性一般会在文本构造的时候设置，比如<a href="https://github.com/apache/jena/tree/master/jena-core/src-examples/jena/examples/rdf/Tutorial11.java">turtorial 11</a>：</p>
+
+<pre><code class="language-Java">// create the resource
+Resource r = model.createResource();
+
+// add the property
+r.addProperty(RDFS.label, model.createLiteral(&quot;chat&quot;, &quot;en&quot;))
+ .addProperty(RDFS.label, model.createLiteral(&quot;chat&quot;, &quot;fr&quot;))
+ .addProperty(RDFS.label, model.createLiteral(&quot;&lt;em&gt;chat&lt;/em&gt;&quot;, true));
+
+// write out the Model
+model.write(system.out);
+</code></pre>
+
+<p>输出为：</p>
+
+<pre><code class="language-XML">&lt;rdf:RDF
+  xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;
+  xmlns:rdfs=&#39;http://www.w3.org/2000/01/rdf-schema#&#39;
+ &gt;
+  &lt;rdf:Description rdf:nodeID=&quot;A0&quot;&gt;
+    &lt;rdfs:label xml:lang=&#39;en&#39;&gt;chat&lt;/rdfs:label&gt;
+    &lt;rdfs:label xml:lang=&#39;fr&#39;&gt;chat&lt;/rdfs:label&gt;
+    &lt;rdfs:label rdf:parseType=&#39;Literal&#39;&gt;&lt;em&gt;chat&lt;/em&gt;&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</code></pre>
+
+<p>如果预期两个文本相同，那他们必须是同一类型的文本，而且语言标签必须相同。简单字符串必须完全相等。XML文本有两个说明要想等。第一个判定依据是刚刚提过的条件满足且字符串相等。另一个判据是他们标准化后的字符串相等。</p>
+
+<p>Jena 的接口同事支持带类型的文本。一种过时的风格是将带类型文本当做文本的缩写：带类型的值会转换成Java的字符串存在模型里。举例来说，试试（简单文本木有，我们可以通过model.createLiteral(。。。)调用）：</p>
+
+<pre><code class="language-Java">// create the resource
+Resource r = model.createResource();
+
+// add the property
+r.addProperty(RDFS.label, &quot;11&quot;)
+ .addProperty(RDFS.label, 11);
+
+// write out the Model
+model.write(system.out, &quot;N-TRIPLE&quot;);
+</code></pre>
+
+<p>输出为：</p>
+
+<pre><code class="language-XML">_:A... &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; &quot;11&quot; .
+</code></pre>
+
+<p>既然两个字符串都是11,那么只有一个陈述可以添加。</p>
+
+<p>RDFCore WG已经定义了RDF数据类型支持机制。Jena通过标签文本机制支持；本文中不讨论这个问题。</p>
+
+<h3 id="toc_15">Glossary</h3>
+
+<p><a href="">Blank Node</a><br/>
+Represents a resource, but does not indicate a URI for the resource. Blank nodes act like existentially qualified variables in first order logic.<br/>
+<a href="">Dublin Core</a><br/>
+A standard for metadata about web resources. Further information can be found at the Dublin Core web site.<br/>
+<a href="">Literal</a><br/>
+A string of characters which can be the value of a property.<br/>
+<a href="">Object</a><br/>
+The part of a triple which is the value of the statement.<br/>
+<a href="">Predicate</a><br/>
+The property part of a triple.<br/>
+<a href="">Property</a><br/>
+A property is an attribute of a resource. For example DC.title is a property, as is RDF.type.<br/>
+<a href="">Resource</a><br/>
+Some entity. It could be a web resource such as web page, or it could be a concrete physical thing such as a tree or a car. It could be an abstract idea such as chess or football. Resources are named by URI&#39;s.<br/>
+<a href="">Statement</a><br/>
+An arc in an RDF Model, normally interpreted as a fact.<br/>
+<a href="">Subject</a><br/>
+The resource which is the source of an arc in an RDF Model<br/>
+<a href="">Triple</a><br/>
+A structure containing a subject, a predicate and an object. Another term for a statement.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[自动补全标签思路]]></title>
+    <link href="http://www.aimyth.com/14988073837096.html"/>
+    <updated>2017-06-30T15:23:03+08:00</updated>
+    <id>http://www.aimyth.com/14988073837096.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">1.svm分类器</h2>
+
+<p>使用svm分类器主要工作在于特征工程，额，这个已经有了。</p>
+
+<h2 id="toc_1">2.Word2Vec+LSTM</h2>
+
+<p>先训练Word2Vec，再用LSTM训练Sentence2Vec，再用LSTM训练Room2Vec，再训练分类器，啊哈哈哈哈。</p>
+
+<p>思路是先压缩，再分类。</p>
+
+<p>是不是可以直接使用磁带子呢？</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[sql 字段]]></title>
+    <link href="http://www.aimyth.com/14987984386703.html"/>
+    <updated>2017-06-30T12:53:58+08:00</updated>
+    <id>http://www.aimyth.com/14987984386703.html</id>
+    <content type="html"><![CDATA[
+<p>根据时间戳区间查询：</p>
+
+<ul>
+<li>平台id</li>
+<li>房间id</li>
+<li>主播类型id(用于oa划分视频的类别)</li>
+<li>视频开始时间戳</li>
+<li>视频时长或结束时间戳</li>
+<li>主播名字</li>
+<li>主播房间名字</li>
+<li>自定义的标签id</li>
+<li>未分词弹幕</li>
+<li>分词弹幕</li>
+</ul>
+
+<p>热门英雄x <br/>
+高能时刻x <br/>
+D大神教学 <br/>
+KPL2017 <br/>
+Y娱乐搞笑 <br/>
+Z知名主播 <br/>
+M美女主播 <br/>
+T体验尝鲜 <br/>
+R热门英雄<br/>
+J精品栏目 <br/>
+Z专业解说 <br/>
+G高能时刻 <br/>
+S视频集锦 </p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[直播间机器人识别]]></title>
+    <link href="http://www.aimyth.com/14986861730968.html"/>
+    <updated>2017-06-29T05:42:53+08:00</updated>
+    <id>http://www.aimyth.com/14986861730968.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">目标</h2>
+
+<p>根据弹幕等信息识别出直播间内的机器人。</p>
+
+<h2 id="toc_1">数据情况</h2>
+
+<p>redis中有最近三天的弹幕数据，包括已经分词的和未分词的。fromid字段就是用户id</p>
+
+<h2 id="toc_2">机器人模式</h2>
+
+<ol>
+<li>从预先准备的弹幕库中指定/随机选弹幕</li>
+<li>重复之前其他用户弹幕</li>
+</ol>
+
+<h2 id="toc_3">方法</h2>
+
+<h3 id="toc_4">神经网络</h3>
+
+<p>使用预先准备的弹幕相比容易识别一点</p>
+
+<ol>
+<li>训练word2vec</li>
+<li>把句子做成word2vec向量序列</li>
+<li>使用多层LSTM网络做分类</li>
+</ol>
+
+<p>如果是重复之间其他用户弹幕，那么相比会麻烦一些，特征阶段需要在全库上做，这样数据结构要复杂一些。可能需要的特征如下：</p>
+
+<ol>
+<li>该用户覆盖时间</li>
+<li>该用户覆盖主播</li>
+<li>该用户弹幕频次</li>
+<li>同内容弹幕数量（时间窗内）</li>
+<li>同内容弹幕占比（个人记录）</li>
+</ol>
+
+<p><em>涉及同内容弹幕</em>部分需基于</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[数据结构笔记]]></title>
+    <link href="http://www.aimyth.com/14984118813264.html"/>
+    <updated>2017-06-26T01:31:21+08:00</updated>
+    <id>http://www.aimyth.com/14984118813264.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">avl</h2>
+
+<p>平衡因子：Balance Factor，BT(T)=\(|h_l-h_r|\)</p>
+
+<p>avl 树：BT(t)&lt;2</p>
+
+<p>高度为h的平衡二叉树，最小节点数为\(n_h\) 则</p>
+
+<p><strong>\(n_h=n_{h-1}+n_{h-2}+1\)</strong></p>
+
+<p><img src="media/14984118813264/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-06-26%20%E4%B8%8A%E5%8D%881.39.06.png" alt="屏幕快照 2017-06-26 上午1.39.06"/></p>
+
+<p><strong>在实现时记得画图，实际上只有两种场景，记被破坏节点为N，从N到新加入节点前两步相同和前两步不同。</strong></p>
+
+<h2 id="toc_1">堆</h2>
+
+<p>堆中使用哨兵节点可简化逻辑，提升效率。</p>
+
+<p>有两种添加方法，单个插入和构建：</p>
+
+<ol>
+<li>单个插入时插入到末尾，递归调整顺序。</li>
+<li>在构建时直接放到数组中，然后倒序二元调整就好了。</li>
+</ol>
+
+<h2 id="toc_2">哈夫曼树(最优二叉树)</h2>
+
+<p>带权路径长度(WPL):设二叉树有<strong>n个叶子节点</strong>，每个叶子结点带有权值\(w_k\)，从根节点到每个叶子节点的长度为\(l_k\)，则每个叶子节点的戴荃路径长度值和就是：\(WPL=\sum_{k=1}^n{w_{k}l_{k}}\)</p>
+
+<p>哈夫曼树的特点：<br/>
+* 没有度为1的节点<br/>
+* n个叶子节点的哈夫曼树共有2n-1个节点 \((n_2=n_0-1)\)<br/>
+* 哈夫曼树的任意非叶节点的左右子树交换后仍是哈夫曼树。<br/>
+* 同一组权值，可以存在两棵不同构的哈夫曼树，但WPL都相同。</p>
+
+<h2 id="toc_3">哈夫曼编码</h2>
+
+<p><strong>前缀码prefix code</strong>：任何字符的编码都不是另一字符编码的前缀<br/>
+* 可以无二义地解码</p>
+
+<p>为了实现前缀码，所以使用树进行编码，当字符仅出现在叶子节点上时，就不可能出现一个字符是另一个编码的前缀。这里左为0，右为1.</p>
+
+<h2 id="toc_4">图</h2>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[二叉树]]></title>
@@ -4167,6 +5513,30 @@ sudo pip install keras<br/>
 
 <p>找个女朋友？</p>
 
+<h2 id="toc_7">2017_7_17</h2>
+
+<p>转眼一个月过去了，应该算是个大低谷了。</p>
+
+<p>天热空调坏了占一部分原因，畏缩占了另一部分。一定要保证一个稳定的外部环境，现在我的控制力还是挺弱的，这很重要。</p>
+
+<p>下个月要去趟大连，吃海鲜，玩，看房子。租辆车吧，吃500，车500，住300，行1300 记3000吧。憋了半年了，终于要出去透透气了。</p>
+
+<p>该数学和软件工程了。数据结构和英语无聊时候看吧。</p>
+
+<p>就重点吧：</p>
+
+<ul>
+<li><strong>数学，软件工程轮替</strong></li>
+<li>无聊时候刷英语和数据结构</li>
+<li>十月份刷政治</li>
+<li>还有两个半月</li>
+</ul>
+
+<h2 id="toc_8">2017.8.7</h2>
+
+<p>超级大低谷~~<br/>
+软件工程基本刷完一遍了，数学要开始刷了，不要让我失望哦。</p>
+
 ]]></content>
   </entry>
   
@@ -4409,336 +5779,6 @@ sudo pip install keras<br/>
 <li>Floyd算法</li>
 <li>拓扑排序。</li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[软件工程大纲]]></title>
-    <link href="http://www.aimyth.com/14959021333435.html"/>
-    <updated>2017-05-28T00:22:13+08:00</updated>
-    <id>http://www.aimyth.com/14959021333435.html</id>
-    <content type="html"><![CDATA[
-<p>考试题型:概念问答题、实践案例题<br/>
-总分:50分</p>
-
-<h2 id="toc_0">一、软件过程</h2>
-
-<ul>
-<li>软件过程的概念</li>
-<li>经典软件过程模型的特点(瀑布模型、增量模型、演化模 型、统一过程模型)</li>
-<li>过程评估与CMM/CMMI的基本概念</li>
-<li>敏捷宣言与敏捷过程的特点。</li>
-</ul>
-
-<h2 id="toc_1">二、软件需求</h2>
-
-<ul>
-<li>软件需求的概念</li>
-<li>需求工程的基本过程</li>
-<li>分层数据流模型</li>
-<li>用例和场景建模及其UML表达(用例图、活动图、泳道图、顺序图)</li>
-<li>数据模型建模及其UML表达(类图)</li>
-<li>行为模型建模及其UML表达(状态机图)。</li>
-</ul>
-
-<h2 id="toc_2">三、软件设计与构造</h2>
-
-<ul>
-<li>软件体系结构及体系结构风格的概念</li>
-<li>设计模式的概念</li>
-<li>模块化设计的基本思想及概念(抽象、分解、模块化、封装、信息隐藏、功能独立)</li>
-<li>软件重构的概念</li>
-<li>软件体系结构的UML建模(包图、类图、构件图、顺序图、部署图)</li>
-<li>接口的概念</li>
-<li>面向对象设计原则(开闭原则、Liskov替换原则、依赖 转置原则、接又隔离原则)</li>
-<li>内聚与耦合的概念</li>
-<li>常见的内聚和耦合类型。</li>
-</ul>
-
-<h2 id="toc_3">四、软件测试</h2>
-
-<ul>
-<li>软件测试及测试用例的概念</li>
-<li>单元测试、集成测试、确认测试、系统测试、回归测试的概念</li>
-<li>调试的概念、调试与测试的关系</li>
-<li>测试覆盖度的概念</li>
-<li>白盒测试、黑盒测试的概念</li>
-<li>代码圈复杂度的计算方法</li>
-<li>白盒测试中的基本路径测试方法</li>
-<li>黑盒测试中的等价类划分方法。</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[storm 安装笔记]]></title>
-    <link href="http://www.aimyth.com/14958952545569.html"/>
-    <updated>2017-05-27T22:27:34+08:00</updated>
-    <id>http://www.aimyth.com/14958952545569.html</id>
-    <content type="html"><![CDATA[
-<ul>
-<li>环境</li>
-<li>安装</li>
-<li>配置</li>
-<li>测试</li>
-</ul>
-
-<h2 id="toc_0">环境</h2>
-
-<p>本次安装使用ubuntu-14.04,storm-1.0.2,.</p>
-
-<h2 id="toc_1">安装</h2>
-
-<h3 id="toc_2">1.zookeeper安装</h3>
-
-<p>这里直接使用docker镜像<a href="https://github.com/jplock/docker-zookeeper">jplock/zookeeper</a> 运行即可.</p>
-
-<h3 id="toc_3">2,storm</h3>
-
-<p>解压即可.</p>
-
-<h2 id="toc_4">配置</h2>
-
-<p>该目录需要有读写权限.</p>
-
-<pre><code>storm.local.dir: &quot;/tmp/storm/&quot;
-</code></pre>
-
-<p>这应该是工作节点的thrift端口,几个端口对应每个worker节点几个线程.</p>
-
-<pre><code>supervisor.slots.ports:
-- 10001
-- 10002
-</code></pre>
-
-<h2 id="toc_5">使用</h2>
-
-<pre><code>storm jar Getting-Started-0.0.1-SNAPSHOT.jar com.kanke.test.ClusterEdition
-</code></pre>
-
-<p>注意,storm集群与单机版不同,并不会立即调用clean生命周期,测试打印需写在excute周期内,打印在[INFO]的[STDO]中.</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ssh反向隧道连接局域网中的linux主机]]></title>
-    <link href="http://www.aimyth.com/14958952545528.html"/>
-    <updated>2017-05-27T22:27:34+08:00</updated>
-    <id>http://www.aimyth.com/14958952545528.html</id>
-    <content type="html"><![CDATA[
-<p>玩树莓派时发现的方法,当时电脑和树莓派在一个局域网里,但树莓派一重启ip就变,电脑查不到,上网查到这么一个方法,正好能用在工作里.</p>
-
-<p>就是这东西,袖珍linux电脑,可以接灯泡传感器显示屏舵机什么的,挺有意思的.<br/>
-<img src="media/14958952545528/14958955969092.jpg" alt=""/></p>
-
-<p>场景是linux电脑A想用ssh连接到B,AB都能连外网但AB互相看不到.这时候只要有一台有公网IP的服务器C,就能通过ssh从A访问B.</p>
-
-<p>下面以ubuntu系统为例,从A连到B.</p>
-
-<p>首先,B,C安装ssh-server(记不清的话都安上)</p>
-
-<pre><code>     sudo apt-get install autossh-server
-</code></pre>
-
-<p>修改服务器C的ssh配置文件</p>
-
-<pre><code>     ubuntu:   /etc/ssh/sshd_config
-     centos:   /etc/ssh/sshd_conf
-</code></pre>
-
-<p>在文件末尾添加一行:</p>
-
-<pre><code>     GatewayPorts clientspecified
-</code></pre>
-
-<p>B,C重启ssh服务(保险起见,似乎不重启也没啥事)</p>
-
-<pre><code>      sudo service ssh restart
-</code></pre>
-
-<p>B安装autossh</p>
-
-<pre><code>      sudo apt-get install autossh
-</code></pre>
-
-<p>B运行命令,简单理解为B通过ssh连接服务器C把自己的的22端口挂到服务器C的10022端口上去.</p>
-
-<pre><code>    autossh -M 10900 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R 服务器C的地址:10022:localhost:22 服务器C的用户名@服务器C的地址
-</code></pre>
-
-<p>现在A就可以直接通过服务器C的10022端口,用B的用户名连接到B了.</p>
-
-<pre><code>    ssh -p10022 B的用户名@C的地址
-</code></pre>
-
-<p>如果过程中哪个步骤提示host与已知的不匹配可以尝试</p>
-
-<pre><code>    rm ~/.ssh/known_hosts
-</code></pre>
-
-<p>过程中会有一些提示记住host输入密码什么的就略过了.</p>
-
-<p>下面是另一个场景,共4台服务器A,B,C,D.C是一台有公网IP的服务器,A没有公网IP能上网,B和D在一个局域网中,D可以连B,B连不了D(没关系的),B不能连外网,D可以连外网.目标还是从A连到B,只是现在B不能连外网了,要通过D连接.</p>
-
-<p>方法比较简单,除了autossh命令外其他步骤相同.</p>
-
-<p>只有D可以同时连B和C,autossh命令在要在D上运行.就直接贴命令了,C域名是www.aimyth.com,B的IP是192.168.1.107.</p>
-
-<pre><code>    autossh -M 18731 -fN -o &quot;PubkeyAuthentication=yes&quot; -o &quot;StrictHostKeyChecking=false&quot; -o &quot;PasswordAuthentication=no&quot; -o &quot;ServerAliveInterval 60&quot; -o &quot;ServerAliveCountMax 3&quot; -R www.aimyth.com:10023:192.168.1.107:22 sean@www.aimyth.com
-</code></pre>
-
-<p>这个命令运行完就可以直接从外网ssh连接B了</p>
-
-<pre><code>    ssh -p10023 B的用户名@www.aimyth.com
-</code></pre>
-
-<p><a href="http://network.chinabyte.com/140/13402140.shtml">原教程</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[sbt-jvm设置]]></title>
-    <link href="http://www.aimyth.com/14958952545489.html"/>
-    <updated>2017-05-27T22:27:34+08:00</updated>
-    <id>http://www.aimyth.com/14958952545489.html</id>
-    <content type="html"><![CDATA[
-<p>用sbt运行一个spark单机任务的时候会报超时异常，怀疑是内存不足导致的。<br/>
-先看下sbt配置<br/>
-<code>sbt -v</code><br/>
-内存确实不够<br/>
-再看sbt在哪里</p>
-
-<pre><code class="language-shell">$:whereis sbt
-/usr/bin/sbt
-$:ls -l /usr/bin/sbt
-lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/sbt
-</code></pre>
-
-<p>这样就找到sbt的安装目录了，打开sbt/conf/sbtopts文件，把以下内容按需要修改后填进去保存。</p>
-
-<pre><code>-J-Xms512M
--J-Xmx3536M
--J-Xss1M
--J-XX:+CMSClassUnloadingEnabled
--J-XX:+UseConcMarkSweepGC
--J-XX:MaxPermSize=724M
--J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-</code></pre>
-
-<p>查看下sbt配置</p>
-
-<p><code>sbt -v</code></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Gson读取List]]></title>
-    <link href="http://www.aimyth.com/14958952545450.html"/>
-    <updated>2017-05-27T22:27:34+08:00</updated>
-    <id>http://www.aimyth.com/14958952545450.html</id>
-    <content type="html"><![CDATA[
-<p>新发现一个用法，直接上代码了：<br/>
-<code><br/>
-val gs = new Gson()<br/>
-  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
-  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
-</code></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[翻译评估方法-BLEU]]></title>
-    <link href="http://www.aimyth.com/14958952545409.html"/>
-    <updated>2017-05-27T22:27:34+08:00</updated>
-    <id>http://www.aimyth.com/14958952545409.html</id>
-    <content type="html"><![CDATA[
-<p>Bilingual Evaluation Understudy</p>
-
-<h2 id="toc_0">场景</h2>
-
-<p><img src="media/14958952545409/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-05-27%20%E4%B8%8B%E5%8D%8810.31.17.png" alt="屏幕快照 2017-05-27 下午10.31.17"/></p>
-
-<ul>
-<li>候选翻译 candidate</li>
-<li>参考翻译 reference</li>
-</ul>
-
-<h2 id="toc_1">1阶</h2>
-
-<p>候选1相比于候选2 与reference 有更多的相同词和相同word-N-grame</p>
-
-<p>-&gt;计算准确评分（正确N-grames的期望）</p>
-
-<p>调整N-gram准确率（每个N-gram）为：</p>
-
-<p>\(count_{clip}(w)=min(count_{candidate}(w),maxcount_{reference}(w))\)</p>
-
-<p>候选1的\[count_{clip}(w=&quot;the&quot;)\]指的是什么呢？<br/>
-min(3,4)=3<br/>
-the在候选1中出现了3次，在reference3中出现了4次。</p>
-
-<ul>
-<li>计算候选翻译中出现的所有词的\[count_{clip}(w)\]</li>
-<li>unigram准确率=候选词中正确词的期望</li>
-<li>\[ p_{unigram} =\frac{count_{clip}(w_1)+count_{clip}(w_2)+...+count_{clip}(w_M)}{count(w_1)+count(w_2)+...+count(w_M)}  \]</li>
-<li>\[p_{unigram}=\frac{\sum_{i=1}^M count_{clip}(w_i)}{\sum_{i=1}^M count(w_i)}\]</li>
-<li>计算所有翻译过句子的\[count_{clip}(w)\]</li>
-<li>把所有翻译过的句子的\[p_1=p_{unigram}\]算出来</li>
-</ul>
-
-<h2 id="toc_2">高阶</h2>
-
-<p>用同样的步骤计算数量更多的N-gram：</p>
-
-<ul>
-<li>bigram</li>
-<li>trigram</li>
-<li>...</li>
-</ul>
-
-<p>-&gt; \[p_1,p_2,p_3\]</p>
-
-<h3 id="toc_3">汇总计算</h3>
-
-<p>把所有精确率放在一起计算几何均值。</p>
-
-<p>P=\[\sqrt[n]{p_1*p_2*...*p_n}\]<br/>
- =\[(p_1*p_2*...*p_n)^{\frac{1}{n}}\]<br/>
- =\[(\prod_{i=1}^n p_i)^{\frac{1}{n}}\]</p>
-
-<p>为了防止越界：</p>
-
-<p>P=\[e^{\frac{1}{n} {\sum_{i=1}^n log_e{p_i}}}\]</p>
-
-<p>为了让翻译尽量简短，使用简洁处罚（Brevity penalty，BP）：<br/>
-\[BP=\begin{cases} 1,&amp;\mbox{if candidate c&gt;reference r} \\ e^{(1-r/c)}, &amp; \mbox{if candidate c } \leq \mbox{ reference r} \end{cases}\]</p>
-
-<p>把他们都放在一起：</p>
-
-<p>\[BLEU=BP*e^{(\frac{1}{n}*\sum_{n=1}^N log_e(p_n))}\]</p>
-
-<p>通常设置：N=4，使用4以下的n-grams</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[序列]]></title>
-    <link href="http://www.aimyth.com/14958952545289.html"/>
-    <updated>2017-05-27T22:27:34+08:00</updated>
-    <id>http://www.aimyth.com/14958952545289.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">链表</h2>
-
-<h2 id="toc_1">栈</h2>
-
-<h2 id="toc_2">队列</h2>
 
 ]]></content>
   </entry>
