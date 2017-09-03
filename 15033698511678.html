@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  软件工程大纲 - AI迷思
+  排序 - AI迷思
   
   </title>
   
@@ -119,10 +119,10 @@
       <div class="markdown-body article-wrap">
        <div class="article">
           
-          <h1>软件工程大纲</h1>
+          <h1>排序</h1>
      
         <div class="read-more clearfix">
-          <span class="date">5/28/2017 0:22 上午</span>
+          <span class="date">8/22/2017 10:44 上午</span>
 
           <span>posted in&nbsp;</span> 
           
@@ -139,55 +139,35 @@
       </div><!-- article -->
 
       <div class="article-content">
-      <p>考试题型:概念问答题、实践案例题<br/>
-总分:50分</p>
+      <h2 id="toc_0">简单排序算法</h2>
 
-<h2 id="toc_0">一、软件过程</h2>
+<p><strong>定理1：</strong>任意N个不同元素组成的序列平均具有\(N(N-1)/4\)个逆序对。</p>
 
-<ul>
-<li>软件过程的概念</li>
-<li>经典软件过程模型的特点(瀑布模型、增量模型、演化模 型、统一过程模型)</li>
-<li>过程评估与CMM/CMMI的基本概念</li>
-<li>敏捷宣言与敏捷过程的特点。</li>
-</ul>
+<p><strong>定理2：</strong>任何仅以交换相邻两元素来排序的算法，其平均时间复杂度为\(\Omega(N^2)\) \(\Omega\)是时间复杂度下界。</p>
 
-<h2 id="toc_1">二、软件需求</h2>
+<p>简单</p>
 
-<ul>
-<li>软件需求的概念</li>
-<li>需求工程的基本过程</li>
-<li>分层数据流模型</li>
-<li>用例和场景建模及其UML表达(用例图、活动图、泳道图、顺序图)</li>
-<li>数据模型建模及其UML表达(类图)</li>
-<li>行为模型建模及其UML表达(状态机图)。</li>
-</ul>
+<h3 id="toc_1">冒泡排序</h3>
 
-<h2 id="toc_2">三、软件设计与构造</h2>
+<p>不断扫描表，一旦发现相邻两项逆序就交换这两项，直到某次扫描未发现逆序退出。<br/>
+最好情况\(O(N)\),最坏情况\(O(N^2)\)</p>
+
+<h3 id="toc_2">插入排序</h3>
+
+<p>扫描原表，依次把表中数据插入到新表中</p>
+
+<h2 id="toc_3">时间复杂度下界</h2>
+
+<p>提高算法效率：</p>
 
 <ul>
-<li>软件体系结构及体系结构风格的概念</li>
-<li>设计模式的概念</li>
-<li>模块化设计的基本思想及概念(抽象、分解、模块化、封装、信息隐藏、功能独立)</li>
-<li>软件重构的概念</li>
-<li>软件体系结构的UML建模(包图、类图、构件图、顺序图、部署图)</li>
-<li>接口的概念</li>
-<li>面向对象设计原则(开闭原则、Liskov替换原则、依赖 转置原则、接又隔离原则)</li>
-<li>内聚与耦合的概念</li>
-<li>常见的内聚和耦合类型。</li>
+<li>每次交换小区不止一个逆序对</li>
+<li>每次交换相隔较远的2个元素</li>
 </ul>
 
-<h2 id="toc_3">四、软件测试</h2>
+<p>由此产生了希尔排序</p>
 
-<ul>
-<li>软件测试及测试用例的概念</li>
-<li>单元测试、集成测试、确认测试、系统测试、回归测试的概念</li>
-<li>调试的概念、调试与测试的关系</li>
-<li>测试覆盖度的概念</li>
-<li>白盒测试、黑盒测试的概念</li>
-<li>代码圈复杂度的计算方法</li>
-<li>白盒测试中的基本路径测试方法</li>
-<li>黑盒测试中的等价类划分方法。</li>
-</ul>
+<h2 id="toc_4">排序算法特点</h2>
 
 
     
@@ -198,16 +178,16 @@
         <div class="large-6 columns">
         <p class="text-left" style="padding:15px 0px;">
       
-          <a href="14959067581040.html" 
-          title="Previous Post: 数据结构与算法大纲">&laquo; 数据结构与算法大纲</a>
+          <a href="15039097733460.html" 
+          title="Previous Post: Faster RCNN">&laquo; Faster RCNN</a>
       
         </p>
         </div>
         <div class="large-6 columns">
       <p class="text-right" style="padding:15px 0px;">
       
-          <a  href="14958952545569.html" 
-          title="Next Post: storm 安装笔记">storm 安装笔记 &raquo;</a>
+          <a  href="15015102563853.html" 
+          title="Next Post: 软件工程基础">软件工程基础 &raquo;</a>
       
       </p>
         </div>
