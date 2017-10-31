@@ -54,6 +54,8 @@
         
         <li id=""><a target="_self" href="archives.html">Archives</a></li>
         
+        <li id=""><a target="_self" href="note.html">课程笔记</a></li>
+        
         </ul>
 
         <ul class="right" id="search-wrap">
@@ -85,6 +87,8 @@
 
     <li><label>Categories</label></li>
 
+        
+            <li><a href="note.html">课程笔记</a></li>
         
             <li><a href="point.html">心得</a></li>
         
@@ -161,54 +165,77 @@
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14958952545569.html">
+                <a class="clearlink" href="14958952545450.html">
                 
-                  <h1>storm 安装笔记</h1>
+                  <h1>Gson读取List</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<ul>
-<li>环境</li>
-<li>安装</li>
-<li>配置</li>
-<li>测试</li>
-</ul>
+                        	<p>新发现一个用法，直接上代码了：<br/>
+<code><br/>
+val gs = new Gson()<br/>
+  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
+  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
+</code></p>
 
-<h2 id="toc_0">环境</h2>
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
 
-<p>本次安装使用ubuntu-14.04,storm-1.0.2,.</p>
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545489.html">
+                
+                  <h1>sbt-jvm设置</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>用sbt运行一个spark单机任务的时候会报超时异常，怀疑是内存不足导致的。<br/>
+先看下sbt配置<br/>
+<code>sbt -v</code><br/>
+内存确实不够<br/>
+再看sbt在哪里</p>
 
-<h2 id="toc_1">安装</h2>
-
-<h3 id="toc_2">1.zookeeper安装</h3>
-
-<p>这里直接使用docker镜像<a href="https://github.com/jplock/docker-zookeeper">jplock/zookeeper</a> 运行即可.</p>
-
-<h3 id="toc_3">2,storm</h3>
-
-<p>解压即可.</p>
-
-<h2 id="toc_4">配置</h2>
-
-<p>该目录需要有读写权限.</p>
-
-<pre><code>storm.local.dir: &quot;/tmp/storm/&quot;
+<pre><code class="language-shell">$:whereis sbt
+/usr/bin/sbt
+$:ls -l /usr/bin/sbt
+lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/sbt
 </code></pre>
 
-<p>这应该是工作节点的thrift端口,几个端口对应每个worker节点几个线程.</p>
+<p>这样就找到sbt的安装目录了，打开sbt/conf/sbtopts文件，把以下内容按需要修改后填进去保存。</p>
 
-<pre><code>supervisor.slots.ports:
-- 10001
-- 10002
+<pre><code>-J-Xms512M
+-J-Xmx3536M
+-J-Xss1M
+-J-XX:+CMSClassUnloadingEnabled
+-J-XX:+UseConcMarkSweepGC
+-J-XX:MaxPermSize=724M
+-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 </code></pre>
 
-<h2 id="toc_5">使用</h2>
+<p>查看下sbt配置</p>
 
-<pre><code>storm jar Getting-Started-0.0.1-SNAPSHOT.jar com.kanke.test.ClusterEdition
-</code></pre>
-
-<p>注意,storm集群与单机版不同,并不会立即调用clean生命周期,测试打印需写在excute周期内,打印在[INFO]的[STDO]中.</p>
+<p><code>sbt -v</code></p>
 
                         
                       </div>
@@ -333,77 +360,54 @@
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14958952545489.html">
+                <a class="clearlink" href="14958952545569.html">
                 
-                  <h1>sbt-jvm设置</h1>
+                  <h1>storm 安装笔记</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>用sbt运行一个spark单机任务的时候会报超时异常，怀疑是内存不足导致的。<br/>
-先看下sbt配置<br/>
-<code>sbt -v</code><br/>
-内存确实不够<br/>
-再看sbt在哪里</p>
+                        	<ul>
+<li>环境</li>
+<li>安装</li>
+<li>配置</li>
+<li>测试</li>
+</ul>
 
-<pre><code class="language-shell">$:whereis sbt
-/usr/bin/sbt
-$:ls -l /usr/bin/sbt
-lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/sbt
+<h2 id="toc_0">环境</h2>
+
+<p>本次安装使用ubuntu-14.04,storm-1.0.2,.</p>
+
+<h2 id="toc_1">安装</h2>
+
+<h3 id="toc_2">1.zookeeper安装</h3>
+
+<p>这里直接使用docker镜像<a href="https://github.com/jplock/docker-zookeeper">jplock/zookeeper</a> 运行即可.</p>
+
+<h3 id="toc_3">2,storm</h3>
+
+<p>解压即可.</p>
+
+<h2 id="toc_4">配置</h2>
+
+<p>该目录需要有读写权限.</p>
+
+<pre><code>storm.local.dir: &quot;/tmp/storm/&quot;
 </code></pre>
 
-<p>这样就找到sbt的安装目录了，打开sbt/conf/sbtopts文件，把以下内容按需要修改后填进去保存。</p>
+<p>这应该是工作节点的thrift端口,几个端口对应每个worker节点几个线程.</p>
 
-<pre><code>-J-Xms512M
--J-Xmx3536M
--J-Xss1M
--J-XX:+CMSClassUnloadingEnabled
--J-XX:+UseConcMarkSweepGC
--J-XX:MaxPermSize=724M
--J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+<pre><code>supervisor.slots.ports:
+- 10001
+- 10002
 </code></pre>
 
-<p>查看下sbt配置</p>
+<h2 id="toc_5">使用</h2>
 
-<p><code>sbt -v</code></p>
+<pre><code>storm jar Getting-Started-0.0.1-SNAPSHOT.jar com.kanke.test.ClusterEdition
+</code></pre>
 
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">5/27/2017 22:27 下午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14958952545450.html">
-                
-                  <h1>Gson读取List</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>新发现一个用法，直接上代码了：<br/>
-<code><br/>
-val gs = new Gson()<br/>
-  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
-  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
-</code></p>
+<p>注意,storm集群与单机版不同,并不会立即调用clean生命周期,测试打印需写在excute周期内,打印在[INFO]的[STDO]中.</p>
 
                         
                       </div>
@@ -480,6 +484,8 @@ val gs = new Gson()<br/>
 
       	<p class="cat-list">
         
+            <a href="note.html"><strong>课程笔记</strong></a>
+        
             <a href="point.html"><strong>心得</strong></a>
         
             <a href="course.html"><strong>课程</strong></a>
@@ -507,31 +513,31 @@ val gs = new Gson()<br/>
 	      
 		      
 			      <li class="post">
+			        <a href="15093533296418.html">软件工程笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15089123496348.html">数据结构笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15077052334055.html">数据结构随堂笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15075982914933.html">数学 10_10 微分方程</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15039097733460.html">Faster RCNN</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15033698511678.html">排序</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15015102563853.html">软件工程基础</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15015093939550.html">新大纲</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15012188936637.html">Jena RDF API</a>
 			      </li>
 		     
 		  

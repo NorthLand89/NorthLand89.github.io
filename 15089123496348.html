@@ -1,0 +1,775 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  数据结构笔记 - AI迷思
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="AI迷思" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:www.aimyth.com ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="point.html">心得</a></li>
+        
+        <li id=""><a target="_self" href="algorithm.html">算法</a></li>
+        
+        <li id=""><a target="_self" href="tech.html">技术栈</a></li>
+        
+        <li id=""><a target="_self" href="doc.html">文档</a></li>
+        
+        <li id=""><a target="_self" href="course.html">课程</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        <li id=""><a target="_self" href="note.html">课程笔记</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; AI迷思</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+       
+       <li><a href="index.html">HOME</a></li>
+    <li><a href="archives.html">Archives</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="note.html">课程笔记</a></li>
+        
+            <li><a href="point.html">心得</a></li>
+        
+            <li><a href="course.html">课程</a></li>
+        
+            <li><a href="doc.html">文档</a></li>
+        
+            <li><a href="algorithm.html">算法</a></li>
+        
+            <li><a href="tech.html">技术栈</a></li>
+        
+            <li><a href="data.html">data</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>数据结构笔记</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">10/25/2017 14:19 下午</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='note.html'>课程笔记</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <h2 id="toc_0">线性表</h2>
+
+<h3 id="toc_1">顺序存储结构</h3>
+
+<p>顺序结构优点<br/>
+顺序结构缺点：<br/>
+稀疏空间浪费<br/>
+增删慢</p>
+
+<h3 id="toc_2">向量</h3>
+
+<p>向量是线性数组的一种抽象与泛化，它是具有线性次序的一组元素构成的集合V={\(v_1,v_2,...,v_n\)}，其中的元素分别由秩相互区分。可以有多种实现方式。<br/>
+ADT：<br/>
+    size()<br/>
+    get(r)<br/>
+    put(r,e)<br/>
+    insert(r,e)<br/>
+    remove(r)<br/>
+    disordered()#是否按非降序排列<br/>
+    sort()#按非降序排列<br/>
+    find(e)#查找等于e且秩最大的元素</p>
+
+<h2 id="toc_3">图</h2>
+
+<h3 id="toc_4">基本概念</h3>
+
+<p>图表示多对多的关系。</p>
+
+<p>基本元素包括<code>顶点</code>，和<code>边</code>。</p>
+
+<p>一个图包含V={\(v_1,v_2,...\)}和E={\(e_1,e_2,...\)}</p>
+
+<p><strong>连通</strong>:如果从V到W存在一条(无向)路径，则称 V和W是连通的</p>
+
+<p><strong>路径</strong>:V到W的路径是一系列顶点{V, v1, v2, ..., vn, W}的集合，其中任一对相邻的顶点间都有图<br/>
+中的边。路径的长度是路径中的边数(如果带权，则是所有边的权重和)。如果V到W之间的所<br/>
+ 有顶点都不同，则称简单路径。</p>
+
+<p><strong>回路</strong>:起点等于终点的路径（回路指的是路径）</p>
+
+<p><strong>连通图</strong>:图中任意两顶点均连通</p>
+
+<p><strong>连通分量</strong>:无向图的极大连通子图</p>
+
+<p><strong>极大联通子图</strong><br/>
+* 极大顶点数:再加1个顶点就不连通了<br/>
+* 极大边数:包含子图中所有顶点相连的所有边</p>
+
+<p><strong>强连通</strong>:有向图中顶点V和W之间存在双向路 径，则称V和W是强连通的<br/>
+<strong>强连通图</strong>:有向图中任意两顶点均强连通<br/>
+<strong>强连通分量</strong>:有向图的极大强连通子图</p>
+
+<h3 id="toc_5">图的存储</h3>
+
+<p>两种方法：</p>
+
+<h4 id="toc_6">邻接矩阵：直接用二维矩阵存储。<img src="media/15089123496348/15091340290429.jpg" alt=""/></h4>
+
+<p>优点：<br/>
+* 简单，容易理解。<br/>
+* 方便检查两个点之间是否有边。<br/>
+* 方便找出任意顶点的“邻接点”（有边直接相连的点）。<br/>
+* 方便计算任一顶点的“度”(从该点发出的边数为“出度”，指向该点的边数为“入度”)</p>
+
+<p>缺点：<br/>
+* 存稀疏图比较浪费空间。<br/>
+* 统计边数比较浪费时间。</p>
+
+<h4 id="toc_7">邻接表</h4>
+
+<p><img src="media/15089123496348/15091342563875.jpg" alt=""/></p>
+
+<p>优点：<br/>
+* 方便计算出度。<br/>
+* 方便查找“邻接点”。<br/>
+* 节约稀疏图的存储空间，需要V个头指针和2E个节点。<br/>
+* 方便计算某一顶点的度（有向图需要逆邻接表）</p>
+
+<p>缺点：<br/>
+* 判断两个节点之间是否有边变麻烦了。</p>
+
+<h3 id="toc_8">图的遍历</h3>
+
+<h4 id="toc_9">深度优先遍历</h4>
+
+<p>Depth First Search<br/>
+时间复杂度为：<br/>
+<strong>邻接表</strong>：\(O(N+E)\)<br/>
+<strong>邻接矩阵</strong>：\(O(N^2)\)<br/>
+只要不是太稠密都是邻接表快一些，根本就是邻接表快一些！！因为E最大等于n（n-1）/2</p>
+
+<p><img src="media/15089123496348/15091396026315.jpg" alt=""/><br/>
+常用DFS来扫描极大连通分量。<br/>
+<img src="media/15089123496348/15091402931171.jpg" alt=""/></p>
+
+<h4 id="toc_10">广度优先算法</h4>
+
+<p>Breadth First Search</p>
+
+<p>复杂度和深度优先一样。<br/>
+<img src="media/15089123496348/15091398927830.jpg" alt=""/></p>
+
+<h4 id="toc_11">广度优先遍历</h4>
+
+<h3 id="toc_12">Dijkstra算法</h3>
+
+<p>用于计算<strong>有权图</strong>的<strong>单源最短路径</strong>。<br/>
+<img src="media/15089123496348/15091410200093.jpg" alt=""/><br/>
+假设的证明：<br/>
+v是马上要收录的顶点，如果存在未包含的顶点w，使s-w-v距离小于s-v，那么|s-w|&lt;|s-v|,那么s-w应早于s-v收录。</p>
+
+<p>收集顶点应按权值升序收集。<br/>
+<img src="media/15089123496348/15091415783330.jpg" alt=""/><br/>
+说明，dist数组用来存储源s到v的最短路径，path则是上一个节点的索引值。<br/>
+所谓收录其实是未收录节点的反。 <br/>
+根据收集最小权值顶点和距离更新方法的不同算法复杂度不同。</p>
+
+<p>主要是未收录的如何存储，未收录的可以用任何线性结构，存储存在距离的节点，动态添加和删除。 </p>
+
+<ul>
+<li>直接扫描收集：T=\(O(|V|^2+|E|)\),对于稠密图效果更好。</li>
+</ul>
+
+<p>把dist存在最小堆里：\(O(\log(|E|\log|V|))\)，对于稀疏图效果更好（充分稀疏，边与顶点同数量级）。</p>
+
+<p><strong>对于稀疏矩阵，可以直接用dijkstra算法计算多源最短路径</strong>（稀疏矩阵用线性结构存储未收集表）</p>
+
+<h3 id="toc_13">Floyd算法</h3>
+
+<p>初始距离矩阵是邻接矩阵。<br/>
+直接在邻接矩阵上迭代。<br/>
+<img src="media/15089123496348/15091442751084.jpg" alt=""/></p>
+
+<p><img src="media/15089123496348/15091442524383.jpg" alt=""/></p>
+
+<p>这个可以画图看下，用那个推论就比较容易理解了。</p>
+
+<h3 id="toc_14">Prime算法</h3>
+
+<p>是一个最小生成树算法，小树长大，跟Dijkstra比较像，都是一个一个收率。例子的话就是修路问题。<br/>
+查找dist最小时用数组，因为这个算法在稠密图中比较有效。</p>
+
+<p>复杂度\(O(|V|^2)\)</p>
+
+<p><img src="media/15089123496348/15091446428843.jpg" alt=""/><br/>
+<img src="media/15089123496348/15091451816636.jpg" alt=""/></p>
+
+<h3 id="toc_15">Kruskal算法</h3>
+
+<p>也是一个最小生成树算法，把森林合成树。每个节点都作为一个树，贪婪合并树直到边数到|V|-1或是边用完了。<br/>
+<img src="media/15089123496348/15091455629904.jpg" alt=""/><br/>
+复杂度T=\(O(|E|log|E|)\),当稀疏时效率高于Prime</p>
+
+<h3 id="toc_16">拓扑排序</h3>
+
+<p>AOV：Activity On Vertex，指活动在顶点上表示的图。</p>
+
+<p>拓扑序：如果图中从V到W有一条有向路径，则V一定排在W之前。满足此条件的顶点序列称为一个拓扑序。</p>
+
+<p>拓扑排序：获得一个拓扑序的过程。</p>
+
+<p>DAG：有向无环图 Directed Acyclic Graph。</p>
+
+<p>AOV一定是DAG</p>
+
+<p><img src="media/15089123496348/15091460902471.jpg" alt=""/><br/>
+就是不断把入度为0的节点提出来并删除这个节点指向其他节点的边（优化是记录入度，如果目标节点入度减至0就把那个节点扔到下次迭代要提出的队列里去）。迭代至队列里没顶点，如果没pop出|V|个节点，那就是有回路。</p>
+
+<p>复杂度是\(O(|V|+|E|)\)</p>
+
+<h2 id="toc_17">排序</h2>
+
+<h3 id="toc_18">冒泡排序</h3>
+
+<p>冒牌排序尾部迭代N次后尾部N个不需要再排了。</p>
+
+<p>最好O（N）<br/>
+最差O（\(N^2\)）</p>
+
+<p>优点是简单，可以排单链表。是稳定的。</p>
+
+<h3 id="toc_19">插入排序</h3>
+
+<p>计算过程复用了原来的数组</p>
+
+<p>最好O（N）<br/>
+最差O（\(N^2\)）</p>
+
+<p>优点是简单，步骤比较省，更好的性质后边说，也是稳定的。</p>
+
+<h3 id="toc_20">希尔排序</h3>
+
+<p>使用递减级数抽取子数列做插入排序，使用不同增量数列效果不同。同样比较简单,不稳定。<br/>
+<img src="media/15089123496348/15091332165058.jpg" alt=""/></p>
+
+<h3 id="toc_21">堆排序</h3>
+
+<p>两种实现：<br/>
+* 从最小堆里一个一个Pop出来。需要额外O（N）空间。复制元素需要时间。<br/>
+* 重复调整最大堆，把堆顶元素与末尾元素调换位置，减少规模，迭代下去~。这里的堆排序索引需要特殊处理，下表计算与堆章节下表计算公式不同，考试的时候画一下。<br/>
+<img src="media/15089123496348/15091335578311.jpg" alt=""/></p>
+
+<h3 id="toc_22">快速排序</h3>
+
+<p><img src="media/15089123496348/15091327687146.jpg" alt=""/></p>
+
+<ol>
+<li>将[head,(head+tail)/2,tail]升序排列</li>
+<li>swap（(head+tail)/2,tail-1）</li>
+<li>使用两个指针对[head:tail-2]遍历swap</li>
+<li>把tail-1插到左侧出发指针所在位置i</li>
+<li>对i两侧区间递归排序</li>
+</ol>
+
+<h3 id="toc_23">基数排序</h3>
+
+<p>就是把要排序的值分桶，有不同的分桶方法，对于多位的值还有不同的顺序（后序优点&amp;&amp;先序优先）<br/>
+<img src="media/15089123496348/15091331445630.jpg" alt=""/></p>
+
+<p>多关键字就再来一次分桶收集。</p>
+
+<h3 id="toc_24">归并排序</h3>
+
+<p><img src="media/15089123496348/15091331212930.jpg" alt=""/></p>
+
+<p>归并，O（N ）<br/>
+O（NlogN），非常稳定，最好最坏一样。稳定的。非常适合外排序中。</p>
+
+<p>分为递归实现和非递归实现。因为占用空间较大，一般不用于内排序。<br/>
+这个非递归实现回头画图看下</p>
+
+<h3 id="toc_25">排序总结</h3>
+
+<table>
+<thead>
+<tr>
+<th>排序方法</th>
+<th>平均时间复杂度</th>
+<th>最坏时间复杂度</th>
+<th>额外空间复杂度</th>
+<th>稳定性</th>
+<th>特点</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>选择排序</td>
+<td>\(O(N^2)\)</td>
+<td>\(O(N^2)\)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+<td></td>
+</tr>
+<tr>
+<td>冒泡排序</td>
+<td>\(O(N^2)\)</td>
+<td>\(O(N^2)\)</td>
+<td>O(1)</td>
+<td>稳定</td>
+<td></td>
+</tr>
+<tr>
+<td>插入排序</td>
+<td>\(O(N^2)\)</td>
+<td>\(O(N^2)\)</td>
+<td>O(1)</td>
+<td>稳定</td>
+<td></td>
+</tr>
+<tr>
+<td>希尔排序</td>
+<td>\(O(N^d)\)</td>
+<td>\(O(N^2)\)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+<td></td>
+</tr>
+<tr>
+<td>堆排序</td>
+<td>\(O(N_{log}N)\)</td>
+<td>\(O(N_{log}N)\)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+<td>常数比较大</td>
+</tr>
+<tr>
+<td>快速排序</td>
+<td>\(O(N_{log}N)\)</td>
+<td>\(O(N^2)\)</td>
+<td>O(logN)</td>
+<td>不稳定</td>
+<td>常数比较小，需要额外空间</td>
+</tr>
+<tr>
+<td>归并排序</td>
+<td>\(O(N_{log}N)\)</td>
+<td>\(O(N_{log}N)\)</td>
+<td>O(N)</td>
+<td>稳定</td>
+<td>占用空间大，</td>
+</tr>
+<tr>
+<td>基数排序</td>
+<td>\(O(P(N+B))\)</td>
+<td>\(O(P(N+B))\)</td>
+<td>O(N+B)</td>
+<td>稳定</td>
+<td>速度看桶，场景有限</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>P是多少次，B是多少个桶</em></p>
+
+<p><strong>归并排序</strong>是<strong>复杂排序算法</strong>中唯一一个<strong>稳定的</strong>。<br/>
+<strong>选择排序</strong>是<strong>简单排序算法</strong>中唯一一个<strong>不稳定的</strong>。<br/>
+<strong>冒泡排序</strong>可以用于<strong>单链表</strong>。<br/>
+<strong>堆排序</strong>常数比较大。<br/>
+<strong>快速排序</strong>常数比较小，非常快。<br/>
+<strong>基数排序</strong>比较适合<em>容易分桶的</em></p>
+
+<h2 id="toc_26">散列</h2>
+
+<p>成功平均查找长度：ASLs</p>
+
+<p>要查找的对象在表里。</p>
+
+<p>失败平均查找长度：ASLu</p>
+
+<p>要查找的对象不在表里。 </p>
+
+<p><img src="media/15089123496348/15091249486795.jpg" alt=""/></p>
+
+<h3 id="toc_27">散列冲突处理方法</h3>
+
+<h4 id="toc_28">开放地址法</h4>
+
+<p>发现冲突时按某种规则放到其他位置上。</p>
+
+<p>发生第i词冲突时，试探下一个地址增加\(d_i\),基本公式是：\(h_i(key)=(h(key)+d_i)\% TableSize,1\le i\lt TableSize\)</p>
+
+<p><strong>优点</strong></p>
+
+<p>散列表是一个数组，存储效率高，随机查找。</p>
+
+<p><strong>缺点</strong></p>
+
+<p>散列表有聚集现象 </p>
+
+<p>注意次数是从1开始的，判定没找到那个空也算次数里。</p>
+
+<p><strong>线性探测</strong>：</p>
+
+<pre><code>增量序列 1，2，3，4，5....
+</code></pre>
+
+<p>聚集问题比较严重</p>
+
+<p><strong>平方探测</strong>：<br/>
+增量序列为：\(d_i=(-ceil(\frac{i}{2}))^{i-1}\)<br/>
+就是 1，-1，4，-4，9，-9，...</p>
+
+<p>有效避免了聚集问题，但如果TableSize没有设好容易出现探测不到闲置空间的情况。</p>
+
+<p>定理：<code>如果散列表长度是某个4k+3形式的素数时，平方探测法可以谈查到整个散列表空间</code></p>
+
+<p><strong>双散列探测法</strong>：</p>
+
+<p>\(d_i\)是\(i*h_2(key),h_2(key)\)是另一散列函数</p>
+
+<p>探测序列成：\(h_2(key),2h_2(key),3h_2(key),...\)<br/>
+对任意key，\(h_2(key)\ne 0\)<br/>
+<img src="media/15089123496348/15091271513853.jpg" alt=""/></p>
+
+<h4 id="toc_29">再散列</h4>
+
+<p>装填因子过大时，查找效率会下降，实用装填因子一般取0.5~0.85，超过超过0.5过多时一般要扩大散列表，新建一个更大的表（还是素数长度），把原来表里的东西都丢进去。</p>
+
+<h4 id="toc_30">链地址法</h4>
+
+<p>就是value不是元素而是元素链表啦。</p>
+
+<p><strong>优点</strong>：<br/>
+容易实现，关键字删除不需要<code>懒惰删除法</code>没有存储<code>垃圾</code>。<br/>
+<strong>缺点</strong>：<br/>
+* 链表部分存储效率和查找效率都比较低。<br/>
+* \(\alpha\)小的时间代价高，大则可能导致空间浪费，不均匀的链表长度导致时间效率的严重下降。</p>
+
+<h4 id="toc_31">性能分析</h4>
+
+<p>关键词的比较次数，取决于产生冲突的多少。<br/>
+映像产生冲突多少有以下三个元素：<br/>
+* 散列函数是否均匀<br/>
+* 处理冲突的方法<br/>
+* 散列表的 装填因子\(\alpha\) </p>
+
+<p><strong>线性探测法</strong><br/>
+<img src="media/15089123496348/15091289632960.jpg" alt=""/></p>
+
+<p><strong>平方探测法和双散列法</strong><br/>
+<img src="media/15089123496348/15091290709161.jpg" alt=""/></p>
+
+<p><strong>分离链表法</strong></p>
+
+<p>特点：<br/>
+散列表是顺序存储和</p>
+
+<p><img src="media/15089123496348/15091295097144.jpg" alt=""/></p>
+
+<h4 id="toc_32">散列查找的特点</h4>
+
+<p><strong>优点</strong>：<br/>
+散列的查找效率期望为常数O(1)，几乎与大小无关。适合关键字直接比较量大的问题，常用于字符串管理。</p>
+
+<p><strong>特点</strong>：<br/>
+以较小的\(\alpha\)为前提，空间换时间。</p>
+
+<p><strong>缺点</strong>：<br/>
+散列方法的存储对关键字是随机的，不便于<code>顺序查找关键字</code>，也不适合于<code>范围查找</code>，或<code>最大值最小值</code>查找。</p>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="15093533296418.html" 
+          title="Previous Post: 软件工程笔记">&laquo; 软件工程笔记</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="15077052334055.html" 
+          title="Next Post: 数据结构随堂笔记">数据结构随堂笔记 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2143124"></script>
+<!-- UY END -->
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>AI迷思</h1>
+                <div class="site-des">雪山大猫的小窝</div>
+                <div class="social">
+
+
+
+
+
+
+
+<a target="_blank" class="weibo" href="http://weibo.com/xueshandamao" title="weibo">Weibo</a>
+
+
+<a target="_blank" class="email" href="mailto:northland89@163.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="note.html"><strong>课程笔记</strong></a>
+        
+            <a href="point.html"><strong>心得</strong></a>
+        
+            <a href="course.html"><strong>课程</strong></a>
+        
+            <a href="doc.html"><strong>文档</strong></a>
+        
+            <a href="algorithm.html"><strong>算法</strong></a>
+        
+            <a href="tech.html"><strong>技术栈</strong></a>
+        
+            <a href="data.html"><strong>data</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15093533296418.html">软件工程笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15089123496348.html">数据结构笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15077052334055.html">数据结构随堂笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15075982914933.html">数学 10_10 微分方程</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15039097733460.html">Faster RCNN</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    <script src="asset/chart/all-min.js"></script><script type="text/javascript">$(function(){    var mwebii=0;    var mwebChartEleId = 'mweb-chart-ele-';    $('pre>code').each(function(){        mwebii++;        var eleiid = mwebChartEleId+mwebii;        if($(this).hasClass('language-sequence')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = Diagram.parse($(this).text());            diagram.drawSVG(eleiid,{theme: 'simple'});        }else if($(this).hasClass('language-flow')){            var ele = $(this).addClass('nohighlight').parent();            $('<div id="'+eleiid+'"></div>').insertAfter(ele);            ele.hide();            var diagram = flowchart.parse($(this).text());            diagram.drawSVG(eleiid);        }    });});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
+
+  </body>
+</html>

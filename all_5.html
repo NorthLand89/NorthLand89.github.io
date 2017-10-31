@@ -54,6 +54,8 @@
         
         <li id=""><a target="_self" href="archives.html">Archives</a></li>
         
+        <li id=""><a target="_self" href="note.html">课程笔记</a></li>
+        
         </ul>
 
         <ul class="right" id="search-wrap">
@@ -85,6 +87,8 @@
 
     <li><label>Categories</label></li>
 
+        
+            <li><a href="note.html">课程笔记</a></li>
         
             <li><a href="point.html">心得</a></li>
         
@@ -119,39 +123,97 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
-                <a class="clearlink" href="14958952545489.html">
+                <a class="clearlink" href="14959067581040.html">
                 
-                  <h1>sbt-jvm设置</h1>
+                  <h1>数据结构与算法大纲</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>用sbt运行一个spark单机任务的时候会报超时异常，怀疑是内存不足导致的。<br/>
-先看下sbt配置<br/>
-<code>sbt -v</code><br/>
-内存确实不够<br/>
-再看sbt在哪里</p>
+                        	<p>考试题型:问答、分析、编程<br/>
+总分:60分 </p>
 
-<pre><code class="language-shell">$:whereis sbt
-/usr/bin/sbt
-$:ls -l /usr/bin/sbt
-lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/sbt
-</code></pre>
+<h2 id="toc_0">一、栈、队列和向量</h2>
 
-<p>这样就找到sbt的安装目录了，打开sbt/conf/sbtopts文件，把以下内容按需要修改后填进去保存。</p>
+<ul>
+<li>单链表</li>
+<li>双向链表</li>
+<li>环形链表</li>
+<li>带哨兵节点的链表</li>
+<li>栈的基本概念和性质</li>
+<li>栈ADT及其顺序，链接实现</li>
+<li>栈的应用</li>
+<li>栈与递归</li>
+<li>队列的基本概念和性质,队列ADT及其顺序,链接实现</li>
+<li>队列的应用</li>
+<li>向量基本概念和性质</li>
+<li>向量ADT及其数组、链接实现</li>
+</ul>
 
-<pre><code>-J-Xms512M
--J-Xmx3536M
--J-Xss1M
--J-XX:+CMSClassUnloadingEnabled
--J-XX:+UseConcMarkSweepGC
--J-XX:MaxPermSize=724M
--J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-</code></pre>
+<h2 id="toc_1">二、树</h2>
 
-<p>查看下sbt配置</p>
+<ul>
+<li>树的基本概念和术语</li>
+<li>树的前序,中序,后序,层次序遍历</li>
+<li>二叉树及其性质</li>
+<li>普通树与二叉树的转换</li>
+<li>树的存储结构</li>
+<li>标准形式</li>
+<li>完全树(complete tree)的数组形式存储</li>
+<li>树的应用</li>
+<li>Huffman树的定义与应用;</li>
+</ul>
 
-<p><code>sbt -v</code></p>
+<h2 id="toc_2">三、查找</h2>
+
+<ul>
+<li>查找的基本概念</li>
+<li>对线性关系结构的查找</li>
+<li>顺序查找</li>
+<li>二分查找</li>
+<li>Hash查找法</li>
+<li>常见的Hash函数(直接定址法,随机数法)</li>
+<li>hash冲突的概念</li>
+<li>解决冲突的方法(开散列方法/拉链法,闭散列方法/开址定址法)</li>
+<li>二次聚集现象</li>
+<li>BST树定义，性质,ADT及其实现</li>
+<li>BST树查找,插入,删除算法</li>
+<li>平衡树 (AVL) 的定义,性质,ADT及其实现,平衡树查找,插入算法,平衡因子的概念</li>
+<li>优先队列与堆,堆的定义</li>
+<li>堆的生成,调整算法</li>
+<li>范围查询</li>
+</ul>
+
+<h2 id="toc_3">四、排序</h2>
+
+<ul>
+<li>排序基本概念</li>
+<li>插入排序</li>
+<li>希尔排序</li>
+<li>选择排序</li>
+<li>快速排序</li>
+<li>合并排序</li>
+<li>基数排序</li>
+<li>等排序算法基本思想,</li>
+<li>算法代码及基本的时间复杂度分析</li>
+</ul>
+
+<h2 id="toc_4">五、图</h2>
+
+<ul>
+<li>图的基本概念</li>
+<li>图的存储结构</li>
+<li>邻接矩阵,邻接表</li>
+<li>图的遍历,广度度优先遍历和深度优先遍历</li>
+<li>最小生成树基本概念</li>
+<li>Prim算法</li>
+<li>Kruskal算法</li>
+<li>最短路径问题</li>
+<li>广度优 先遍历算法</li>
+<li>Dijkstra算法</li>
+<li>Floyd算法</li>
+<li>拓扑排序。</li>
+</ul>
 
                         
                       </div>
@@ -160,10 +222,10 @@ lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/s
                 <div class="read-more clearfix">
                   <div class="more-left left">
                   
-                    <span class="date">5/27/2017 22:27 下午</span>
+                    <span class="date">5/28/2017 1:39 上午</span>
                     <span>posted in&nbsp;</span> 
           				  
-          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+          					    <span class="posted-in"><a href='course.html'>课程</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -177,19 +239,99 @@ lrwxrwxrwx 1 root root 22 5月  11 08:24 /usr/bin/sbt -&gt; /usr/share/sbt/bin/s
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14958952545450.html">
+                <a class="clearlink" href="14959021333435.html">
                 
-                  <h1>Gson读取List</h1>
+                  <h1>软件工程大纲</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<p>新发现一个用法，直接上代码了：<br/>
-<code><br/>
-val gs = new Gson()<br/>
-  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
-  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
-</code></p>
+                        	<p>考试题型:概念问答题、实践案例题<br/>
+总分:50分</p>
+
+<h2 id="toc_0">一、软件过程</h2>
+
+<ul>
+<li>软件过程的概念</li>
+<li>经典软件过程模型的特点(瀑布模型、增量模型、演化模 型、统一过程模型)</li>
+<li>过程评估与CMM/CMMI的基本概念</li>
+<li>敏捷宣言与敏捷过程的特点。</li>
+</ul>
+
+<h2 id="toc_1">二、软件需求</h2>
+
+<ul>
+<li>软件需求的概念</li>
+<li>需求工程的基本过程</li>
+<li>分层数据流模型</li>
+<li>用例和场景建模及其UML表达(用例图、活动图、泳道图、顺序图)</li>
+<li>数据模型建模及其UML表达(类图)</li>
+<li>行为模型建模及其UML表达(状态机图)。</li>
+</ul>
+
+<h2 id="toc_2">三、软件设计与构造</h2>
+
+<ul>
+<li>软件体系结构及体系结构风格的概念</li>
+<li>设计模式的概念</li>
+<li>模块化设计的基本思想及概念(抽象、分解、模块化、封装、信息隐藏、功能独立)</li>
+<li>软件重构的概念</li>
+<li>软件体系结构的UML建模(包图、类图、构件图、顺序图、部署图)</li>
+<li>接口的概念</li>
+<li>面向对象设计原则(开闭原则、Liskov替换原则、依赖 转置原则、接又隔离原则)</li>
+<li>内聚与耦合的概念</li>
+<li>常见的内聚和耦合类型。</li>
+</ul>
+
+<h2 id="toc_3">四、软件测试</h2>
+
+<ul>
+<li>软件测试及测试用例的概念</li>
+<li>单元测试、集成测试、确认测试、系统测试、回归测试的概念</li>
+<li>调试的概念、调试与测试的关系</li>
+<li>测试覆盖度的概念</li>
+<li>白盒测试、黑盒测试的概念</li>
+<li>代码圈复杂度的计算方法</li>
+<li>白盒测试中的基本路径测试方法</li>
+<li>黑盒测试中的等价类划分方法。</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/28/2017 0:22 上午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='course.html'>课程</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14958952545289.html">
+                
+                  <h1>序列</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">链表</h2>
+
+<h2 id="toc_1">栈</h2>
+
+<h2 id="toc_2">队列</h2>
 
                         
                       </div>
@@ -199,9 +341,7 @@ val gs = new Gson()<br/>
                   <div class="more-left left">
                   
                     <span class="date">5/27/2017 22:27 下午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
+                    
           				   
                   </div>
                   <div class="more-right right">
@@ -313,18 +453,19 @@ the在候选1中出现了3次，在reference3中出现了4次。</p>
               </div><!-- article -->
         
 			<div class="article">
-                <a class="clearlink" href="14958952545289.html">
+                <a class="clearlink" href="14958952545450.html">
                 
-                  <h1>序列</h1>
+                  <h1>Gson读取List</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<h2 id="toc_0">链表</h2>
-
-<h2 id="toc_1">栈</h2>
-
-<h2 id="toc_2">队列</h2>
+                        	<p>新发现一个用法，直接上代码了：<br/>
+<code><br/>
+val gs = new Gson()<br/>
+  val token = new TypeToken[java.util.List[SourceBean]]() {}.getType<br/>
+  val b1=gs.fromJson[java.util.List[SourceBean]](rml,token).toList<br/>
+</code></p>
 
                         
                       </div>
@@ -334,7 +475,9 @@ the在候选1中出现了3次，在reference3中出现了4次。</p>
                   <div class="more-left left">
                   
                     <span class="date">5/27/2017 22:27 下午</span>
-                    
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='tech.html'>技术栈</a></span>
           				   
                   </div>
                   <div class="more-right right">
@@ -358,7 +501,7 @@ the在候选1中出现了3次，在reference3中出现了4次。</p>
 			  </div>
 			  <div class="large-6 columns">
 			<p class="text-right" style="padding-top:25px;">
-			
+			 <a href="all_6.html">&raquo; Next Page</a> 
 			</p>
 			  </div>
 			</div>
@@ -399,6 +542,8 @@ the在候选1中出现了3次，在reference3中出现了4次。</p>
 
       	<p class="cat-list">
         
+            <a href="note.html"><strong>课程笔记</strong></a>
+        
             <a href="point.html"><strong>心得</strong></a>
         
             <a href="course.html"><strong>课程</strong></a>
@@ -426,31 +571,31 @@ the在候选1中出现了3次，在reference3中出现了4次。</p>
 	      
 		      
 			      <li class="post">
+			        <a href="15093533296418.html">软件工程笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15089123496348.html">数据结构笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15077052334055.html">数据结构随堂笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15075982914933.html">数学 10_10 微分方程</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15039097733460.html">Faster RCNN</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15033698511678.html">排序</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15015102563853.html">软件工程基础</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15015093939550.html">新大纲</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15012188936637.html">Jena RDF API</a>
 			      </li>
 		     
 		  

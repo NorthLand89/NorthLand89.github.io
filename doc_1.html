@@ -54,6 +54,8 @@
         
         <li id=""><a target="_self" href="archives.html">Archives</a></li>
         
+        <li id=""><a target="_self" href="note.html">课程笔记</a></li>
+        
         </ul>
 
         <ul class="right" id="search-wrap">
@@ -85,6 +87,8 @@
 
     <li><label>Categories</label></li>
 
+        
+            <li><a href="note.html">课程笔记</a></li>
         
             <li><a href="point.html">心得</a></li>
         
@@ -118,6 +122,90 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="14961980378781.html">
+                
+                  <h1>Keras LSTM</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>Hochreiter 于1997年发明的长时记忆单元</p>
+
+<p>想深入的了解该算法，看这里：<br/>
+<a href="http://deeplearning.net/tutorial/lstm.html">this tutorial</a>.</p>
+
+<h1 id="toc_0">Arguments</h1>
+
+<ul>
+<li>units: 输出空间的维度</li>
+<li>activation: Activation function to use
+        (see <a href="../activations.md">activations</a>).
+        要使用的激活函数，如果是None啥都不用
+        (也就是说 &quot;linear&quot; activation: <code>a(x) = x</code>).</li>
+<li>recurrent_activation: 用于复现步骤的激活函数
+        (see <a href="../activations.md">activations</a>).</li>
+<li>use_bias: Boolean:是否使用偏置</li>
+<li>kernel_initializer:             用于初始化核矩阵权值的方法
+        (see <a href="../initializers.md">initializers</a>).</li>
+<li>recurrent_initializer: 用于初始化复现步阶段现行转换权值矩阵的方法
+        (see <a href="../initializers.md">initializers</a>).</li>
+<li>bias_initializer: 偏置向量生成器
+        (see <a href="../initializers.md">initializers</a>).</li>
+<li>unit_forget_bias: Boolean.是否在遗忘单元上加偏置，如果为真，在初始化的时候会在遗忘门上加 1，将他设置为真将强制使用bias_initializer=&quot;zeros&quot;,在这个连接中建议使用这个选项</li>
+<li><p>This is recommended in <a href="http://www.jmlr.org/proceedings/papers/v37/jozefowicz15.pdf">Jozefowicz et al.</a></p></li>
+<li><p>kernel_regularizer:用于核矩阵权值的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>recurrent_regularizer:用于创建核矩阵权值的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>bias_regularizer: 用于偏置向量的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>activity_regularizer:用于输出激活值的正则化方法<br/>
+        (see <a href="../regularizers.md">regularizer</a>).</p></li>
+<li><p>kernel_constraint: 用于核矩阵的限制函数<br/>
+        (see <a href="../constraints.md">constraints</a>).</p></li>
+<li><p>recurrent_constraint: 用于重现矩阵的限制函数<br/>
+        (see <a href="../constraints.md">constraints</a>).</p></li>
+<li><p>bias_constraint: 用于偏置向量的限制函数<br/>
+        (see <a href="../constraints.md">constraints</a>).</p></li>
+<li><p>dropout: Float.输入做线性转换时丢弃的比例</p></li>
+<li><p>recurrent_dropout: 重现做线性转换时要丢弃的比例</p>
+
+<h1 id="toc_1">References</h1>
+
+<blockquote>
+<ul>
+<li><a href="http://deeplearning.cs.cmu.edu/pdfs/Hochreiter97_lstm.pdf">Long short-term memory</a> (original 1997 paper)</li>
+<li><a href="http://www.mitpressjournals.org/doi/pdf/10.1162/089976600300015015">Learning to forget: Continual prediction with LSTM</a></li>
+<li><a href="http://www.cs.toronto.edu/%7Egraves/preprint.pdf">Supervised sequence labeling with recurrent neural networks</a></li>
+<li><a href="http://arxiv.org/abs/1512.05287">A Theoretically Grounded Application of Dropout in Recurrent Neural Networks</a></li>
+</ul>
+</blockquote></li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">5/31/2017 10:33 上午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='doc.html'>文档</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="14960949349195.html">
                 
@@ -378,6 +466,8 @@ sudo pip install keras<br/>
 
       	<p class="cat-list">
         
+            <a href="note.html"><strong>课程笔记</strong></a>
+        
             <a href="point.html"><strong>心得</strong></a>
         
             <a href="course.html"><strong>课程</strong></a>
@@ -405,31 +495,31 @@ sudo pip install keras<br/>
 	      
 		      
 			      <li class="post">
+			        <a href="15093533296418.html">软件工程笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15089123496348.html">数据结构笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15077052334055.html">数据结构随堂笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15075982914933.html">数学 10_10 微分方程</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15039097733460.html">Faster RCNN</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15033698511678.html">排序</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15015102563853.html">软件工程基础</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15015093939550.html">新大纲</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15012188936637.html">Jena RDF API</a>
 			      </li>
 		     
 		  
