@@ -123,6 +123,38 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
+                <a class="clearlink" href="15094822436869.html">
+                
+                  <h1></h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">11/1/2017 4:37 上午</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='note.html'>课程笔记</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
                 <a class="clearlink" href="15093533296418.html">
                 
                   <h1>软件工程笔记</h1>
@@ -157,45 +189,85 @@
 
 <h4 id="toc_3">增量模型</h4>
 
-<p>增量式开发的思想是先开发出一个初始的实现，给用户使用并听取用户的使用意见和建议，通过多个版本的不断修改直到产生一个充分的系统。</p>
+<p><code>增量模型</code>是把待开发的软件系统<code>模块化</code>，将每个模块作为一个<code>增量组件</code>，从而分批次地<code>分析</code>、<code>设计</code>、<code>编码</code>和<code>测试</code>这些增量组件。运用增量模型的软件开发过程是递增式的过程。<br/>
+<strong>相对于瀑布模型而言，采用增量模型进行开发，开发人员不需要一次性地把整个软件产品提交给用户，而是可以分批次进行提交。</strong></p>
+
+<p>增量模型又称为渐增模型，也称为有计划的产品改进模型，它从一组给定的需求开始，通过构造一系列可执行中间版本来实施开发活动。第一个版本纳入一部分需求，下一个版本纳入更多的需求，依此类推，直到系统完成。每个中间版本都要执行必需的过程、活动和任务。</p>
 
 <p>描述，开发和验证交织在一起。</p>
 
 <p>优点：</p>
 
 <ol>
-<li>降低了适用用户需求变更的成本。</li>
-<li>在开发过程中更容易得到用户对于已做的开发工作的反馈意见。</li>
-<li>使更快地交付和部署有用的软件到客户方变成可能。</li>
+<li>将待开发的软件系统模块化，可以分批次地提交软件产品，使用户可以及时了解软件项目的进展。-模块化后分批次提供各个模块，用户更了解进展。</li>
+<li>以组件为单位进行开发降低了软件开发的风险。一个开发周期内的错误不会影响到整个软件系统。-降低了开发风险，开发周期容错性增加。</li>
+<li>开发顺序灵活。开发人员可以对组件的实现顺序进行优先级排序，先完成需求稳定的核心组件。当组件的优先级发生变化时，还能及时地对实现顺序进行调整。-灵活，可以在开发过程中调整顺序。</li>
 </ol>
 
 <p>缺点：</p>
 
 <ol>
-<li>过程不可见。</li>
-<li>伴随着新增量的添加，系统结构在不断退化。随着时间推移，变更成本逐渐上升。</li>
+<li>增量模型的缺点是要求待开发的软件系统可以被模块化。如果待开发的软件系统很难被模块化，那么将会给增量开发带来很多麻烦。</li>
+<li>对项目管理人员把握全局水平要求较高。</li>
 </ol>
 
-<p>与瀑布模型相比的特点：</p>
+<p>增量模型适用于具有以下特征的软件开发项目：</p>
 
 <ol>
-<li>多个版本可以并行开发。</li>
-<li>每个版本都是可运行版本。</li>
-<li>需求在开发早起是明确的。</li>
+<li>软件产品可以分批次地进行交付。</li>
+<li>待开发的软件系统能够被模块化。</li>
+<li>软件开发人员对应用领域不熟悉，难以一次性地进行系统开发。</li>
+<li>项目管理人员把握全局的水平较高。</li>
 </ol>
 
 <h4 id="toc_4">演化模型</h4>
 
-<p>演化模型是迭代的过程模型，支持并行开发。</p>
+<p>即根据用户的基本需求，通过快速分析构造出该软件的一个<code>初始可运行版本</code>，这个初始的软件通常称之为原型，然后根据用户在使用原型的过程中提出的意见和建议对原型进行改进，获得原型的新版本。重复这一过程，最终可得到令用户满意的软件产品。采用演化模型的开发过程，实际上就是从初始的原型逐步演化成最终软件产品的过程。演化模型特别适用于对软件需求缺乏准确认识的情况。</p>
+
+<p>演化模型的优点</p>
 
 <ol>
-<li>演化模型在一部分需求被定义后就开始开发了，在每个相继的版本中逐步完善。</li>
-<li>允许需求变更，通过演示迭代产生部分系统功能，尽早手机用户对系统的反馈，及时改正对用户需求的理解偏差。</li>
+<li>任何功能一经开发就能进入测试以便验证是否符合产品需求。-功能验证快</li>
+<li>帮助导引出高质量的产品要求。如果没有可能在一开始就弄清楚所有的产品需求，它们可以分批取得。而对于已提出的产品需求，则可根据对现阶段原型的试用而作出修改。</li>
+<li>风险管理可以在早期就获得项目进程数据，可据此对后续的开发循环作出比较切实的估算。提供机会去采取早期预防措施，增加项目成功的机率。</li>
+<li>大大有助于早期建立产品开发的配置管理，产品构建（build ），自动化测试，缺陷跟踪，文档管理。均衡整个开发过程的负荷。</li>
+<li>开发中的经验教训能反馈应用于本产品的下一个循环过程，大大提高质量与效率。</li>
+<li>如果风险管理发现资金或时间已超出可承受的程度，则可以决定调整后续的开发，或在一个适当的时刻结束开发，但仍然有一个具有部分功能的，可工作的产品。</li>
+<li>心理上，开发人员早日见到产品的雏型，是一种鼓舞。</li>
+<li>使用户可以在新的一批功能开发测试后，立即参加验证，以便提供非常有价值的反馈。</li>
+<li>可使销售工作有可能提前进行，因为可以在产品开发的中后期取得包含了主要功能的产品原型去向客户作展示和试用。</li>
+</ol>
+
+<p>演化模型的缺点</p>
+
+<ol>
+<li>如果所有的产品需求在一开始并不完全弄清楚的话，会给总体设计带来困难及削弱产品设计的完整性，并因而影响产品性能的优化及产品的可维护性。</li>
+<li>如果缺乏严格的过程管理的话，这个生命周期模型很可能退化为一种原始的无计划的“试－错－改”模式。</li>
+<li>心理上，可能产生一种影响尽最大努力的想法，认为虽然不能完成全部功能，但还是造出了一个有部分功能的产品。</li>
+<li>如果不加控制地让用户接触开发中尚未测试稳定的功能，可能对开发人员及用户都产生负面的影响。</li>
 </ol>
 
 <p>常见的是原型模型和螺旋模型。</p>
 
 <h4 id="toc_5">统一过程模型</h4>
+
+<p>RUP（Rational Unified Process，统一软件开发过程，统一软件过程)是一个面向对象且基于网络的程序开发方法论。根据Rational(Rational Rose和统一建模语言的开发者)的说法，好像一个在线的指导者，它可以为所有方面和层次的程序开发提供<code>指导方针</code>，<code>模版</code>以及<code>事例支持</code>。</p>
+
+<p>RUP和类似的产品--例如面向对象的软件过程（OOSP），以及OPEN Process都是理解性的软件工程工具--把开发中面向过程的方面（例如定义的阶段，技术和实践）和其他开发的组件（例如文档，模型，手册以及代码等等）整合在一个统一的框架内。</p>
+
+<p>RUP具有很多长处：</p>
+
+<ul>
+<li>提高了团队生产力.在迭代的开发过程、需求管理、基于组件的体系结构、可视化软件建模、验证软件质量及控制软件变更等方面，针对所有关键的开发活动为每个开发成员提供了必要的准则、模板和工具指导，并确保全体成员共享相同的知识基础。</li>
+<li>它建立了简洁和清晰的过程结构，为开发过程提供较大的通用性。</li>
+</ul>
+
+<p>但同时它也存在一些不足： </p>
+
+<ul>
+<li>RUP只是一个开发过程，并没有涵盖软件过程的全部内容，例如它缺少关于软件运行和支持等方面的内容。</li>
+<li>它没有支持多项目的开发结构，这在一定程度上降低了在开发组织内大范围实现重用的可能性。</li>
+</ul>
 
 <p>是一种风险驱动的软件过程模型。</p>
 
@@ -215,6 +287,8 @@
 <p>每个阶段可以细分成若干个迭代。</p>
 
 <p>是最被广泛接受的模型。</p>
+
+<p><code>面向对象</code> <code>基于网络</code> <code>准则</code> <code>模板</code> <code>指导</code> <code>通用性高</code> <code>只是开发过程</code> <code>不支持多项目并发结构</code></p>
 
 <h4 id="toc_6">演化模型与增量模型区别</h4>
 
@@ -239,6 +313,8 @@
 <li>CMMI for Acquisition：采购模型，提供软件采购和外包管理的服务交付指南。</li>
 </ul>
 
+<p><code>开发</code> <code>服务</code> <code>采购</code></p>
+
 <p>CMMI模型用不同的表示法支持不同的改进方法：</p>
 
 <ul>
@@ -249,72 +325,78 @@
 <p>阶梯式模型将软件组织的成熟度分为以下5级：</p>
 
 <ol>
-<li>初始级：无序混乱的。</li>
-<li>已管理级：有管理过程了。</li>
-<li>已定义级：软件管理和工程两方面标准化了，就像现在公司一样。</li>
-<li>定量管理级：软件过程和产品质量 有详细的度量一举，对软件过程和产品有定量的理解和控制了。</li>
-<li>持续优化级：过程的量化反馈和先进的新思想，新技术促使过程持续不断改进。</li>
+<li><code>初始级</code>：无序混乱的。</li>
+<li><code>已管理级</code>：有管理过程了。</li>
+<li><code>已定义级</code>：<code>软件管理</code>和<code>工程</code>两方面标准化了，就像现在公司一样。</li>
+<li><code>定量管理级</code>：<code>软件过程</code>和<code>产品质量</code> 有详细的度量依据，对软件过程和产品有定量的理解和控制了。</li>
+<li><code>持续优化级</code>：<code>过程的量化反馈</code>和先进的<code>新思想</code>，<code>新技术</code>促使<code>过程持续不断改进</code>。</li>
 </ol>
 
 <h3 id="toc_8">敏捷宣言与敏捷过程特点</h3>
 
+<p>敏捷开发以用户的需求进化为核心，采用迭代、循序渐进的方法进行软件开发。在敏捷开发中，软件项目在构建初期被切分成多个子项目，各个子项目的成果都经过测试，具备可视、可集成和可运行使用的特征。换言之，就是把一个大项目分为多个相互联系，但也可独立运行的小项目，并分别完成，在此过程中软件一直处于可使用状态。</p>
+
 <h4 id="toc_9">4条敏捷价值观</h4>
 
 <ol>
-<li>注重个人交互胜于过程和工具</li>
-<li>注重可用的软件胜于事无巨细的文档</li>
-<li>注重客户协作胜于合同谈判</li>
-<li>注重随机应变胜于恪守计划</li>
+<li>注重个人交互胜于过程和工具 交互-过程和工具</li>
+<li>注重可用的软件胜于事无巨细的文档 可用-文档</li>
+<li>注重客户协作胜于合同谈判 合作-谈判</li>
+<li>注重随机应变胜于恪守计划 机灵-计划</li>
 </ol>
 
 <h4 id="toc_10">12条基本规则</h4>
 
 <ol>
-<li>最优先的目标是通过尽早地，持续低交付高价值的软件来满足客户需求。</li>
-<li>欢迎需求变化，甚至在开发后期。</li>
-<li>经常交付可用软件，间隔从两周到两个月不等，优先采用较短的时间尺度。</li>
-<li>整个项目自始至终，业务人员和开发人员都必须每天在一起工作。</li>
-<li>以积极主动的人员为核心建立项目团队，给与他们所需的环境和支持，并且信任他们能胜任工作。</li>
-<li>开发团队内外传递信息最有效的方法是面对面的交流。</li>
-<li>可用的软件是最主要的项目进展指标。</li>
-<li>敏捷过程提倡可持续的开发。项目发起人、开发者、用户都应始终保持稳定的开发步调。</li>
-<li>持续关注技术上的精益求精和优良的设计以增强敏捷性。</li>
-<li>简约，将必要的工作最小化的艺术，是成功的关键。</li>
-<li>最优的架构、需求、设计浮现于自组织的团队。</li>
-<li><p>团队定期不断对如何更加有效地开展工作进行反思，并相应地调整，校正自己的行为。</p>
-
-<h4 id="toc_11">适合采用敏捷过程的场景</h4></li>
+<li>最优先的目标是通过尽早地，持续低交付<code>高价值的软件</code>来满足客户需求。</li>
+<li><code>欢迎需求变化</code>，甚至在开发后期。</li>
+<li><code>经常交付</code>可用软件，间隔从两周到两个月不等，优先采用较短的时间尺度。</li>
+<li>整个项目自始至终，业务人员和开发人员都必须<code>每天在一起</code>工作。</li>
+<li>以<code>积极主动的人员</code>为核心建立项目团队，给与他们所需的环境和支持，并且信任他们能胜任工作。</li>
+<li>开发团队内外传递信息最有效的方法是<code>面对面的交流</code>。</li>
+<li><code>可用的软件</code>是最主要的项目进展指标。</li>
+<li>敏捷过程提倡<code>可持续</code>的开发。项目发起人、开发者、用户都应始终保持稳定的开发步调。</li>
+<li>持续<code>关注技术上的精益求精</code>和优良的设计以增强敏捷性。</li>
+<li><code>简约</code>，将必要的工作最小化的艺术，是成功的关键。</li>
+<li>最优的架构、需求、设计<code>浮现于自组织的团队</code>。</li>
+<li>团队<code>定期</code>不断对如何更加有效地开展工作进行<code>反思</code>，并相应地调整，校正自己的行为。</li>
 </ol>
+
+<p>目标，变化，周期，团队3条，进展指标，可持续，精益求精，简约，自组织，反思。</p>
+
+<h4 id="toc_11">适合采用敏捷过程的场景</h4>
 
 <ul>
 <li>需求不确定、易挥发</li>
 <li>有责任感和积极向上的开发人员</li>
 <li>用户容易沟通并能参与</li>
 <li>团队小于10人</li>
-<li>
-#### 特点
-敏捷过程保留了传统软件实践的基本框架活动：客户沟通，策划，建模，构建，测试，交付，迭代等，但将其所见到一个推动项目组朝着构建和交付发展的最小任务集。</li>
 </ul>
 
-<h2 id="toc_12">2.软件需求</h2>
+<h4 id="toc_12">特点</h4>
+
+<p>敏捷过程保留了传统软件实践的基本框架活动：客户沟通，策划，建模，构建，测试，交付，迭代等，但将其所见到一个推动项目组朝着构建和交付发展的最小任务集。</p>
+
+<h2 id="toc_13">2.软件需求</h2>
 
 <p><code>需求</code>就是系统必须符合的条件或能力。</p>
 
 <p>FURPS+模型：</p>
 
-<p>功能性：F，特性，功能和安全性。<br/>
-易用性：U，描述实现“用户友好”的因素，几分钟上手啥的。<br/>
-可靠性：R，无故障执行一段时间的概率。<br/>
-性能：P,在功能需求基础上规定的性能参数，包括速度，效率，可用性，准确性，吞吐量，响应时间或资源使用情况。<br/>
-可支持性：S,系统使用各活动所需工作量的大小。</p>
+<p>功能性：Functional，特性，功能和安全性。<br/>
+易用性：Usability，描述实现“用户友好”的因素，几分钟上手啥的。<br/>
+可靠性：Reliability，无故障执行一段时间的概率。<br/>
+性能：Performance,在功能需求基础上规定的性能参数，包括速度，效率，可用性，准确性，吞吐量，响应时间或资源使用情况。<br/>
+可支持性：Supportability,系统使用各活动所需工作量的大小。</p>
 
 <p>URPS合成非功能需求</p>
 
 <p>+是一些补充的需求：<br/>
+一个约束三个需求（设计，实现，接口，物理）<br/>
 设计约束：比如必须采用某种算法。<br/>
 实现需求：比如语言，策略等。<br/>
 接口需求：与之交互的外部软件或硬件。<br/>
-无力需求：必须具备的物理特征，代表硬件要求。</p>
+物理需求：必须具备的物理特征，代表硬件要求。</p>
 
 <p>需求工程的基本过程：</p>
 
@@ -331,11 +413,11 @@
 2. 前景文档：既概要需求，用于记录关键的用户需要和系统特征。<br/>
 3. 软件需求规约：既正式的详细软件需求，用于记录详细的功能需求，非功能需求，约束条件。其中功能需求常用用例图来刻画。</p>
 
-<h3 id="toc_13">用例图及其UML表达</h3>
+<h3 id="toc_14">用例图及其UML表达</h3>
 
-<h4 id="toc_14">用例图</h4>
+<h4 id="toc_15">用例图</h4>
 
-<p>用例图是一种描述待加建软件上下文范围及它提供的功能的概览视图。从黑盒的角度描述谁与系统交互，外部世界希望系统做些什么。</p>
+<p>用例图是一种描述待开发软件上下文范围及它提供的功能的概览视图。从黑盒的角度描述谁与系统交互，外部世界希望系统做些什么。</p>
 
 <p>用例图包含三种要素：</p>
 
@@ -347,7 +429,7 @@
 
 <p><img src="media/15087884854897/15087888659410.jpg" alt=""/></p>
 
-<h4 id="toc_15">活动图</h4>
+<h4 id="toc_16">活动图</h4>
 
 <p>活动图用于刻画一个系统或者子系统的工作流程，也可用于描述用例内部的事件。它提供了活动流程的可视化描述，关注被执行的活动及谁负责执行这些活动。</p>
 
@@ -358,7 +440,7 @@
 <li>控制流，用来表示从一个动作到另一个动作的流的控制。用带箭头的直线表示。</li>
 </ul>
 
-<h5 id="toc_16">控制节点分为</h5>
+<h5 id="toc_17">控制节点分为</h5>
 
 <ol>
 <li><strong>初始节点</strong>：实心圆表示，是活动开始的节点。</li>
@@ -377,14 +459,14 @@
 是动作处理的数据，用举行表示，某些情况下有用，不推荐泛用。</li>
 </ol>
 
-<h4 id="toc_17">分区/泳道图</h4>
+<h4 id="toc_18">分区/泳道图</h4>
 
 <p>分区图=泳道图</p>
 
 <p>分组的目的是说明执行具体活动的责任。<br/>
 <img src="media/15087893059804/15087918675671.jpg" alt=""/></p>
 
-<h4 id="toc_18">时序图（顺序图）</h4>
+<h4 id="toc_19">时序图（顺序图）</h4>
 
 <p>时序图（序列图，顺序图）关注对象间协作的UML图。</p>
 
@@ -413,9 +495,9 @@
 
 <p><img src="media/15093533296418/15093566011971.jpg" alt=""/></p>
 
-<h3 id="toc_19">数据模型建模及其UML表达</h3>
+<h3 id="toc_20">数据模型建模及其UML表达</h3>
 
-<h4 id="toc_20">类</h4>
+<h4 id="toc_21">类</h4>
 
 <p>类定义了一组有着状态和行为的对象。状态由属性和关联描述。个体行为由操作来描述，方法是操作的实现。<br/>
 <img src="media/15087925660642/15087931338746.jpg" alt=""/></p>
@@ -431,19 +513,17 @@
 <li>~ package </li>
 </ul>
 
-<h4 id="toc_21">继承/泛化</h4>
+<h4 id="toc_22">继承/泛化</h4>
 
-<p>一组类可以用繁华关系再起内部建立的继承机制分享公用的状态和行为描述。</p>
+<p><img src="media/15093533296418/15094878093361.jpg" alt=""/></p>
+
+<p>一组类可以用泛化关系再起内部建立的继承机制分享公用的状态和行为描述。</p>
 
 <p>类之间的泛化关系用带空心三角的实现来表示，多重继承现实存在，但建模时要注意，他会引起冲突和重复继承问题。</p>
 
 <p>继承是一种 is-a关系，直观但也会引起混淆。</p>
 
 <p>继承关系由子类指向父类。</p>
-
-<h5 id="toc_22">Liskov替换准则</h5>
-
-<p>在继承时，子类应该能替换父类。</p>
 
 <h5 id="toc_23">关联</h5>
 
@@ -460,19 +540,25 @@
 
 <p>设计阶段关联用来说明关于数据结构的设计和类之间职责的划分，这个时候关联的方向性很重要，而且为了提高对象的存取效率和对特定类信息的定位，也可引入一些必要的多余关联。</p>
 
+<p><a href="http://www.cnblogs.com/jiyuqi/p/4571543.html">比较详细的UML关系说明</a></p>
+
 <h5 id="toc_24">聚合</h5>
+
+<p><img src="media/15093533296418/15094879037604.jpg" alt=""/></p>
 
 <p>聚合是一种特殊的关联，表示部分与整体的关系，比如车队是车的聚合，用带空菱形的实线表示，空菱形与聚合类连接（集合类）</p>
 
 <h5 id="toc_25">组合</h5>
 
-<p>组合是一种更强形式的聚合，用带有实菱形的实现表示，比如夫妻-妻子。</p>
+<p>组合是一种更强形式的聚合，用带有实菱形的实现表示，比如夫妻-妻子。<br/>
+<img src="media/15093533296418/15094878841186.jpg" alt=""/></p>
 
 <p>聚合与组合的区别在于整体和部分的生存周期是否独立。组合关系的部分依赖于整体存在，整体消亡时部分亦消失。</p>
 
 <h5 id="toc_26">依赖</h5>
 
-<p>当一个类的行为或实现影响了另一个类时，这两个类之间就存在依赖关系。</p>
+<p>当一个类的行为或实现影响了另一个类时，这两个类之间就存在依赖关系。<br/>
+<img src="media/15093533296418/15094878645308.jpg" alt=""/></p>
 
 <p>依赖关系表示两个模型元素之间存在的一种语义关系，被依赖着的某些变化会要求或指示依赖者随之发生变化。根据这个定义，关联和泛化都是依赖关系，但是他们有更特别的语义，所以有自己的名字和详细的语义。</p>
 
@@ -498,7 +584,8 @@
 
 <h5 id="toc_27">接口和实现</h5>
 
-<p>接口和实现分离使软件模块更加独立，从而增加可复用性，减少维护成本。</p>
+<p>接口和实现分离使软件模块更加独立，从而增加可复用性，减少维护成本。<br/>
+<img src="media/15093533296418/15094884288812.jpg" alt=""/></p>
 
 <p><strong>接口是一组操作的集合，它是对类、构建、子系统等行为的抽象</strong><br/>
 他是一种特殊的类，包含操作但不包含属性，可以用衍型《》或圆圈表示：</p>
@@ -632,7 +719,7 @@ MVC就是一个体系结构。<br/>
 
 <p><code>抽象</code>：关注事物中与问题相关部分而忽略其他无关部分的一种思考方法。</p>
 
-<p>抽象是控制复杂性的基本策略之一，在软件抽象层次中，最高层的抽象程度最高，若需要系统 某部分的细节，就一项较低层次的抽象。越是到较低层次，可看到的细节越多。软件开发过程其实就是对软件抽象层次的一次次细化的的过程。</p>
+<p>抽象是控制复杂性的基本策略之一，在软件抽象层次中，最高层的抽象程度最高，若需要系统某部分的细节，就移向较低层次的抽象。越是到较低层次，可看到的细节越多。软件开发过程其实就是对软件抽象层次的一次次细化的的过程。</p>
 
 <ol>
 <li>在最高抽象级别上用面向问题域的语言描述问题，概述问题接的形式。</li>
@@ -887,10 +974,10 @@ B. 抽象不应该依赖于具体实现，具体实现应该依赖于抽象。</
 <li>考虑用户实际的诸多使用场景</li>
 </ul>
 
-<p><code>等价类划分</code>是将输入域划分为尽可能少的若干紫玉，在划分中要求每个子域两两互不相交，每个子域成为一个等价类。<br/>
+<p><code>等价类划分</code>是将输入域划分为尽可能少的若干子域，在划分中要求每个子域两两互不相交，每个子域称为一个等价类。<br/>
 <img src="media/15093533296418/15093916652235.jpg" alt=""/><br/>
 <code>有效等价类</code>是对规格说明有意义，合理的输入数据构成的集合，能够校验程序是否实现了规格说明中预先规定的功能和性能。<br/>
-<code>无效等价类</code>是对规格说明无异议，不合理的输入数据构成的集合，已检查程序是否具有一定的容错性。<br/>
+<code>无效等价类</code>是对规格说明无异议，不合理的输入数据构成的集合，以检查程序是否具有一定的<code>容错性</code>。<br/>
 一个例子：<br/>
 <img src="media/15093533296418/15093919267744.jpg" alt=""/><br/>
 另一个例子：<br/>
@@ -1553,177 +1640,6 @@ O（NlogN），非常稳定，最好最坏一样。稳定的。非常适合外�
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="15039097733460.html">
-                
-                  <h1>Faster RCNN</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">1.简介</h2>
-
-<p>Recent advances in object detection are driven by the success of region proposal methods (e.g., [4]) and region-based convolutional neural networks (R- CNNs) [5]. Although region-based CNNs were com- putationally expensive as originally developed in [5], their cost has been drastically reduced thanks to shar- ing convolutions across proposals [1], [2]. The latest incarnation, Fast R-CNN [2], achieves near real-time rates using very deep networks [3], when ignoring the time spent on region proposals. Now, proposals are the test-time computational bottleneck in state-of-the-art detection systems.</p>
-
-<p>Region proposal methods typically rely on inex- pensive features and economical inference schemes. Selective Search [4], one of the most popular meth- ods, greedily merges superpixels based on engineered low-level features. Yet when compared to efficient detection networks [2], Selective Search is an order of magnitude slower, at 2 seconds per image in a CPU implementation. EdgeBoxes [6] currently provides the best tradeoff between proposal quality and speed, at 0.2 seconds per image. Nevertheless, the region proposal step still consumes as much running time as the detection network.</p>
-
-<p>One may note that fast region-based CNNs take advantage of GPUs, while the region proposal meth- ods used in research are implemented on the CPU, making such runtime comparisons inequitable. An ob- vious way to accelerate proposal computation is to re- implement it for the GPU. This may be an effective en- gineering solution, but re-implementation ignores the down-stream detection network and therefore misses important opportunities for sharing computation.<br/>
-In this paper, we show that an algorithmic change— computing proposals with a deep convolutional neu- ral network—leads to an elegant and effective solution where proposal computation is nearly cost-free given the detection network’s computation. To this end, we introduce novel Region Proposal Networks (RPNs) that share convolutional layers with state-of-the-art object detection networks [1], [2]. By sharing convolutions at test-time, the marginal cost for computing proposals is small (e.g., 10ms per image).</p>
-
-<p>Our observation is that the convolutional feature maps used by region-based detectors, like Fast R- CNN, can also be used for generating region pro- posals. On top of these convolutional features, we construct an RPN by adding a few additional con- volutional layers that simultaneously regress region bounds and objectness scores at each location on a regular grid. The RPN is thus a kind of fully convo- lutional network (FCN) [7] and can be trained end-to- end specifically for the task for generating detection proposals.</p>
-
-<p>RPNs are designed to efficiently predict region pro- posals with a wide range of scales and aspect ratios. In contrast to prevalent methods [8], [9], [1], [2] that use pyramids of images (Figure 1, a) or pyramids of filters (Figure 1, b), we introduce novel “anchor” boxes that serve as references at multiple scales and aspect ratios. Our scheme can be thought of as a pyramid of regression references (Figure 1, c), which avoids enumerating images or filters of multiple scales or aspect ratios. This model performs well when trained and tested using single-scale images and thus benefits running speed.</p>
-
-<p>To unify RPNs with Fast R-CNN [2] object detec- tion networks, we propose a training scheme that alternates between fine-tuning for the region proposal task and then fine-tuning for object detection, while keeping the proposals fixed. This scheme converges quickly and produces a unified network with convo- lutional features that are shared between both tasks.1</p>
-
-<p>We comprehensively evaluate our method on the PASCAL VOC detection benchmarks [11] where RPNs with Fast R-CNNs produce detection accuracy bet- ter than the strong baseline of Selective Search with Fast R-CNNs. Meanwhile, our method waives nearly all computational burdens of Selective Search at test-time—the effective running time for proposals is just 10 milliseconds. Using the expensive very deep models of [3], our detection method still has a frame rate of 5fps (including all steps) on a GPU, and thus is a practical object detection system in terms of both speed and accuracy. We also report results on the MS COCO dataset [12] and investi- gate the improvements on PASCAL VOC using the COCO data. Code has been made publicly available at <a href="https://github.com/shaoqingren/faster_">https://github.com/shaoqingren/faster_</a> rcnn (in MATLAB) and <a href="https://github.com/">https://github.com/</a> rbgirshick/py-faster-rcnn (in Python).</p>
-
-<p><img src="media/15039097733460/15039100798184.jpg" alt="" title="Figure 1: Different schemes for addressing multiple scales and sizes. (a) Pyramids of images and feature maps are built, and the classifier is run at all scales. (b) Pyramids of filters with multiple scales/sizes are run on the feature map. (c) We use pyramids of reference boxes in the regression functions."/></p>
-
-<p>A preliminary version of this manuscript was pub- lished previously [10]. Since then, the frameworks of RPN and Faster R-CNN have been adopted and gen- eralized to other methods, such as 3D object detection [13], part-based detection [14], instance segmentation [15], and image captioning [16]. Our fast and effective object detection system has also been built in com-mercial systems such as at Pinterests [17], with user engagement improvements reported.</p>
-
-<p>In ILSVRC and COCO 2015 competitions, Faster R-CNN and RPN are the basis of several 1st-place entries [18] in the tracks of ImageNet detection, Ima- geNet localization, COCO detection, and COCO seg- mentation. RPNs completely learn to propose regions from data, and thus can easily benefit from deeper and more expressive features (such as the 101-layer residual nets adopted in [18]). Faster R-CNN and RPN are also used by several other leading entries in these competitions2. These results suggest that our method is not only a cost-efficient solution for practical usage, but also an effective way of improving object detec- tion accuracy.</p>
-
-<h2 id="toc_1">2. 相关工作</h2>
-
-<p><strong>Object Proposals</strong>. There is a large literature on object proposal methods. Comprehensive surveys and com- parisons of object proposal methods can be found in [19], [20], [21]. Widely used object proposal methods include those based on grouping super-pixels (e.g., Selective Search [4], CPMC [22], MCG [23]) and those based on sliding windows (e.g., objectness in windows [24], EdgeBoxes [6]). Object proposal methods were adopted as external modules independent of the de- tectors (e.g., Selective Search [4] object detectors, R- CNN [5], and Fast R-CNN [2]).</p>
-
-<p><strong>Deep Networks for Object Detection</strong>. The R-CNN method [5] trains CNNs end-to-end to classify the proposal regions into object categories or background. R-CNN mainly plays as a classifier, and it does not predict object bounds (except for refining by bounding box regression). Its accuracy depends on the perfor- mance of the region proposal module (see compar- isons in [20]). Several papers have proposed ways of using deep networks for predicting object bounding boxes [25], [9], [26], [27]. In the OverFeat method [9], a fully-connected layer is trained to predict the box coordinates for the localization task that assumes a single object. The fully-connected layer is then turned into a convolutional layer for detecting multiple class- specific objects. The MultiBox methods [26], [27] gen- erate region proposals from a network whose last fully-connected layer simultaneously predicts mul- tiple class-agnostic boxes, generalizing the “single- box” fashion of OverFeat. These class-agnostic boxes are used as proposals for R-CNN [5]. The MultiBox proposal network is applied on a single image crop or multiple large image crops (e.g., 224×224), in contrast to our fully convolutional scheme. MultiBox does not share features between the proposal and detection networks. We discuss OverFeat and MultiBox in more depth later in context with our method. Concurrent with our work, the DeepMask method [28] is devel- oped for learning segmentation proposals.</p>
-
-<p>hared computation of convolutions [9], [1], [29], [7], [2] has been attracting increasing attention for ef- ficient, yet accurate, visual recognition. The OverFeat paper [9] computes convolutional features from an image pyramid for classification, localization, and de- tection. Adaptively-sized pooling (SPP) [1] on shared convolutional feature maps is developed for efficient region-based object detection [1], [30] and semantic segmentation [29]. Fast R-CNN [2] enables end-to-end detector training on shared convolutional features and shows compelling accuracy and speed.</p>
-
-<h2 id="toc_2">3.Faster RCNN</h2>
-
-<p>Our object detection system, called Faster R-CNN, is composed of two modules. The first module is a deep fully convolutional network that proposes regions, and the second module is the Fast R-CNN detector [2] that uses the proposed regions. The entire system is a single, unified network for object detection (Figure 2). Using the recently popular terminology of neural networks with ‘attention’ [31] mechanisms, the RPN module tells the Fast R-CNN module where to look. In Section 3.1 we introduce the designs and properties of the network for region proposal. In Section 3.2 we develop algorithms for training both modules with features shared.</p>
-
-<p>我们的目标识别系统，叫做Faster R-CNN，是两个模组的组合。第一个模块是一个用来做猜测的深度全连接网络，第二个木块是一个使用猜测区域的 Fast-RCNN检测器。系统入口是一个dan</p>
-
-<h3 id="toc_3">3.1 Region Proposal Networks</h3>
-
-<p>A Region Proposal Network (RPN) takes an image (of any size) as input and outputs a set of rectangular object proposals, each with an objectness score.3 We model this process with a fully convolutional network [7], which we describe in this section. Because our ulti- mate goal is to share computation with a Fast R-CNN object detection network [2], we assume that both nets share a common set of convolutional layers. In our ex- periments, we investigate the Zeiler and Fergus model <a href="ZF">32</a>, which has 5 shareable convolutional layers and the Simonyan and Zisserman model <a href="VGG-16">3</a>, which has 13 shareable convolutional layers.<br/>
-To generate region proposals, we slide a small network over the convolutional feature map output by the last shared convolutional layer. This small network takes as input an n × n spatial window of the input convolutional feature map. Each sliding window is mapped to a lower-dimensional feature (256-d for ZF and 512-d for VGG, with ReLU [33] following). This feature is fed into two sibling fully- connected layers—a box-regression layer (reg) and a box-classification layer (cls). We use n = 3 in this paper, noting that the effective receptive field on the input image is large (171 and 228 pixels for ZF and VGG, respectively). This mini-network is illustrated at a single position in Figure 3 (left). Note that be- cause the mini-network operates in a sliding-window fashion, the fully-connected layers are shared across all spatial locations. This architecture is naturally im- plemented with an n×n convolutional layer followed by two sibling 1 × 1 convolutional layers (for reg and cls, respectively).</p>
-
-<h4 id="toc_4">3.1.1 Anchors</h4>
-
-<p>At each sliding-window location, we simultaneously predict multiple region proposals, where the number of maximum possible proposals for each location is denoted as k. So the reg layer has 4k outputs encoding the coordinates of k boxes, and the cls layer outputs 2k scores that estimate probability of object or not object for each proposal4. The k proposals are param- eterized relative to k reference boxes, which we call anchors. An anchor is centered at the sliding window in question, and is associated with a scale and aspect ratio (Figure 3, left). By default we use 3 scales and 3 aspect ratios, yielding k = 9 anchors at each sliding position. For a convolutional feature map of a size W × H (typically ∼2,400), there are W H k anchors in total.</p>
-
-<p><img src="media/15039097733460/15039114235241.jpg" alt="" title="Region Proposal Network (RPN). Right: Example detections using RPN proposals on PASCAL VOC 2007 test. Our method detects objects in a wide range of scales and aspect ratios."/></p>
-
-<p><strong>Translation-Invariant Anchors</strong></p>
-
-<p>An important property of our approach is that it is translation invariant, both in terms of the anchors and the functions that compute proposals relative to the anchors. If one translates an object in an image, the proposal should translate and the same function should be able to predict the proposal in either lo- cation. This translation-invariant property is guaran- teed by our method5. As a comparison, the MultiBox method [27] uses k-means to generate 800 anchors, which are not translation invariant. So MultiBox does not guarantee that the same proposal is generated if an object is translated.</p>
-
-<p>The translation-invariant property also reduces the model size. MultiBox has a (4 + 1) × 800-dimensional fully-connected output layer, whereas our method has a (4 + 2) × 9-dimensional convolutional output layer in the case of k = 9 anchors. As a result, our output layer has 2.8 × 104 parameters (512 × (4 + 2) × 9 for VGG-16), two orders of magnitude fewer than MultiBox’s output layer that has 6.1 × 106 parameters (1536 × (4 + 1) × 800 for GoogleNet [34] in MultiBox [27]). If considering the feature projection layers, our proposal layers still have an order of magnitude fewer parameters than MultiBox6. We expect our method to have less risk of overfitting on small datasets, like PASCAL VOC.</p>
-
-<p><strong>Multi-Scale Anchors as Regression References</strong></p>
-
-<p>Our design of anchors presents a novel scheme for addressing multiple scales (and aspect ratios). As shown in Figure 1, there have been two popular ways for multi-scale predictions. The first way is based on image/feature pyramids, e.g., in DPM [8] and CNN- based methods [9], [1], [2]. The images are resized at multiple scales, and feature maps (HOG [8] or deep convolutional features [9], [1], [2]) are computed for each scale (Figure 1(a)). This way is often useful but is time-consuming. The second way is to use sliding windows of multiple scales (and/or aspect ratios) on the feature maps. For example, in DPM [8], models of different aspect ratios are trained separately using different filter sizes (such as 5×7 and 7×5). If this way is used to address multiple scales, it can be thought of as a “pyramid of filters” (Figure 1(b)). The second way is usually adopted jointly with the first way [8].<br/>
-As a comparison, our anchor-based method is built on a pyramid of anchors, which is more cost-efficient. Our method classifies and regresses bounding boxes with reference to anchor boxes of multiple scales and aspect ratios. It only relies on images and feature maps of a single scale, and uses filters (sliding win- dows on the feature map) of a single size. We show by experiments the effects of this scheme for addressing multiple scales and sizes (Table 8).<br/>
-Because of this multi-scale design based on anchors, we can simply use the convolutional features com- puted on a single-scale image, as is also done by the Fast R-CNN detector [2]. The design of multi- scale anchors is a key component for sharing features without extra cost for addressing scales.</p>
-
-<h4 id="toc_5">3.1.2 LossFunction</h4>
-
-<p>For training RPNs, we assign a binary class label (of being an object or not) to each anchor. We as- sign a positive label to two kinds of anchors: (i) the anchor/anchors with the highest Intersection-over- Union (IoU) overlap with a ground-truth box, or (ii) an anchor that has an IoU overlap higher than 0.7 with any ground-truth box. Note that a single ground-truth box may assign positive labels to multiple anchors. Usually the second condition is sufficient to determine the positive samples; but we still adopt the first condition for the reason that in some rare cases the second condition may find no positive sample. We assign a negative label to a non-positive anchor if its IoU ratio is lower than 0.3 for all ground-truth boxes. Anchors that are neither positive nor negative do not contribute to the training objective.<br/>
-With these definitions, we minimize an objective function following the multi-task loss in Fast R-CNN [2]. Our loss function for an image is defined as:</p>
-
-<p>\[L(\{p_i\},\{t_i\}) = \frac{1}{N_{cls}}\sum_{cls}(p_i,p_i^*)+\lambda\frac{1}{N_{reg}}\sum_{i}p_i^*L_{reg}(t_i,t_i^*)\]</p>
-
-<p>Here, i is the index of an anchor in a mini-batch and pi is the predicted probability of anchor i being an object. The ground-truth label p∗i is 1 if the anchor is positive, and is 0 if the anchor is negative. ti is a vector representing the 4 parameterized coordinates of the predicted bounding box, and t∗i is that of the ground-truth box associated with a positive anchor. The classification loss Lcls is log loss over two classes (object vs. not object). For the regression loss, we use Lreg (ti, t∗i ) = R(ti − t∗i ) where R is the robust loss function (smooth L1) defined in [2]. The term p∗i Lreg means the regression loss is activated only for positive anchors (p∗i = 1) and is disabled otherwise (p∗i = 0). The outputs of the cls and reg layers consist of {pi} and {ti} respectively.<br/>
-The two terms are normalized by Ncls and Nreg and weighted by a balancing parameter λ. In our current implementation (as in the released code), the cls term in Eqn.(1) is normalized by the mini-batch size (i.e., Ncls = 256) and the reg term is normalized by the number of anchor locations (i.e., Nreg ∼ 2, 400). By default we set λ = 10, and thus both cls and reg terms are roughly equally weighted. We show by experiments that the results are insensitive to the values of λ in a wide range (Table 9). We also note that the normalization as above is not required and could be simplified.<br/>
-For bounding box regression, we adopt the param- eterizations of the 4 coordinates following [5]:<br/>
-tx =(x−xa)/wa, ty =(y−ya)/ha,<br/>
-tw = log(w/wa), th = log(h/ha), (2)<br/>
-t∗x = (x∗ − xa)/wa, t∗y = (y∗ − ya)/ha, t∗w = log(w∗/wa), t∗h = log(h∗/ha),<br/>
-where x, y, w, and h denote the box’s center coordi- nates and its width and height. Variables x, xa, and x∗ are for the predicted box, anchor box, and ground- truth box respectively (likewise for y, w, h). This can be thought of as bounding-box regression from an anchor box to a nearby ground-truth box.<br/>
-Nevertheless, our method achieves bounding-box regression by a different manner from previous RoI- based (Region of Interest) methods [1], [2]. In [1], [2], bounding-box regression is performed on features pooled from arbitrarily sized RoIs, and the regression weights are shared by all region sizes. In our formula- tion, the features used for regression are of the same spatial size (3 × 3) on the feature maps. To account for varying sizes, a set of k bounding-box regressors are learned. Each regressor is responsible for one scale and one aspect ratio, and the k regressors do not share weights. As such, it is still possible to predict boxes of various sizes even though the features are of a fixed size/scale, thanks to the design of anchors.</p>
-
-<h4 id="toc_6">3.1.3 Training RPNs</h4>
-
-<p>The RPN can be trained end-to-end by back- propagation and stochastic gradient descent (SGD) [35]. We follow the “image-centric” sampling strategy from [2] to train this network. Each mini-batch arises from a single image that contains many positive and negative example anchors. It is possible to optimize for the loss functions of all anchors, but this will bias towards negative samples as they are dominate. Instead, we randomly sample 256 anchors in an image to compute the loss function of a mini-batch, where the sampled positive and negative anchors have a ratio of up to 1:1. If there are fewer than 128 positive samples in an image, we pad the mini-batch with negative ones.<br/>
-We randomly initialize all new layers by drawing weights from a zero-mean Gaussian distribution with standard deviation 0.01. All other layers (i.e., the shared convolutional layers) are initialized by pre- training a model for ImageNet classification [36], as is standard practice [5]. We tune all layers of the ZF net, and conv3 1 and up for the VGG net to conserve memory [2]. We use a learning rate of 0.001 for 60k mini-batches, and 0.0001 for the next 20k mini-batches on the PASCAL VOC dataset. We use a momentum of 0.9 and a weight decay of 0.0005 [37]. Our implementation uses Caffe [38].</p>
-
-<h4 id="toc_7">3.2 Sharing Features for RPN and Fast R-CNN</h4>
-
-<p>Thus far we have described how to train a network for region proposal generation, without considering the region-based object detection CNN that will utilize these proposals. For the detection network, we adopt Fast R-CNN [2]. Next we describe algorithms that learn a unified network composed of RPN and Fast R-CNN with shared convolutional layers (Figure 2).<br/>
-Both RPN and Fast R-CNN, trained independently, will modify their convolutional layers in different ways. We therefore need to develop a technique that allows for sharing convolutional layers between the two networks, rather than learning two separate net- works. We discuss three ways for training networks with features shared:</p>
-
-<table>
-<thead>
-<tr>
-<th>Anchor</th>
-<th>\(128^2\), 2:1</th>
-<th>\(128^2\), 1:1</th>
-<th>\(128^2\), 1:2</th>
-<th>\(512^2\), 2:1</th>
-<th>\(512^2\), 1:1</th>
-<th>\(256^2\), 1:2</th>
-<th>\(512^2\), 2:1</th>
-<th>\(512^2\), 1:1</th>
-<th>\(512^2\), 1:2</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>Proposal</td>
-<td>188×111</td>
-<td>113×114</td>
-<td>70×92</td>
-<td>416×229</td>
-<td>261×284</td>
-<td>174×332</td>
-<td>768×437</td>
-<td>499×501</td>
-<td>355×715</td>
-</tr>
-</tbody>
-</table>
-
-<p>(i) Alternating training. In this solution, we first train RPN, and use the proposals to train Fast R-CNN. The network tuned by Fast R-CNN is then used to initialize RPN, and this process is iterated. This is the solution that is used in all experiments in this paper.</p>
-
-<p>(ii) Approximate joint training. In this solution, the RPN and Fast R-CNN networks are merged into one network during training as in Figure 2. In each SGD iteration, the forward pass generates region propos- als which are treated just like fixed, pre-computed proposals when training a Fast R-CNN detector. The backward propagation takes place as usual, where for the shared layers the backward propagated signals from both the RPN loss and the Fast R-CNN loss are combined. This solution is easy to implement. But this solution ignores the derivative w.r.t. the proposal boxes’ coordinates that are also network responses, so is approximate. In our experiments, we have em- pirically found this solver produces close results, yet reduces the training time by about 25-50% comparing with alternating training. This solver is included in our released Python code.</p>
-
-<p>(iii) Non-approximate joint training. As discussed above, the bounding boxes predicted by RPN are also functions of the input. The RoI pooling layer [2] in Fast R-CNN accepts the convolutional features and also the predicted bounding boxes as input, so a theoretically valid backpropagation solver should also involve gradients w.r.t. the box coordinates. These gradients are ignored in the above approximate joint training. In a non-approximate joint training solution, we need an RoI pooling layer that is differentiable w.r.t. the box coordinates. This is a nontrivial problem and a solution can be given by an “RoI warping” layer as developed in [15], which is beyond the scope of this paper.</p>
-
-<p><strong>4-Step Alternating Training</strong> . In this paper, we adopt a pragmatic 4-step training algorithm to learn shared features via alternating optimization. In the first step, we train the RPN as described in Section 3.1.3. This network is initialized with an ImageNet-pre-trained model and fine-tuned end-to-end for the region pro- posal task. In the second step, we train a separate detection network by Fast R-CNN using the proposals generated by the step-1 RPN. This detection net- work is also initialized by the ImageNet-pre-trained model. At this point the two networks do not share convolutional layers. In the third step, we use the detector network to initialize RPN training, but we fix the shared convolutional layers and only fine-tune the layers unique to RPN. Now the two networks share convolutional layers. Finally, keeping the shared convolutional layers fixed, we fine-tune the unique layers of Fast R-CNN. As such, both networks share the same convolutional layers and form a unified network. A similar alternating training can be run for more iterations, but we have observed negligible improvements.</p>
-
-<h3 id="toc_8">3.3 Implementation Details</h3>
-
-<p>We train and test both region proposal and object detection networks on images of a single scale [1], [2]. We re-scale the images such that their shorter side is s = 600 pixels [2]. Multi-scale feature extraction (using an image pyramid) may improve accuracy but does not exhibit a good speed-accuracy trade-off [2]. On the re-scaled images, the total stride for both ZF and VGG nets on the last convolutional layer is 16 pixels, and thus is ∼10 pixels on a typical PASCAL image before resizing (∼500×375). Even such a large stride provides good results, though accuracy may be further improved with a smaller stride.<br/>
-For anchors, we use 3 scales with box areas of 1282, 2562, and 5122 pixels, and 3 aspect ratios of 1:1, 1:2, and 2:1. These hyper-parameters are not carefully cho- sen for a particular dataset, and we provide ablation experiments on their effects in the next section. As dis- cussed, our solution does not need an image pyramid or filter pyramid to predict regions of multiple scales, saving considerable running time. Figure 3 (right) shows the capability of our method for a wide range of scales and aspect ratios. Table 1 shows the learned average proposal size for each anchor using the ZF net. We note that our algorithm allows predictions that are larger than the underlying receptive field. Such predictions are not impossible—one may still roughly infer the extent of an object if only the middle of the object is visible.<br/>
-The anchor boxes that cross image boundaries need to be handled with care. During training, we ignore all cross-boundary anchors so they do not contribute to the loss. For a typical 1000 × 600 image, there will be roughly 20000 (≈ 60 × 40 × 9) anchors in total. With the cross-boundary anchors ignored, there are about 6000 anchors per image for training. If the boundary-crossing outliers are not ignored in training, they introduce large, difficult to correct error terms in the objective, and training does not converge. During testing, however, we still apply the fully convolutional RPN to the entire image. This may generate cross- boundary proposal boxes, which we clip to the image boundary.</p>
-
-<p><img src="media/15039097733460/15039113101725.jpg" alt="" title="Table 2: Detection results on PASCAL VOC 2007 test set (trained on VOC 2007 trainval). The detectors are Fast R-CNN with ZF, but using various proposal methods for training and testing."/></p>
-
-<p>Some RPN proposals highly overlap with each other. To reduce redundancy, we adopt non-maximum suppression (NMS) on the proposal regions based on their cls scores. We fix the IoU threshold for NMS at 0.7, which leaves us about 2000 proposal regions per image. As we will show, NMS does not harm the ultimate detection accuracy, but substantially reduces the number of proposals. After NMS, we use the top-N ranked proposal regions for detection. In the following, we train Fast R-CNN using 2000 RPN pro- posals, but evaluate different numbers of proposals at test-time.</p>
-
-<h2 id="toc_9">4.实验</h2>
-
-<h2 id="toc_10">5.结论</h2>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">8/28/2017 16:42 下午</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='algorithm.html'>算法</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -1805,6 +1721,12 @@ The anchor boxes that cross image boundaries need to be handled with care. Durin
 	      
 		      
 			      <li class="post">
+			        <a href="15094822436869.html"></a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="15093533296418.html">软件工程笔记</a>
 			      </li>
 		     
@@ -1824,12 +1746,6 @@ The anchor boxes that cross image boundaries need to be handled with care. Durin
 		      
 			      <li class="post">
 			        <a href="15075982914933.html">数学 10_10 微分方程</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="15039097733460.html">Faster RCNN</a>
 			      </li>
 		     
 		  
